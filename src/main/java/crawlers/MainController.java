@@ -31,6 +31,18 @@ public class MainController {
     public String contacto(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
         model.addAttribute("name", name);
         return "contacto";
+    }    
+    
+    @RequestMapping("/perfil")
+    public String perfil(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+        model.addAttribute("name", name);
+        return "contacto";
+    }
+    
+    @RequestMapping("/crawlers")
+    public String crawlers(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+        model.addAttribute("name", name);
+        return "contacto";
     }
 
 }
