@@ -7,6 +7,7 @@
     this.tab=2;
     this.loged=false;
     this.user="";
+    this.email="";
 
     /* Edita el valor de la pestaña actual */
     this.selectedTab = function(tab){
@@ -17,12 +18,11 @@
       return this.tab === checkTab;
     };
 
-    /* El usuario se loguea, se cambian valores por defecto */
-    $scope.$on('loged', function(event, args) {
+    this.setUser = function(){
       this.user=document.getElementById("usernameLogin").value;
       this.loged=true;
       this.tab=1;
-    });
+    };
 
     /* El usuario sale de la sesión y se cambian valores y vista visual */
     this.salir = function(){
@@ -127,7 +127,6 @@
       	document.getElementById("liLogin").style.display="none";
       	document.getElementById("liUser").style.display="inline";
       	document.getElementById("misCrawMenu").style.display="inline";
-      	$scope.$emit('loged', {});
         document.cookie="usuario="+this.user;
         document.cookie="password="+this.password;
         if(document.getElementById("rememberMe").checked){
