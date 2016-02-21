@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ubuntu #It used to be stackbrew/ubuntu:saucy but its deprecated
+from ubuntu
 MAINTAINER Inigo <inigol22zgz@gmail.com>
 
 WORKDIR /root/
@@ -30,6 +30,7 @@ RUN add-apt-repository -y multiverse && \
 # Install latest Oracle Java from PPA
 RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
   apt-get install -y oracle-java7-installer oracle-java7-set-default
+Run export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 
 # Install dependencies
 RUN apt-get install -y ant openssh-server zookeeperd vim telnet subversion rsync curl build-essential maven
@@ -82,6 +83,7 @@ RUN mv /root/nutch-sources /opt/apache-nutch-2.x && \
 
 # Setup hduser environment
 ADD config/bashrc /home/hduser/.bashrc
+RUN chmod +x /home/hduser/.bashrc
 
 # Add Hadoop, HBase and nutch configs
 ADD config/core-site.xml /tmp/hadoop-etc/core-site.xml
