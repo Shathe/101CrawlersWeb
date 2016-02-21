@@ -1,6 +1,6 @@
 (function(){
   var app = angular.module('crawlers',['crawlers']);
-
+  var loged=false;
   /* Controlador general */
   app.controller('ContainerController',['$scope', '$http','$log',function($scope, $http,$log){
     /* Valores por defecto */
@@ -20,8 +20,7 @@
 
     this.setUser = function(){
       this.user=document.getElementById("usernameLogin").value;
-      this.loged=true;
-      this.tab=1;
+      loged=true;
     };
 
     /* El usuario sale de la sesión y se cambian valores y vista visual */
