@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  * @author mattmann
- * @version $Revision$
+ * @version $Revision: 1655526 $
  * 
  *          <p>
  *          Unit tests for the {@link File}Protocol.

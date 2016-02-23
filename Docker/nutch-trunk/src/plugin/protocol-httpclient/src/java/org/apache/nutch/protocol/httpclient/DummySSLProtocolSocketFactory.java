@@ -19,7 +19,7 @@
  * 
  * $Header:
  * /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/contrib/org/apache/commons/httpclient/contrib/ssl/DummySSLProtocolSocketFactory.java,v
- * 1.7 2004/06/11 19:26:27 olegk Exp $ $Revision$ $Date: 2005-02-26 05:01:52
+ * 1.7 2004/06/11 19:26:27 olegk Exp $ $Revision: 1655526 $ $Date: 2005-02-26 05:01:52
  * -0800 (Sat, 26 Feb 2005) $
  */
 
