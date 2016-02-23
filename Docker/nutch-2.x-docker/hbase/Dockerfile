@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ubuntu 
+from ubuntu
 MAINTAINER Inigo <inigol22zgz@gmail.com>
 
 WORKDIR /root/
@@ -30,7 +30,6 @@ RUN add-apt-repository -y multiverse && \
 # Install latest Oracle Java from PPA
 RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
   apt-get install -y oracle-java7-installer oracle-java7-set-default
-RUN export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 
 # Install dependencies
 RUN apt-get install -y ant openssh-server zookeeperd vim telnet subversion rsync curl build-essential maven
@@ -102,6 +101,7 @@ ENV NUTCH_ROOT /opt/apache-nutch-2.x
 RUN echo 'gora.datastore.default=org.apache.gora.hbase.store.HBaseStore' >> /opt/apache-nutch-2.x/conf/gora.properties
 RUN vim -c 'g/name="gora-hbase"/+1d' -c 'x' $NUTCH_ROOT/ivy/ivy.xml
 RUN vim -c 'g/name="gora-hbase"/-1d' -c 'x' $NUTCH_ROOT/ivy/ivy.xml
+
 RUN cd $NUTCH_ROOT && ant runtime
 RUN ln -s /opt/apache-nutch-2.x/runtime/local /opt/nutch
 ENV NUTCH_HOME /opt/nutch
@@ -141,5 +141,6 @@ EXPOSE 9090 9095
 # Create start script
 ADD config/run-services.sh /root/run-services.sh
 RUN chmod +x /root/run-services.sh
+RUN export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 
 CMD ["/root/run-services.sh"]

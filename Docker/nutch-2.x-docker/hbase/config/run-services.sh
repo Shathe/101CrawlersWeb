@@ -21,6 +21,7 @@ set -x
 #echo $AUTHORIZED_SSH_PUBLIC_KEY >> /home/hduser/.ssh/authorized_keys
 
 # format the namenode if it's not already done
+su -l -c 'mkdir -p /home/hduser/data/hadoop/nn /home/hduser/data/hadoop/dn && hdfs namenode -format' hduser
 su -l -c 'mkdir -p /home/hduser/data/hadoop/nn /home/hduser/data/hadoop/dn && /opt/hadoop/bin/hadoop namenode -format' hduser
 
 # start ssh daemon
