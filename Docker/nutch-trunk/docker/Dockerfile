@@ -14,7 +14,7 @@
 # limitations under the License.
 
 FROM ubuntu:14.04
-MAINTAINER Michael Joyce <joyce@apache.org>
+MAINTAINER inigo alonso <inigol22zgz@gmail.com>
 
 WORKDIR /root/
 
@@ -31,12 +31,12 @@ RUN apt-get install -y ant openssh-server vim telnet subversion rsync curl build
 
 # Set up JAVA_HOME
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' >> $HOME/.bashrc
-RUN ls -a
 
 # Checkout and build the nutch trunk
 # RUN svn checkout https://svn.apache.org/repos/asf/nutch/trunk/ nutch_source && cd nutch_source && ant
-RUN git clone https://github.com/Shathe/101CrawlersWeb.git  crawler && cd crawler/Docker/nutch-trunk && ant
-RUN cd crawler
+RUN cd $HOME
+
+RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 
 # Convenience symlink to Nutch runtime local
 RUN ln -s nutch_source/runtime/local $HOME/nutch

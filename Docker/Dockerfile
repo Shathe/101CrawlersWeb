@@ -39,7 +39,8 @@ RUN apt-get install -y ant openssh-server zookeeperd vim telnet subversion rsync
 RUN wget -q 'https://archive.apache.org/dist/hadoop/core/hadoop-2.5.1/hadoop-2.5.1.tar.gz'
 RUN wget -q 'http://archive.apache.org/dist/hbase/hbase-0.98.8/hbase-0.98.8-hadoop2-bin.tar.gz'
 RUN wget -q 'https://protobuf.googlecode.com/files/protobuf-2.5.0.tar.gz'
-RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/2.x/ nutch-sources
+RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-1.9/ nutch-sources
+#https://svn.apache.org/repos/asf/nutch/trunk/
 
 # Setup system user and group to own and run Hadoop
 RUN addgroup hadoop && adduser --ingroup hadoop hduser
@@ -76,10 +77,10 @@ RUN ln -s /opt/hbase-0.98.8-hadoop2 /opt/hbase &&  mkdir /opt/hbase/logs && \
   chown -R hduser:hadoop /opt/hbase/logs
 
  # Deploy and setup file permissions
-RUN mv /root/nutch-sources /opt/apache-nutch-2.x && \
-  chown -R root:root /opt/apache-nutch-2.x && \
-  mkdir /opt/apache-nutch-2.x/logs && \
-  chown -R hduser:hadoop /opt/apache-nutch-2.x/logs
+RUN mv /root/nutch-sources /opt/apache-nutch-1.9 && \
+  chown -R root:root /opt/apache-nutch-1.9 && \
+  mkdir /opt/apache-nutch-1.9/logs && \
+  chown -R hduser:hadoop /opt/apache-nutch-1.9/logs
 
 # Setup hduser environment
 ADD config/bashrc /home/hduser/.bashrc
@@ -94,15 +95,15 @@ ADD config/hbase-site.xml /tmp/hbase-etc/hbase-site.xml
 ADD config/nutch-site.xml /tmp/nutch-etc/nutch-site.xml
 RUN mv /tmp/hadoop-etc/* /opt/hadoop/etc/hadoop
 RUN mv /tmp/hbase-etc/* /opt/hbase/conf/
-RUN mv /tmp/nutch-etc/* /opt/apache-nutch-2.x/conf/
+RUN mv /tmp/nutch-etc/* /opt/apache-nutch-1.9/conf/
 
 
-ENV NUTCH_ROOT /opt/apache-nutch-2.x
-RUN echo 'gora.datastore.default=org.apache.gora.hbase.store.HBaseStore' >> /opt/apache-nutch-2.x/conf/gora.properties
+ENV NUTCH_ROOT /opt/apache-nutch-1.9
+RUN echo 'gora.datastore.default=org.apache.gora.hbase.store.HBaseStore' >> /opt/apache-nutch-1.9/conf/gora.properties
 RUN vim -c 'g/name="gora-hbase"/+1d' -c 'x' $NUTCH_ROOT/ivy/ivy.xml
 RUN vim -c 'g/name="gora-hbase"/-1d' -c 'x' $NUTCH_ROOT/ivy/ivy.xml
 RUN cd $NUTCH_ROOT && ant runtime
-RUN ln -s /opt/apache-nutch-2.x/runtime/local /opt/nutch
+RUN ln -s /opt/apache-nutch-1.9/runtime/local /opt/nutch
 ENV NUTCH_HOME /opt/nutch
 ENV HADOOP_HOME /opt/hadoop
 ENV NUTCHSERVER_PORT 8899
