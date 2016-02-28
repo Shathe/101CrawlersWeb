@@ -32,11 +32,22 @@ RUN apt-get install -y ant openssh-server vim telnet subversion rsync curl build
 # Set up JAVA_HOME
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' >> $HOME/.bashrc
 
-# Checkout and build the nutch trunk
 # RUN svn checkout https://svn.apache.org/repos/asf/nutch/trunk/ nutch_source && cd nutch_source && ant
-RUN cd $HOME
-
-RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 
 # Convenience symlink to Nutch runtime local
 RUN ln -s nutch_source/runtime/local $HOME/nutch
+
+
+RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
+# Checkout and build the nutch trunk
+
+
+RUN JAVA_HOME=/usr/lib/jvm/java-7-oracle
+RUN export JAVA_HOME
+RUN PATH=$PATH:$HOME
+RUN echo /usr/lib/jvm/java-7-oracle << /etc/environment
+RUN echo $JAVA_HOME
+RUN echo PATH=$PATH:$HOME >> /etc/environment
+RUN more /etc/environment
+RUN echo ls >> a.sh
+RUN mv a.sh /usr/local/bin

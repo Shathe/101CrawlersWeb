@@ -1,4 +1,6 @@
-sudo docker run  $1 /bin/bash
+#sudo docker run  $1 /bin/bash
+sudo docker run -i $1
+sudo docker exec ...
 
 id=$(sudo docker ps -a | head -2 | tail -1 | awk '{print $1;}')
 sudo  docker start $id

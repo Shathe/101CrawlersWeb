@@ -1,0 +1,5 @@
+Error: JAVA_HOME is not set.
+Error: JAVA_HOME is not set.
+Error: JAVA_HOME is not set.
+Error: JAVA_HOME is not set.
+Error: JAVA_HOME is not set.
