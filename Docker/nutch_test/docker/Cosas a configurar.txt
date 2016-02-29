@@ -1,0 +1,38 @@
+Mirar si se puede hacer lo de hadddoop , que hay que pone, y que no 
+
+Seed -> hecho
+
+hacer qe se puedan poner varias seed -s s1 s2 s3 -n nombre
+
+Añadir plugins ->
+In order to get Nutch to use your plugin, you need to edit your conf/nutch-site.xml file and add in a block like this:
+<property>
+  <name>plugin.includes</name>
+  <value>protocol-http|urlfilter-regex|parse-(html|tika)|index-(basic|anchor)|scoring-opic|urlnormalizer-(pass|regex|basic)|urlmeta</value>
+  <description>Regular expression naming plugin directory names to
+  include.  Any plugin not matching this expression is excluded.
+  In any case you need at least include the nutch-extensionpoints plugin. By
+  default Nutch includes crawling just HTML and plain text via HTTP,
+  and basic indexing and search plugins.
+  </description>
+</property>
+
+
+nutch-site (aquí se escribe todo lo quehay en el nutch-defautl que se quiere cambiar, ese fichero en cambio no se ha de tocar)->
+-Muchisimas configuraciones
+
+Añadir filtros de dominios? domain-urlfilter.txt
+
+Añadir dominios? domain-suffixes.xml
+
+
+
+
+#core/hadoop-default.xml: This file contains generic default settings for Hadoop daemons and Map/Reduce jobs.
+#nutch-default.xml: This file contains generic default settings for Nutch specific configuration properties.
+#core-site.xml: This file contains site specific settings for all Hadoop daemons and Map/Reduce jobs.
+#nutch-site.xml: This file contains site specific settings for Nutch specific configuration properties.
+#mapred-site.xml: This file contains site specific settings for the Hadoop Map/Reduce daemons and jobs.
+
+Donde extraer los datos (y ejecuar otro excrip que por ejeplo solo haga un cat del dump y lo extaiga a algun y eso se vueque a algun sitio)
+A donde llevar los datos dentro de la imagen? dump , gora hadoop..
