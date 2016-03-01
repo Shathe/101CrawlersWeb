@@ -1,8 +1,9 @@
-#Este id es para pruebas, lo mejor seria pasar el id por parametro habiendolo guarado nada mas crearlo
+#!/bin/sh
 
-idImagen=$(sudo docker images | head -2 | tail -1 | awk '{print $3;}')
+idImagen=$(docker images | head -2 | tail -1 | awk '{print $3;}')
+#Este id es para pruebas, lo mejor seria pasar el id por parametro habiendolo guarado nada mas crearlo
 if test "$#" -ne 1; then
-  sudo docker run  -i $idImagen
+  docker run  -i -d $idImagen
 else
-  sudo docker run  -i $1
+  docker run  -i -d $1
 fi
