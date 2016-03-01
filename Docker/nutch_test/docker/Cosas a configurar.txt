@@ -1,10 +1,9 @@
-Mirar si se puede hacer lo de hadddoop , que hay que pone, y que no 
-
-Seed -> hecho
-
+- Poder intoducir varias seed en vez de una como está el release ahora.
 hacer qe se puedan poner varias seed -s s1 s2 s3 -n nombre
 
-Añadir plugins ->
+-Para #bin/crawl <seedDir> <crawlDir> <solrURL> <numberOfRounds>, el numero de rondas!
+
+- Poder añadir plugins ->
 In order to get Nutch to use your plugin, you need to edit your conf/nutch-site.xml file and add in a block like this:
 <property>
   <name>plugin.includes</name>
@@ -16,23 +15,22 @@ In order to get Nutch to use your plugin, you need to edit your conf/nutch-site.
   and basic indexing and search plugins.
   </description>
 </property>
+plugin.includes	protocol-http|urlfilter-regex|parse-(html|tika)|index-(basic|anchor)|indexer-solr|scoring-opic|urlnormalizer-(pass|regex|basic)	Regular expression naming plugin directory names to include. Any plugin not matching this expression is excluded. In any case you need at least include the nutch-extensionpoints plugin. By default Nutch includes crawling just HTML and plain text via HTTP, and basic indexing and search plugins. In order to use HTTPS please enable protocol-httpclient, but be aware of possible intermittent problems with the underlying commons-httpclient library.
 
+-(nutch-site) file.content.limit The length limit for downloaded content using the file:// protocol, in bytes.
+-(nutch-site) http.content.limit  The length limit for downloaded content using the http:// protocol, in bytes.
+-(nutch-site) http.timeout	10000	The default network timeout, in millisecond
+-(nutch-site) http.max.delays	100	The number of times a thread will delay when trying to fetch a page.
+-(nutch-site) ftp.server.timeout	100000	An estimation of ftp server idle time, in millisec. Typically it is 120000 millisec for many ftp servers out there.
+-(nutch-site) db.url.filters	false	Filter urls when updating crawldb
+-(nutch-site) db.ignore.internal.links	true	If true, when adding new links to a page, links from the same host are ignored. This is an effective way to limit the size of the link database, keeping only the highest quality links.
+-(nutch-site) db.max.inlinks	10000	Maximum number of Inlinks per URL to be kept in LinkDb. If "invertlinks" finds more inlinks than this number, only the first N inlinks will be stored, and the rest will be discarded.
+-(nutch-site) fetcher.queue.mode	byHost	Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
+-(nutch-site) fetcher.maxNum.threads	25	Max number of fetch threads allowed when using fetcher.bandwidth.target. Defaults to fetcher.threads.fetch if unspecified or set to a value lower than it.
+-(nutch-site) parser.timeout	30	Timeout in seconds for the parsing of a document,
+-(nutch-site) scoring.depth.max	1000	Max depth value from seed allowed by default.
+-(nutch-site) fetcher.max.crawl.delay	30	If the Crawl-Delay in robots.txt is set to greater than this value (in seconds) then the fetcher will skip this page, generating an error report. If set to -1 the fetcher will never skip such pages and will wait the amount of time retrieved from robots.txt Crawl-Delay, however long that might be.
 
-nutch-site (aquí se escribe todo lo quehay en el nutch-defautl que se quiere cambiar, ese fichero en cambio no se ha de tocar)->
--Muchisimas configuraciones
+-(domain-urlfilter.txt) filtros de dominio
 
-Añadir filtros de dominios? domain-urlfilter.txt
-
-Añadir dominios? domain-suffixes.xml
-
-
-
-
-#core/hadoop-default.xml: This file contains generic default settings for Hadoop daemons and Map/Reduce jobs.
-#nutch-default.xml: This file contains generic default settings for Nutch specific configuration properties.
-#core-site.xml: This file contains site specific settings for all Hadoop daemons and Map/Reduce jobs.
-#nutch-site.xml: This file contains site specific settings for Nutch specific configuration properties.
-#mapred-site.xml: This file contains site specific settings for the Hadoop Map/Reduce daemons and jobs.
-
-Donde extraer los datos (y ejecuar otro excrip que por ejeplo solo haga un cat del dump y lo extaiga a algun y eso se vueque a algun sitio)
-A donde llevar los datos dentro de la imagen? dump , gora hadoop..
+-A donde extraer los datos en el contendor y a donde extraerlos desde el contendor. (docker cp o cat dump)

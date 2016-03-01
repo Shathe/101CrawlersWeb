@@ -29,56 +29,6 @@ RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true 
 # Install various dependencies
 RUN apt-get install -y ant openssh-server vim telnet subversion rsync curl build-essential git
 
-
-# Download Hadoop
-RUN wget -q 'https://archive.apache.org/dist/hadoop/core/hadoop-2.5.1/hadoop-2.5.1.tar.gz'
-RUN wget -q 'http://archive.apache.org/dist/hbase/hbase-0.98.8/hbase-0.98.8-hadoop2-bin.tar.gz'
-RUN wget -q 'https://protobuf.googlecode.com/files/protobuf-2.5.0.tar.gz'
-
-
-# Setup SSH keys for passwordless access
-RUN su -l -c 'ssh-keygen -t rsa -f /home/hduser/.ssh/id_rsa -P ""' hduser && \
-  cat /home/hduser/.ssh/id_rsa.pub | su -l -c 'tee -a /home/hduser/.ssh/authorized_keys' hduser
-ADD config/ssh-config /home/hduser/.ssh/config
-RUN chmod 600 /home/hduser/.ssh/config
-RUN chown hduser /home/hduser/.ssh/config
-
-# Fix Ubuntu 13.10 SSH daemon problem with docker: http://docs.docker.io/en/latest/examples/running_ssh_service/
-RUN sed -ri 's/session[[:blank:]]+required[[:blank:]]+pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd
-
-# Deploy and setup file permissions
-RUN tar xvfz /root/hadoop-2.5.1.tar.gz -C /opt && \
-  ln -s /opt/hadoop-2.5.1 /opt/hadoop && \
-  chown -R root:root /opt/hadoop-2.5.1 && \
-  mkdir /opt/hadoop-2.5.1/logs && \
-  chown -R hduser:hadoop /opt/hadoop-2.5.1/logs
-
-# Unpack and compile Google protobuf
-RUN tar xvfz /root/protobuf-2.5.0.tar.gz -C /opt && \
-  chown -R root:root /opt/protobuf-2.5.0
-RUN cd /opt/protobuf-2.5.0 && ./configure && make && make check && make install
-
-# Deploy and setup file permissions
-RUN tar xvfz /root/hbase-0.98.8-hadoop2-bin.tar.gz -C /opt && \
-  chown -R root:root /opt/hbase-0.98.8-hadoop2
-
-# link binaries, create logs directory
-RUN ln -s /opt/hbase-0.98.8-hadoop2 /opt/hbase &&  mkdir /opt/hbase/logs && \
-  chown -R hduser:hadoop /opt/hbase/logs
-
- # Deploy and setup file permissions
-RUN mv /root/nutch-sources /opt/apache-nutch-1.9 && \
-  chown -R root:root /opt/apache-nutch-1.9 && \
-  mkdir /opt/apache-nutch-1.9/logs && \
-  chown -R hduser:hadoop /opt/apache-nutch-1.9/logs
-
-# Setup hduser environment
-ADD config/bashrc /home/hduser/.bashrc
-RUN chmod +x /home/hduser/.bashrc
-
-
-
-
 # RUN svn checkout https://svn.apache.org/repos/asf/nutch/trunk/ nutch_source && cd nutch_source && ant
 
 # Convenience symlink to Nutch runtime local
@@ -98,9 +48,99 @@ RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 # Checkout and build the nutch trunk
 
 
+
 #default seed
 ARG seed='http://www.google.es'
 RUN echo $seed >> crawler/urls/seeds.txt
 
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+ENV PATH $PATH:$JAVA_HOME/bin
+
+
+
+
+# passwordless ssh
+RUN ssh-keygen -q -N "" -t rsa -f /root/.ssh/id_rsa
+RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
+
+# download native support
+RUN mkdir -p /tmp/native
+RUN curl -L https://github.com/sequenceiq/docker-hadoop-build/releases/download/v2.7.1/hadoop-native-64-2.7.1.tgz | tar -xz -C /tmp/native
+
+# hadoop
+RUN curl -s http://www.eu.apache.org/dist/hadoop/common/hadoop-2.7.1/hadoop-2.7.1.tar.gz | tar -xz -C /usr/local/
+RUN cd /usr/local && ln -s ./hadoop-2.7.1 hadoop
+
+ENV HADOOP_PREFIX /usr/local/hadoop
+ENV HADOOP_COMMON_HOME /usr/local/hadoop
+ENV HADOOP_HDFS_HOME /usr/local/hadoop
+ENV HADOOP_MAPRED_HOME /usr/local/hadoop
+ENV HADOOP_YARN_HOME /usr/local/hadoop
+ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
+ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
+
+
+RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-7-oracle\nexport HADOOP_PREFIX=/usr/local/hadoop\nexport HADOOP_HOME=/usr/local/hadoop\n:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
+RUN sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop/:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
+
+
+
+RUN mkdir $HADOOP_PREFIX/input
+RUN cp $HADOOP_PREFIX/etc/hadoop/*.xml $HADOOP_PREFIX/input
+
+# pseudo distributed
+ADD core-site.xml.template $HADOOP_PREFIX/etc/hadoop/core-site.xml.template
+RUN sed s/HOSTNAME/localhost/ /usr/local/hadoop/etc/hadoop/core-site.xml.template > /usr/local/hadoop/etc/hadoop/core-site.xml
+ADD hdfs-site.xml $HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
+
+ADD mapred-site.xml $HADOOP_PREFIX/etc/hadoop/mapred-site.xml
+ADD yarn-site.xml $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
+
+RUN $HADOOP_PREFIX/bin/hdfs namenode -format
+
+# fixing the libhadoop.so like a boss
+RUN rm -rf /usr/local/hadoop/lib/native
+RUN mv /tmp/native /usr/local/hadoop/lib
+
+ADD ssh_config /root/.ssh/config
+RUN chmod 600 /root/.ssh/config
+RUN chown root:root /root/.ssh/config
+
+# # installing supervisord
+# RUN yum install -y python-setuptools
+# RUN easy_install pip
+# RUN curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -o - | python
+# RUN pip install supervisor
+#
+# ADD supervisord.conf /etc/supervisord.conf
+
+ADD bootstrap.sh /etc/bootstrap.sh
+RUN chown root:root /etc/bootstrap.sh
+RUN chmod 700 /etc/bootstrap.sh
+
+ENV BOOTSTRAP /etc/bootstrap.sh
+
+# workingaround docker.io build error
+RUN ls -la /usr/local/hadoop/etc/hadoop/*-env.sh
+RUN chmod +x /usr/local/hadoop/etc/hadoop/*-env.sh
+RUN ls -la /usr/local/hadoop/etc/hadoop/*-env.sh
+
+# fix the 254 error code
+RUN sed  -i "/^[^#]*UsePAM/ s/.*/#&/"  /etc/ssh/sshd_config
+RUN echo "UsePAM no" >> /etc/ssh/sshd_config
+RUN echo "Port 2122" >> /etc/ssh/sshd_config
+
+RUN service sshd start && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -mkdir -p /user/root
+RUN service sshd start && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -put $HADOOP_PREFIX/etc/hadoop/ input
+
+CMD ["/etc/bootstrap.sh", "-d"]
+
+# Hdfs ports
+EXPOSE 50010 50020 50070 50075 50090 8020 9000
+# Mapred ports
+EXPOSE 19888
+#Yarn ports
+EXPOSE 8030 8031 8032 8033 8040 8042 8088
+#Other ports
+EXPOSE 49707 2122
