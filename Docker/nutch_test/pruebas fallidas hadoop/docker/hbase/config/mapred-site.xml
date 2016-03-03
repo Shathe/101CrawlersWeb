@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+  <property>
+    <name>mapred.local.dir</name>
+    <value>/home/hduser/data/hadoop/cache/mapred-local</value>
+  </property>
+  <property>
+    <name>mapred.temp.dir</name>
+    <value>/home/hduser/data/hadoop/cache/mapred-tmp</value>
+  </property>
+  <property>
+    <name>mapred.system.dir</name>
+    <value>/home/hduser/data/hadoop/mapred-system</value>
+  </property>
+</configuration>

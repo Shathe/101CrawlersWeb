@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<configuration>
+
+    <property>
+        <name>http.agent.name</name>
+        <value>Mozilla/5.0</value>
+    </property>
+    <property>
+        <name>http.robots.agents</name>
+        <value>Mozilla/5.0,*</value>
+    </property>
+    <property>
+        <name>http.agent.description</name>
+        <value>Mozilla/5</value>
+    </property>
+    <property>
+        <name>http.agent.version</name>
+        <value>0.0.1</value>
+    </property>
+    <property>
+        <name>http.content.limit</name>
+        <value>-1</value>
+    </property>
+    <property>
+        <name>storage.data.store.class</name>
+        <value>org.apache.gora.cassandra.store.CassandraStore</value>
+        <description>Default class for storing data</description>
+    </property>
+    <property>
+        <name>plugin.includes</name>
+        <value>protocol-http|urlfilter-regex|parse-(html|tika)|index-(basic|anchor|more|html)|urlnormalizer-(pass|regex|basic)|scoring-opic|protocol-httpclient|language-identifier|indexer-solr</value>
+        <description>Regular expression naming plugin directory names to
+            include. Any plugin not matching this expression is excluded.
+            In any case you need at least include the nutch-extensionpoints plugin. By
+            default Nutch includes crawling just HTML and plain text via HTTP,
+            and basic indexing and search plugins. In order to use HTTPS please enable
+            protocol-httpclient, but be aware of possible intermittent problems with the
+            underlying commons-httpclient library.
+        </description>
+    </property>
+</configuration>

@@ -1,5 +1,9 @@
--Analizar configuraciones mínimas
-Mirar a ver si se peude poner hadoop de forma facil, lo que esabas haciedno y has comentado
+-Evaluar una librería para el shell
+Mirar lo de git
 
+-Buscar y analizar ejemplos del uso de YAML para configuración
+Mirar git 
+
+-Poder hacer todas as operaciones que están refleajdas en el diagrama
 -Modificar los scripts actuales para poder realizar dichas configuraciones
 -Implementar el DSL y realiazr su documentación
