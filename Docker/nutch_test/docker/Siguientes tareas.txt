@@ -2,8 +2,17 @@
 Mirar lo de git
 
 -Buscar y analizar ejemplos del uso de YAML para configuración
-Mirar git 
+Mirar git
 
 -Poder hacer todas as operaciones que están refleajdas en el diagrama
 -Modificar los scripts actuales para poder realizar dichas configuraciones
 -Implementar el DSL y realiazr su documentación
+
+
+hacer que arrancar nutch sea con el ortro comando
+parar nutch
+extraer info
+eliminar contendor
+
+
+¿El que se tiene ahora tiene hadoop con bin/crawl, intentar ponerlo solo instalandolo y poniendo la variable de path 

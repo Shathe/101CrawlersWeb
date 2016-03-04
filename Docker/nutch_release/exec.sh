@@ -3,12 +3,35 @@
 idContainer=$(docker ps -a | head -2 | tail -1 | awk '{print $1;}')
 #Este id es para pruebas, lo mejor seria pasar el id por parametro habiendolo guarado nada mas crearlo
 
-#bin/crawl <seedDir> <crawlDir> <solrURL> <numberOfRounds>
+while test $# -gt 0; do
+        case "$1" in
+                -h|--help)
+                        echo 'usage' $0 '[-id idContainer]'
+                        echo " "
+                        echo "options:"
+                        echo "-i, --id                  specify an container id if not, it will stop the last one the system created"
+                        exit 0
+                        ;;
+                -i|--id)
+                        shift
+                        if test $# -gt 0; then
+                                idContainer=$1
+                        else
+                                echo "no id specified"
+                                exit 1
+                        fi
+                        shift
+                        ;;
+                        *)
+                        echo 'bad usage'
+                        echo 'usage' $0 '[-id idContainer]'
+                        echo " "
+                        echo "options:"
+                        echo "-i, --id                  specify an container id if not, it will stop the last one the system created"
+                        exit 0
+                        ;;
 
-#el crawl llevarlo a >>devnull y luego hacer un cat de dump aqui fuer para tenerlo en tu ordena
+        esac
+done
 
-if test "$#" -ne 1; then
   docker exec  $idContainer  sh crawler/run.sh
-else
-  docker exec  $1  sh crawler/run.sh
-fi

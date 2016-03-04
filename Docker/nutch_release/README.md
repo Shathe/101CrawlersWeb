@@ -12,11 +12,15 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
    El mensaje que no te tiene que aparecer es `'Cannot connect to the Docker daemon. Is 'docker daemon' running on this host?'` lo cual significará que se ha configurado mal docker.
 
 
-1. Ejecutar el script build.sh para crear la imagen de docker. Uso: sh build.sh nombre seed 
-   Donde el nombre es el nombre de la imagen que se le quiera dar y seed es la semilla para nutch. (En la siguiente versión se podrán introducir varias semillas y más configuraciones)
-   Ejemplo ejecucion: 
+1. Ejecutar el script build.sh para crear la imagen de docker (En la siguiente versión se podrán introducir más configuraciones).
+   Ayuda:
+   usage build.sh [ -n imageName -s numberOfSeeds (seed)* ]
+    options:
+    -n, --name                  sets the name of the image, if there's no name, it will be set as a random name
+    -s, --seed                  first specify the number of seed(s), followed by the seed(s) for the crawl
+   Ejemplo ejecucion:
    ```
-   $> sh build.sh contendor1 http://www.google.es
+   $> sh build.sh -n contendor1 -s 2 http://www.google.es http://www.yahoo.es
    ```
    Salida deseada:
    ```
@@ -33,23 +37,33 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
    Successfully built 24cb54109da2
    ````
 
-1. Ejecutar start.sh para arrancar la imagen en un contenedor. Su uso es `sh start.sh [idImagen]`
+1. Ejecutar start.sh para arrancar la imagen en un contenedor.
+   Ayuda:
+    usage start.sh [--id idImage]
+    options:
+    -i, --id                  specify an image id if not, it will stop the last one the system created
+
    Es decir, se le puede pasar el ID de la imagen docker la cual se quiere arrancar, o si no se le pasa, se ejecturá con la última imagen creada en el sistema.
    Ejemplo:
    ```
-   $> sh start.sh 
+   $> sh start.sh
    ```
    Salida:
    ````
-   5d0c8c3765be5d5710ac4d2b91283b146e52770f8baf68722bd344e4c8aa9a0a 
+   5d0c8c3765be5d5710ac4d2b91283b146e52770f8baf68722bd344e4c8aa9a0a
    ````
    Que es una clave generada
 
-1. Ejecutar exec.sh para arrancar nutch. Su uso es `sh exec.sh [idContenedor]`
+1. Ejecutar exec.sh para arrancar nutch.
+   Ayuda:
+    usage exec.sh [-id idContainer]
+    options:
+    -i, --id                  specify an container id if not, it will stop the last one the system created
+
    Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere arrancar nuch, o si no se le pasa, se ejecturá en el último contenedor creado en el sistema.
-   Ejemplo: 
+   Ejemplo:
    ```
-   sh exec.sh 
+   sh exec.sh
    ```
    Salida deseada:
    ```
@@ -71,4 +85,35 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
  ```
 
 
+ 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh
+    Ayuda:
+    usage pararNutch.sh [--id idContainer]
+    options:
+    -i, --id                  specify an container id if not, it will stop nutch in the last container the system created
 
+    Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere parar nuch, o si no se le pasa, se parará en el último contenedor creado en el sistema.
+    Ejemplo:
+    ```
+    sh stopNutch.sh
+    ```
+    Salida deseada:
+    ```
+    Nutch stopped in' (idContainer)
+  ```
+
+
+  1. Si en algún momento se quiere parar el contenedor docker, se debe ejecutar stopContainer.sh
+     Ayuda:
+     usage stopContainer.sh [--id idContainer]
+     options:
+     -i, --id                  specify an container id if not, it will stop the last one the system created
+
+     Es decir, se le puede pasar el ID del contenedor docker el cual se quiere parar, o si no se le pasa, se parará el último contenedor creado en el sistema.
+     Ejemplo:
+     ```
+     sh stopContainer.sh
+     ```
+     Salida deseada:
+     ```
+     (idContainer) stopped
+   ```

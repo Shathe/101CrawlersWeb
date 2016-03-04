@@ -51,7 +51,7 @@ RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 
 #default seed
 ARG seed='http://www.google.es'
-RUN echo $seed >> crawler/urls/seeds.txt
+RUN echo $seed > crawler/urls/seeds.txt
 
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
