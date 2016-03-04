@@ -85,8 +85,8 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
  ```
 
 
- 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh
-    Ayuda:
+ 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh.
+    Ayuda:\n
     usage pararNutch.sh [--id idContainer]
     options:
     -i, --id                  specify an container id if not, it will stop nutch in the last container the system created
@@ -98,7 +98,7 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
     ```
     Salida deseada:
     ```
-    Nutch stopped in' (idContainer)
+    Nutch stopped in (idContainer)
   ```
 
 
