@@ -13,11 +13,17 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
 
 
 1. Ejecutar el script build.sh para crear la imagen de docker (En la siguiente versión se podrán introducir más configuraciones).
+
    Ayuda:
+
    usage build.sh [ -n imageName -s numberOfSeeds (seed)* ]
+
     options:
+
     -n, --name                  sets the name of the image, if there's no name, it will be set as a random name
+
     -s, --seed                  first specify the number of seed(s), followed by the seed(s) for the crawl
+
    Ejemplo ejecucion:
    ```
    $> sh build.sh -n contendor1 -s 2 http://www.google.es http://www.yahoo.es
@@ -56,8 +62,11 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
 
 1. Ejecutar exec.sh para arrancar nutch.
    Ayuda:
+
     usage exec.sh [-id idContainer]
+
     options:
+
     -i, --id                  specify an container id if not, it will stop the last one the system created
 
    Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere arrancar nuch, o si no se le pasa, se ejecturá en el último contenedor creado en el sistema.
@@ -85,18 +94,12 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
  ```
 
 
- 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh
-
-
-    Ayuda:
-
+ 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh. Ayuda:
 
     usage pararNutch.sh [--id idContainer]
 
-
     options:
 
-    
     -i, --id                  specify an container id if not, it will stop nutch in the last container the system created
 
     Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere parar nuch, o si no se le pasa, se parará en el último contenedor creado en el sistema.
@@ -112,8 +115,11 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
 
   1. Si en algún momento se quiere parar el contenedor docker, se debe ejecutar stopContainer.sh
      Ayuda:
+
      usage stopContainer.sh [--id idContainer]
+
      options:
+
      -i, --id                  specify an container id if not, it will stop the last one the system created
 
      Es decir, se le puede pasar el ID del contenedor docker el cual se quiere parar, o si no se le pasa, se parará el último contenedor creado en el sistema.
