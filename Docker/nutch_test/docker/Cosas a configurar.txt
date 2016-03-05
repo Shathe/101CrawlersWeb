@@ -34,3 +34,16 @@ plugin.includes	protocol-http|urlfilter-regex|parse-(html|tika)|index-(basic|anc
 -(domain-urlfilter.txt) filtros de dominio
 
 -A donde extraer los datos en el contendor y a donde extraerlos desde el contendor. (docker cp o cat dump)
+
+
+que quieres guardar en cada paso del crawl (ahora esta puesto que solo el texto parseado)
+-nogenerate: No muestra el resultado la etapa de generate
+(URLs seleccionadas para descargar).
+-nofetch: No muestra el resultado de la etapa de fetch
+(lista de URLs que realmente ha podido descargar).
+-noparse: No muestra el resultado de la etapa de parse
+(lista de URLs procesadas y nuevas URLs encontradas).
+-nocontent: No muestra el contenido original de los documentos descargados.
+-noparsetext: No muestra el texto extraído de los documentos descargados
+(texto plano sin tags de estructura).
+-noparsedata: No muestra los enlaces extraídos de cada página

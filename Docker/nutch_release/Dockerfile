@@ -38,7 +38,6 @@ RUN ln -s nutch_source/runtime/local $HOME/nutch
 # Set up JAVA_HOME
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' >> $HOME/.bashrc
 
-
 RUN JAVA_HOME=/usr/lib/jvm/java-7-oracle
 RUN export JAVA_HOME
 RUN PATH=$PATH:$HOME
@@ -52,6 +51,6 @@ RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 #default seed
 ARG seed='http://www.google.es'
 RUN echo $seed > crawler/urls/seeds.txt
-
+RUN cat crawler/urls/seeds.txt
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle

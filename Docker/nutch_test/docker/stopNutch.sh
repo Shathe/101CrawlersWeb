@@ -23,7 +23,7 @@ while test $# -gt 0; do
                         fi
                         shift
                         ;;
-                        *)
+              *)
                         echo 'bad usage'
                         echo 'usage' $0 '[--id idContainer]'
                         echo " "

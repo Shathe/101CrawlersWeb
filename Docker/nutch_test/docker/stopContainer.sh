@@ -36,14 +36,14 @@ while test $# -gt 0; do
                         shift
                         ;;
                 *)
-                echo 'bad usage'
-                echo 'usage' $0 '[-t seconds --id idContainer]'
-                echo " "
-                echo "options:"
-                echo "-t, --time                sets the time to wait before stopping the crawl"
-                echo "-i, --id                  specify an container id if not, it will stop the last one the system created"
-                exit 0
-                ;;
+                        echo 'bad usage'
+                        echo 'usage' $0 '[-t seconds --id idContainer]'
+                        echo " "
+                        echo "options:"
+                        echo "-t, --time                sets the time to wait before stopping the crawl"
+                        echo "-i, --id                  specify an container id if not, it will stop the last one the system created"
+                        exit 0
+                        ;;
         esac
 done
 

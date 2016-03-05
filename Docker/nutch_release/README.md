@@ -63,35 +63,57 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
 1. Ejecutar exec.sh para arrancar nutch.
    Ayuda:
 
-    usage exec.sh [-id idContainer]
+    usage exec.sh [-id idContainer -r numberOfRounds]
 
     options:
 
     -i, --id                  specify an container id if not, it will stop the last one the system created
 
+    -r, --rounds               specify the number of rounds to execute (2 by defect)
+
    Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere arrancar nuch, o si no se le pasa, se ejecturá en el último contenedor creado en el sistema.
    Ejemplo:
    ```
-   sh exec.sh
+   sh exec.sh -r 2
    ```
    Salida deseada:
    ```
-   java: /usr/bin/java /usr/bin/X11/java /usr/share/java /usr/share/man/man1/java.1.gz
-   java version "1.7.0_80"
-   Java(TM) SE Runtime Environment (build 1.7.0_80-b15)
-   Java HotSpot(TM) 64-Bit Server VM (build 24.80-b11, mixed mode)
    Injector: starting at 2016-03-01 13:13:48
    Injector: crawlDb: micrawl/crawldb
    ..
    ..
    ..
    ..
-   Generator: starting at 2016-03-01 13:22:07
-   Generator: Selecting best-scoring urls due for fetch.
-   Generator: filtering: true
-   Generator: normalizing: true
-   Generator: jobtracker is 'local', generating exactly one partition.
+   LinkDb: merging with existing linkdb: micrawl/linkdb
+   LinkDb: finished at 2016-03-05 14:29:29, elapsed: 00:00:02
+   SegmentReader: dump segment: micrawl/segments/20160305142333
+   SegmentReader: done
  ```
+
+
+ 1. Para extraer la información recogida por el crawler, se debe ejecutar el script extraer.sh.
+    Ayuda:
+
+    usage extract.sh [--id idImage -p pathToCopy]
+
+    options:
+
+    -i, --id                  specify an image id if not, it will stop the last one the system created
+
+    -p, --path                specify the path where Nutch's output will be copy
+
+    Es decir, se le puede pasar el ID del contenedor docker en el cual se quiere arrancar nuch, o si no se le pasa, se ejecturá en el último contenedor creado en el sistema.
+    Ejemplo:
+    ```
+    sh extract.sh -p salida.txt
+    ```
+    Salida deseada:
+    ```
+    output copied to salida.txt
+
+  ```
+
+  Y en el fichero salida.txt se habrá volacado todo el contenido.
 
 
  1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh. Ayuda:
