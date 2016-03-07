@@ -44,9 +44,13 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
    ````
 
 1. Ejecutar start.sh para arrancar la imagen en un contenedor.
+
    Ayuda:
+
     usage start.sh [--id idImage]
+
     options:
+
     -i, --id                  specify an image id if not, it will stop the last one the system created
 
    Es decir, se le puede pasar el ID de la imagen docker la cual se quiere arrancar, o si no se le pasa, se ejecturá con la última imagen creada en el sistema.
@@ -88,10 +92,9 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
    LinkDb: finished at 2016-03-05 14:29:29, elapsed: 00:00:02
    SegmentReader: dump segment: micrawl/segments/20160305142333
    SegmentReader: done
- ```
+   ```
 
-
- 1. Para extraer la información recogida por el crawler, se debe ejecutar el script extraer.sh.
+1. Para extraer la información recogida por el crawler, se debe ejecutar el script extraer.sh.
     Ayuda:
 
     usage extract.sh [--id idImage -p pathToCopy]
@@ -110,13 +113,12 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
     Salida deseada:
     ```
     output copied to salida.txt
-
-  ```
+    ```
 
   Y en el fichero salida.txt se habrá volacado todo el contenido.
 
 
- 1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh. Ayuda:
+1. Si en algún momento se quiere parar nutch dentro de la imagen, se debe ejecutar stopNutch.sh. Ayuda:
 
     usage pararNutch.sh [--id idContainer]
 
@@ -135,7 +137,7 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
   ```
 
 
-  1. Si en algún momento se quiere parar el contenedor docker, se debe ejecutar stopContainer.sh
+1. Si en algún momento se quiere parar el contenedor docker, se debe ejecutar stopContainer.sh
      Ayuda:
 
      usage stopContainer.sh [--id idContainer]
@@ -152,4 +154,4 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
      Salida deseada:
      ```
      (idContainer) stopped
-   ```
+     ```
