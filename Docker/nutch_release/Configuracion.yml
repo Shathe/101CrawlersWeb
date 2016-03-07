@@ -1,5 +1,5 @@
-#Container Operating System
-OSbase:
+#Docker container Operating System
+DockerOS:
   name: ubuntu
   version: 14.04
 
