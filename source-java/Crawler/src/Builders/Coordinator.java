@@ -7,7 +7,7 @@ package Builders;
 
 import YalmReader.*;
 
-public class Coordiantor {
+public class Coordinator {
 
 	public static void main(String[] args) {
 		Configuration config = YamlConfigRunner.read(args[0]);
