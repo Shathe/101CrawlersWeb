@@ -15,5 +15,6 @@
 /source-java/Crawler/.project
 /source-java/Crawler/.settings/
 /source-java/Crawler/.gitignore/
-/source-java/RemoteSystemsTempFiles/
+/source-java/RemoteSystemsTempFiles
 /RemoteSystemsTempFiles/
+/.metadata
