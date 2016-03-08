@@ -6,3 +6,8 @@
 /site/build/
 /site/bin/
 /site/target/
+/source-java/.metadata
+/source-java/.recommenders
+/source-java/Crawler/.classpath
+/source-java/Crawler/.project
+/source-java/Crawler/.settings/
