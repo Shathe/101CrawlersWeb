@@ -2,9 +2,6 @@
 /site/.project
 /site/.springBeans
 /site/.settings/
-/site/.metadata/
-/site/.RemoteSystemsTempFiles/
-/site/.Servers/
 /site/.gradle/
 /site/build/
 /site/bin/
