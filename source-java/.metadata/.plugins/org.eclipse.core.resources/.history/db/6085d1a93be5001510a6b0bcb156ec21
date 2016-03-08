@@ -1,0 +1,29 @@
+import static java.lang.String.format;
+
+public final class Configuration {
+	private dockerOS dockerOS;
+	private crawlSystem crawlSystem;
+
+	public dockerOS getDockerOS() {
+		return dockerOS;
+	}
+
+	public void setDockerOS(dockerOS dockerOS) {
+		this.dockerOS = dockerOS;
+	}
+
+	public crawlSystem getCrawlSystem() {
+		return crawlSystem;
+	}
+
+	public void setCrawlSystem(crawlSystem crawlSystem) {
+		this.crawlSystem = crawlSystem;
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder().append(format("dockerOS: %s\n", dockerOS))
+				.append(format("crawlSystem: %s\n", crawlSystem)).toString();
+	}
+
+}

@@ -1,0 +1,45 @@
+import static java.lang.String.format;
+
+public final class Timeouts {
+	private String parser;
+	private String fetchTimes;
+	private String network;
+	  /*parser: 30 # parser.timeout
+    #The number of times a thread will delay when trying to fetch a page
+    fetchTimes: 100 # http.timeout
+    #The default network timeout, in millisecond
+    network: 10000 # http.timeout*/
+	
+	@Override
+	public String toString() {
+		 return new StringBuilder()
+					.append( format( "Timeouts:" ) )
+					.append( format( "	number of times a thread will delay when trying to fetch a page: %s\n", fetchTimes ) )
+					.append( format( "	seconds for the parsing of a document: %s\n", parser ) )
+					.append( format( "	network: %s\n", network ) )
+	                .toString();	}
+
+	public String getParser() {
+		return parser;
+	}
+
+	public void setParser(String parser) {
+		this.parser = parser;
+	}
+
+	public String getFetchTimes() {
+		return fetchTimes;
+	}
+
+	public void setFetchTimes(String fetchTimes) {
+		this.fetchTimes = fetchTimes;
+	}
+
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		this.network = network;
+	}
+}

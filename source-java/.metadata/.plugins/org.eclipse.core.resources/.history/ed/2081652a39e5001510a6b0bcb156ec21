@@ -1,0 +1,18 @@
+import static java.lang.String.format;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+public final class Configuration { 
+    private CrawlerConfig crawlSystem;
+    private DockerConfig dockerOS;
+ 
+    @Override
+    public String toString() {
+        return new StringBuilder()
+            .append( format( "Version: %s\n", dockerOS ) )
+            .append( format( "Released: %s\n", crawlSystem ) )
+            .toString();
+    }
+}

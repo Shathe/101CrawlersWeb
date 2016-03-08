@@ -1,0 +1,7 @@
+package Builders;
+
+import YalmReader;
+public class Coordiantor {
+	
+	YalmReader.YalmConfigReader ymlreader=new  YalmReader.YalmConfigReader();
+}

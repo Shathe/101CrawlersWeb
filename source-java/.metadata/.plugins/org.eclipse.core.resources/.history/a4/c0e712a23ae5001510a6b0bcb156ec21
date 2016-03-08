@@ -1,0 +1,33 @@
+import static java.lang.String.format;
+
+
+public final class Configuration { 
+    private dockerOS dockerOS;
+    private CrawlerConfig crawlSystem;
+
+
+	public CrawlerConfig getCrawlSystem() {
+		return crawlSystem;
+	}
+
+	public void setCrawlSystem(CrawlerConfig crawlSystem) {
+		this.crawlSystem = crawlSystem;
+	}
+
+	public dockerOS getDockerOS() {
+		return dockerOS;
+	}
+
+	public void setDockerOS(dockerOS dockerOS) {
+		this.dockerOS = dockerOS;
+	}
+	
+    @Override
+    public String toString() {
+        return new StringBuilder()
+            .append( format( "Version: %s\n", dockerOS ) )
+            .append( format( "Released: %s\n", crawlSystem ) )
+            .toString();
+    }
+
+}

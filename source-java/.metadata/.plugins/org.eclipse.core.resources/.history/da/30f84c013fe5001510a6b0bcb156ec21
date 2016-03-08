@@ -1,0 +1,67 @@
+import java.util.List;
+import static java.lang.String.format;
+
+public final class crawlSystem {
+	private String name;
+	private String version;
+    private List< String > seeds;
+	private String rounds;
+    private List< String > plugins;
+    private String infoCrawled;
+    private String maxFileLength;
+    private String maxCrawlDelay;
+    private String  linksLimitURL;
+    private String internalLinks;
+    private String queueMode;
+
+	public List<String> getSeeds() {
+		return seeds;
+	}
+
+	public void setSeeds(List<String> seeds) {
+		this.seeds = seeds;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String nombre) {
+		this.name = nombre;
+	}
+
+	public String getRounds() {
+		return rounds;
+	}
+
+	public void setRounds(String rounds) {
+		this.rounds = rounds;
+	}
+
+	public List<String> getPlugins() {
+		return plugins;
+	}
+
+	public void setPlugins(List<String> plugins) {
+		this.plugins = plugins;
+	}
+
+	@Override
+	public String toString() {
+        return new StringBuilder()
+                .append( format( "Crawler system: %s version %s\n", getName(), getVersion() ) )
+				.append( format( "Seeds: %s\n", seeds ) )
+				.append( format( "Plugins: %s\n", plugins ) )
+				.append( format( "number of rounds: %s\n", rounds ) )
+                .toString();
+	}
+
+}

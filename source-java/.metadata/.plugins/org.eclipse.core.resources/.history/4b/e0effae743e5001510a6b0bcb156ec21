@@ -1,0 +1,14 @@
+package Builders;
+
+import YalmReader.*;
+public class Coordiantor {
+	
+
+
+	public static void mani (String []args ){
+		Configuration config= YamlConfigRunner.read("config.yml");
+
+		System.out.println();
+
+	}
+}

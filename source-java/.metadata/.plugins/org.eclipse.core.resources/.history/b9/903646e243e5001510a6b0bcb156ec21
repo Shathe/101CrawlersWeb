@@ -1,0 +1,9 @@
+package Builders;
+
+import YalmReader.*;
+public class Coordiantor {
+	
+	Configuration config= YamlConfigRunner.read("config.yml");
+
+	
+}

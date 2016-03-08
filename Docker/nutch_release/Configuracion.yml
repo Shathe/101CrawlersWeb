@@ -1,5 +1,5 @@
 #Docker container Operating System
-DockerOS:
+dockerOS:
   name: ubuntu
   version: 14.04
 
@@ -7,12 +7,16 @@ DockerOS:
 crawlSystem:
     name: nutch
     version: 1.9
-    #seeds are separated by spaces
-    seeds: https://dzone.com/articles/using-yaml-java-application https://dzone.com/articles/
+    #seeds are separated by line break and preceded by '- '
+    seeds:
+      - https://dzone.com/articles/using-yaml-java-application
+      - https://dzone.com/articles/
     #number of rounds the crawler is going to iterate
     rounds: 2
-    #plugins are separated by spaces
-    plugins: nombrePlugin1 nombrePlugin2
+    #seeds are separated by line break and preceded by '- '
+    plugins:
+      - nombrePlugin1
+      - nombrePlugin2
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
     #The length limit for downloaded content
@@ -27,7 +31,7 @@ crawlSystem:
     internalLinks: true # db.ignore.internal.links
     # Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
     queueMode: byHost # fetcher.queue.mode
-    Timeouts:
+    timeouts:
       #	Timeout in seconds for the parsing of a document
       parser: 30 # parser.timeout
       #The number of times a thread will delay when trying to fetch a page

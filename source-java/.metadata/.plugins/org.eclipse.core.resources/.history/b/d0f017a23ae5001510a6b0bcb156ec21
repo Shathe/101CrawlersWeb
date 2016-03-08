@@ -1,0 +1,38 @@
+import java.util.List;
+
+public final class CrawlerConfig {
+	private String name;
+	private String version;
+
+    private List< String > protocols;
+
+	public List<String> getSeeds() {
+		return protocols;
+	}
+
+	public void setSeeds(List<String> seeds) {
+		this.protocols = seeds;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String nombre) {
+		this.name = nombre;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Crawler system: '%s' version '%s'\n"
+				+ "seeds: %s \n", getName(), getVersion());
+	}
+}
