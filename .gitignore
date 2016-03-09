@@ -18,6 +18,13 @@
 /butler/.settings/
 /butler/.gitignore/
 /butler/RemoteSystemsTempFiles
+/.metadata
+/.recommenders
+/.classpath
+/.project
+/.gradle
+/.settings/
+/.gitignore/
 /RemoteSystemsTempFiles/
 /.gradle
 /.metadata
