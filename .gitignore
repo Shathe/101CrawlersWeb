@@ -13,10 +13,10 @@
 /site/target/
 /butler/.metadata
 /butler/.recommenders
-/butler/Crawler/.classpath
-/butler/Crawler/.project
-/butler/Crawler/.settings/
-/butler/Crawler/.gitignore/
+/butler/.classpath
+/butler/.project
+/butler/.settings/
+/butler/.gitignore/
 /butler/RemoteSystemsTempFiles
 /RemoteSystemsTempFiles/
 /.gradle

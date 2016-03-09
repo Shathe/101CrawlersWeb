@@ -1,6 +1,6 @@
-package Builders;
+package es.unizar.iaaa.crawler.butler.builders;
 
-import YalmReader.Configuration;
+import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 public class Adaptador {
 

@@ -1,0 +1,18 @@
+5DockerOS: Docker image based on ubuntu version 14.04
+/CrawlSystem: Crawler system: nutch version 1.9
+^	Seeds: [https://dzone.com/articles/using-yaml-java-application, https://dzone.com/articles/]
+)	Plugins: [nombrePlugin1, nombrePlugin2]
+	Links limit for URL: 2
+"	format of the info Crawled: text
+	Number of rounds: 10000
+	Max Crawl delay to fetch: 50
+,	length limit for downloaded content: 65536
+,	links from the same host are ignored: true
+	queue Mode: byHost
+	Timeouts:
+G		number of times a thread will delay when trying to fetch a page: 100
+,		seconds for the parsing of a document: 30
+		network: 10000
+
+
+

@@ -5,10 +5,9 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
+import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-
-import YalmReader.Configuration;
 
 public class DockerBuilder {
 
@@ -31,11 +30,12 @@ public class DockerBuilder {
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		try {
-			fichero = new FileWriter("Dockerfile");
+			//Crear el fichero docker
+			/*fichero = new FileWriter("Dockerfile");
 			pw = new PrintWriter(fichero);
 
 			pw.println("Linea ");
-
+			 */
 			/*
 			 * Si no se he insertado valor en alguna configuracion saldrá el valor null
 			 * comprbarlo al hacer los ficheros de salida
