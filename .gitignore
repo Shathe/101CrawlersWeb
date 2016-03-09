@@ -1,3 +1,5 @@
+/.idea
+/IñigoAlonso.iml
 /site/.classpath
 /site/.project
 /site/.springBeans
@@ -9,12 +11,13 @@
 /site/build/
 /site/bin/
 /site/target/
-/source-java/.metadata
-/source-java/.recommenders
-/source-java/Crawler/.classpath
-/source-java/Crawler/.project
-/source-java/Crawler/.settings/
-/source-java/Crawler/.gitignore/
-/source-java/RemoteSystemsTempFiles
+/butler/.metadata
+/butler/.recommenders
+/butler/Crawler/.classpath
+/butler/Crawler/.project
+/butler/Crawler/.settings/
+/butler/Crawler/.gitignore/
+/butler/RemoteSystemsTempFiles
 /RemoteSystemsTempFiles/
+/.gradle
 /.metadata

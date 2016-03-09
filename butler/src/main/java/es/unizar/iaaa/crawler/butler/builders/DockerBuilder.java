@@ -3,7 +3,7 @@
  * Quality supervised by: F.J. Lopez Pellicer
  */
 
-package Builders;
+package es.unizar.iaaa.crawler.butler.builders;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;

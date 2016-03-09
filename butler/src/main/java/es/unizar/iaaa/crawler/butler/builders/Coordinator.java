@@ -3,17 +3,14 @@
  * Quality supervised by: F.J. Lopez Pellicer
  */
 
-package Builders;
+package es.unizar.iaaa.crawler.butler.builders;
 
-import YalmReader.*;
 
 public class Coordinator {
 
-	public static void main(String[] args) {
-		Configuration config = YamlConfigRunner.read(args[0]);
-		System.out.println(config.toString());
-		/*
-		 * Creates a dockerfile and configuration files for 
+    public static void main(String[] args) {
+        /*
+         * Creates a dockerfile and configuration files for
 		 * the crawl system 
 		 */
 		
@@ -26,5 +23,5 @@ public class Coordinator {
 		 * 
 		 * un adaptador intermedio
 		 */
-	}
+    }
 }
