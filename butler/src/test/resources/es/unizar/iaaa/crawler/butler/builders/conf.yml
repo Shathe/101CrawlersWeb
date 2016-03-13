@@ -18,7 +18,7 @@ crawlSystem:
     #The plugin.xml must be in the same directory and it has to be named as
     #the plugin
     plugins:
-      - protocol-file protocol-file.jar
+      - src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.jar
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
     #The length limit for downloaded content
