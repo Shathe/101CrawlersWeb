@@ -10,17 +10,18 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
 public class YamlConfigRunner {
 
-    public static Configuration read(String file) {
+    public static Configuration read(Path file) {
         Yaml yaml;
         yaml = new Yaml();
         InputStream in;
         try {
-            in = Files.newInputStream(Paths.get(file));
+            in = Files.newInputStream(file);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             return null;

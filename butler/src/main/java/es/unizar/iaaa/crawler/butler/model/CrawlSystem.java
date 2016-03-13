@@ -19,7 +19,6 @@ public final class CrawlSystem {
     private String maxFileLength;
     private String maxCrawlDelay;
     private String linksLimitURL;
-    private String internalLinks;
     private String queueMode;
     private Timeouts timeouts;
 
@@ -97,14 +96,6 @@ public final class CrawlSystem {
         this.linksLimitURL = linksLimitURL;
     }
 
-    public String getInternalLinks() {
-        return internalLinks;
-    }
-
-    public void setInternalLinks(String internalLinks) {
-        this.internalLinks = internalLinks;
-    }
-
     public String getQueueMode() {
         return queueMode;
     }
@@ -131,7 +122,6 @@ public final class CrawlSystem {
                 format("	Number of rounds: %s\n", linksLimitURL) +
                 format("	Max Crawl delay to fetch: %s\n", maxCrawlDelay) +
                 format("	length limit for downloaded content: %s\n", maxFileLength) +
-                format("	links from the same host are ignored: %s\n", internalLinks) +
                 format("	queue Mode: %s\n", queueMode) +
                 format("	%s\n", timeouts);
 

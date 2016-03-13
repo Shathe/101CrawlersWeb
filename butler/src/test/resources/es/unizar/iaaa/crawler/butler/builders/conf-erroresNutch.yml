@@ -1,24 +1,25 @@
 #Docker container Operating System
 dockerOS:
-  name: ubuntu
-  version: 14.04
+  name: fedora
+  version: 10.0
 
 #Crawling System
 crawlSystem:
     name: nutch
-    version: 1.9
+    version: 1.2
     #seeds are separated by line break and preceded by '- '
     seeds:
       - https://dzone.com/articles/using-yaml-java-application
       - https://dzone.com/articles/
     #number of rounds the crawler is going to iterate
     rounds: 2
-    #plugins are separated by line break and preceded by '- '
+       #plugins are separated by line break and preceded by '- '
     #First goes the plugin named followed by the jar files.
     #The plugin.xml must be in the same directory and it has to be named as
     #the plugin
     plugins:
-      - protocol-file protocol-file.jar
+      - nombrePlugin1 file.jar file2.jar
+      - nombrePlugin2 file.jar
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
     #The length limit for downloaded content
@@ -29,6 +30,7 @@ crawlSystem:
     maxCrawlDelay: 50 # fetcher.max.crawl.delay
     #Maximum number of Inlinks per URL to be kept in LinkDb.
     linksLimitURL: 10000 # db.max.inlinks
+    # If true, when adding new links to a page, links from the same host are ignored.
     # Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
     queueMode: byHost # fetcher.queue.mode
     timeouts:

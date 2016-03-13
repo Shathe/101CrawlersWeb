@@ -18,9 +18,11 @@ crawlSystem:
     #The plugin.xml must be in the same directory and it has to be named as
     #the plugin
     plugins:
-      - protocol-file protocol-file.jar
+      - nombrePlugin1 file.jar file2.jar
+      - nombrePlugin2 file.jar
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
+    
     #The length limit for downloaded content
     maxFileLength: 65536 # file.content.limit  and http.content.limit
     # If the Crawl-Delay in robots.txt is set to greater than this value (in seconds)
@@ -29,6 +31,8 @@ crawlSystem:
     maxCrawlDelay: 50 # fetcher.max.crawl.delay
     #Maximum number of Inlinks per URL to be kept in LinkDb.
     linksLimitURL: 10000 # db.max.inlinks
+    # If true, when adding new links to a page, links from the same host are ignored.
+    internalLinks: true # db.ignore.internal.links
     # Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
     queueMode: byHost # fetcher.queue.mode
     timeouts:

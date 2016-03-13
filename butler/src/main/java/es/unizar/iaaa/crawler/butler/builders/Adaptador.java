@@ -4,6 +4,9 @@ import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 public class Adaptador {
 
+	/* Valida los fichero de configuración, si son válidos, elegirá a que builders pasarselos
+	 * para que cree los ficheros de configuracion del crawler y dokcer
+	 */
 	private Configuration configuracion;
 
 	public Adaptador(Configuration config) {
@@ -18,9 +21,5 @@ public class Adaptador {
 		this.configuracion = configuracion;
 	}
 	
-	public boolean validar(){
-		boolean valido=true;
-		/* comprobar que todos los valores son del tipo y rango esperado */
-		return valido;
-	}
+	
 }
