@@ -16,50 +16,50 @@ import static java.lang.String.format;
 
 public final class Configuration {
 
-	private DockerOS dockerOS;
-	private CrawlSystem crawlSystem;
+    private DockerOS dockerOS;
+    private CrawlSystem crawlSystem;
 
 	/* Getters and setters */
 
-	public DockerOS getDockerOS() {
-		return dockerOS;
-	}
+    public DockerOS getDockerOS() {
+        return dockerOS;
+    }
 
-	public void setDockerOS(DockerOS dockerOS) {
-		this.dockerOS = dockerOS;
-	}
+    public void setDockerOS(DockerOS dockerOS) {
+        this.dockerOS = dockerOS;
+    }
 
-	public CrawlSystem getCrawlSystem() {
-		return crawlSystem;
-	}
+    public CrawlSystem getCrawlSystem() {
+        return crawlSystem;
+    }
 
-	public void setCrawlSystem(CrawlSystem crawlSystem) {
-		this.crawlSystem = crawlSystem;
-	}
+    public void setCrawlSystem(CrawlSystem crawlSystem) {
+        this.crawlSystem = crawlSystem;
+    }
 
-	@Override
-	public String toString() {
-		return format("DockerOS: %s\n", dockerOS) + format("CrawlSystem: %s\n", crawlSystem);
-	}
+    @Override
+    public String toString() {
+        return format("DockerOS: %s\n", dockerOS) + format("CrawlSystem: %s\n", crawlSystem);
+    }
 
-	/* Valida si el contenido es correcto */
-	public boolean isOk() {
-		Validator validator = new ConfigurationValidator();
-		ValidationResult result = validator.validate(this);
-		return result.isOk();
-	}
+    /* Valida si el contenido es correcto */
+    public boolean isOk() {
+        Validator validator = new ConfigurationValidator();
+        ValidationResult result = validator.validate(this);
+        return result.isOk();
+    }
 
-	/* Devuelve el codigo de error correspondiente a esta configuracion */
-	public ErroresValidar getLatestErrorCode() {
-		Validator validator = new ConfigurationValidator();
-		ValidationResult result = validator.validate(this);
-		return result.getFirstErrorCode();
-	}
+    /* Devuelve el codigo de error correspondiente a esta configuracion */
+    public ErroresValidar getLatestErrorCode() {
+        Validator validator = new ConfigurationValidator();
+        ValidationResult result = validator.validate(this);
+        return result.getFirstErrorCode();
+    }
 
-	/* Devuelve el error/ok  de esta configuracion */
-	public Object getLatestErrorValue() {
-		Validator validator = new ConfigurationValidator();
-		ValidationResult result = validator.validate(this);
-		return result.getFirstErrorValue();
-	}
+    /* Devuelve el error/ok  de esta configuracion */
+    public Object getLatestErrorValue() {
+        Validator validator = new ConfigurationValidator();
+        ValidationResult result = validator.validate(this);
+        return result.getFirstErrorValue();
+    }
 }
