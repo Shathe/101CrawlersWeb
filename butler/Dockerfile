@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+From ubuntu:14.04
 MAINTAINER inigo alonso <inigol22zgz@gmail.com>
 
 WORKDIR /root/
@@ -24,6 +24,7 @@ RUN JAVA_HOME=/usr/lib/jvm/java-7-oracle
 RUN export JAVA_HOME
 RUN PATH=$PATH:$HOME
 RUN echo PATH=$PATH:$HOME >> /etc/environment
+
 #Para conseguir que pueda configurarse la versión de nutch tendria que hacerse con
 #RUN svn checkout https://svn.apache.org/repos/asf/nutch/trunk/ nutch_source && cd nutch_source && ant para la ultima version disponible o
 #RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-1.9/ nutch_source && cd nutch_source && ant
@@ -37,13 +38,19 @@ RUN echo PATH=$PATH:$HOME >> /etc/environment
 #Run mkdir crawler/micrawl/linkbd
 #Run mkdir crawler/micrawl/crawlbd
 
-
 RUN git clone https://github.com/Shathe/nutchCrawlers.git crawler && cd crawler
 # Checkout and build the nutch trunk
 
-#default seed
-ARG seed='http://www.google.es'
-RUN echo $seed > crawler/urls/seeds.txt
-RUN cat crawler/urls/seeds.txt
-
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+RUN echo https://dzone.com/articles/using-yaml-java-application >> crawler/urls/seeds.txt
+RUN echo https://dzone.com/articles/ >> crawler/urls/seeds.txt
+ADD src/test/resources/es/unizar/iaaa/crawler/butler/builders//home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/juntarSalidas.sh crawler/juntarSalidas.sh
+ADD src/test/resources/es/unizar/iaaa/crawler/butler/builders//home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/run.sh crawler/run.sh
+ADD /home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/nutch-site.xml crawler/conf/nutch-site.xml
+
+Run mkdir crawler/plugins/protocol-file
+ADD /home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.xml crawler/plugins/protocol-file/plugin.xml
+ADD /home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.jar crawler/plugins/protocol-file/protocol-file.jar
+Run mkdir crawler/plugins/protocol-file2
+ADD /home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file2.xml crawler/plugins/protocol-file2/plugin.xml
+ADD /home/shathe/Documents/workspaceSpring/Crawlers101/butler/src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file2.jar crawler/plugins/protocol-file2/protocol-file2.jar

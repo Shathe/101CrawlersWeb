@@ -1,5 +1,5 @@
 Ayudas para configurar:
-
+para el plugin mirar la carpeta de plugins y lo del nutch.site
 - Poder añadir plugins ->
 In order to get Nutch to use your plugin, you need to edit your conf/nutch-site.xml file and add in a block like this:
 <property>
@@ -28,8 +28,6 @@ maxCrawlDelay: 50 # fetcher.max.crawl.delay
 #Maximum number of Inlinks per URL to be kept in LinkDb.
 linksLimitURL: 10000 # db.max.inlinks
 # If true, when adding new links to a page, links from the same host are ignored.
-internalLinks: true # db.ignore.internal.links
-# Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
 queueMode: byHost # fetcher.queue.mode
 Timeouts:
   #	Timeout in seconds for the parsing of a document
