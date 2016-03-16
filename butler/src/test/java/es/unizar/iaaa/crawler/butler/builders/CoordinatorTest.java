@@ -76,23 +76,7 @@ public class CoordinatorTest {
                 Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
     }
 
-    @Test
-    public void DockerBuilder() throws URISyntaxException {
-        Configuration config;
-        config = readConfiguration("conf.yml");
-        AdaptadorBuilder dockerbuilder = new AdaptadorBuilder(config);
-        dockerbuilder.crearFicherosConfiguracion();
-        assertEquals("DefaultValidator no informa del tipo de error",
-                true, checkFileExists("Dockerfile"));
-        assertEquals("DefaultValidator no informa del tipo de error",
-                true, checkFileExists("nutch-site.xml"));
-        assertEquals("DefaultValidator no informa del tipo de error",
-                true, checkFileExists("juntarSalidas.sh"));
-        assertEquals("DefaultValidator no informa del tipo de error",
-                true, checkFileExists("run.sh"));
-    }
 
-<<<<<<< HEAD
 	@Test
 	public void builder() throws URISyntaxException {
 		Configuration config;
@@ -109,13 +93,11 @@ public class CoordinatorTest {
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id+"/run.sh"));
 	}
-=======
     private Configuration readConfiguration(String route) throws URISyntaxException {
         Configuration config;
         config = YamlConfigRunner.read(Paths.get(CoordinatorTest.class.getResource(route).toURI()));
         return config;
     }
->>>>>>> 5a23b7e7125595cf928ede0f70b89763eea9ce0e
 
     private boolean checkFileExists(String file) {
         try {
