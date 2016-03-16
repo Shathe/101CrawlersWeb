@@ -1,3 +1,8 @@
+/Crawlers101
+/butler/run.sh
+/butler/juntarSalidas.sh
+/butler/Dockerfile
+/butler/nutch-site.xml
 ### Eclipse template
 *.pydevproject
 .metadata

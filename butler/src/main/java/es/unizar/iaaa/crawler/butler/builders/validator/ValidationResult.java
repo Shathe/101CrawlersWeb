@@ -4,10 +4,10 @@ import es.unizar.iaaa.crawler.butler.builders.validator.Validator.ErroresValidar
 
 public interface ValidationResult {
 
-	boolean isOk();
+    boolean isOk();
 
-	ErroresValidar getFirstErrorCode();
+    ErroresValidar getFirstErrorCode();
 
-	Object getFirstErrorValue();
+    Object getFirstErrorValue();
 
 }
