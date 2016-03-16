@@ -5,43 +5,34 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Random;
-import java.util.Scanner;
-
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.Random;
 
 public class AdaptadorBuilder {
 
-	private Configuration configuracion;
-	private final String resources = "src/test/resources/es/unizar/iaaa/crawler/butler/builders/";
+	private Configuration configuration;
 	private final String nombre;
 
 
 	public AdaptadorBuilder(Configuration config, String nombre) {
-		configuracion = config;
+		configuration = config;
 		this.nombre = nombre;
 	}
-    public String getResources() {
-        return resources;
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
-    public Configuration getConfiguracion() {
-        return configuracion;
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
-    public void setConfiguracion(Configuration configuracion) {
-        this.configuracion = configuracion;
-    }
-
-    /* Crear ficheros de configuracion dependiendo del sistema de crawling */
+    /* Crear ficheros de configuration dependiendo del sistema de crawling */
     public void crearFicherosConfiguracion() {
         /* Si está bien la configuración */
-        if (configuracion.isOk()) {
+        if (configuration.isOk()) {
 			/*
 			 * Aquí si hubiera varias posibilidades de sistemas de crawling o
 			 * OS's para docker, el adaptador
@@ -50,14 +41,21 @@ public class AdaptadorBuilder {
 			File theDir = new File(directoryName);
 			theDir.mkdir();
 			/* Primero se llama al builder de nutch y después al de docker */
-			CrawlerBuilder builder = new NutchBuilder(configuracion, resources, directoryName);
-			builder.crearNutchSite();
+			CrawlerBuilder builder = new NutchBuilder(configuration, directoryName);
+			builder.createNutchSite();
 
-			DockerBuilder dockerbuilder = new DockerBuilder(configuracion, resources, directoryName,builder);
-			dockerbuilder.crearDockerfile();
+
+            DockerBuilder dockerbuilder;
+            try {
+                dockerbuilder = new DockerBuilder(configuration,
+                    new File(getClass().getResource("/templates").toURI()), directoryName,builder);
+                dockerbuilder.crearDockerfile();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 		}
 		else{
-			System.out.println(configuracion.getLatestErrorValue());
+			System.out.println(configuration.getLatestErrorValue());
 		}
 	}
 

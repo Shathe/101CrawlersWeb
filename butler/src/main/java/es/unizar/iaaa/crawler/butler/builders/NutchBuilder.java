@@ -7,26 +7,17 @@ package es.unizar.iaaa.crawler.butler.builders;
 
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class NutchBuilder implements CrawlerBuilder {
 
-	private final String resources;
 	private final String directoryName;
 	private Configuration configuracion;
 
-	public NutchBuilder(Configuration config, String resources, String directoryName) {
+	public NutchBuilder(Configuration config, String directoryName) {
 		configuracion = config;
-		this.resources = resources;
 		this.directoryName = directoryName;
 	}
 
@@ -38,7 +29,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		this.configuracion = configuracion;
 	}
 
-	public void anadirDockerfile(PrintWriter pw) {
+	public void addDockerfile(PrintWriter pw) {
 		/* Descarga y preparación de carpetas para nutch */
 		pw.write("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
 				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant\n");
@@ -95,14 +86,14 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 	}
 
-	public void crearNutchSite() {
+	public void createNutchSite() {
 		if (configuracion.isOk()) {
 			createNutchSiteXml();
 		}
 	}
 
 	private void createNutchSiteXml() {
-		ArrayList<Property> properties = new ArrayList<Property>();
+		ArrayList<Property> properties = new ArrayList<>();
 		/* Añadimos posibles configuraciones */
 		properties.add(new Property("http.agent.name", directoryName));
 		properties.add(new Property("http.content.limit", configuracion.getCrawlSystem().getMaxFileLength()));
@@ -119,40 +110,25 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 		properties.add(new Property("plugin.includes", pluginsValue(configuracion.getCrawlSystem().getPlugins())));
 
-		FileWriter fichero = null;
-		PrintWriter pw = null;
-		try {
-			File theDir = new File(directoryName);
-
 			/*
 			 * Crea el fichero nutch-site.xml el cual contiene todas las
 			 * configuraciones personalizadas de nutch
 			 */
 
-			fichero = new FileWriter(theDir + "/nutch-site.xml");
-			pw = new PrintWriter(fichero);
+		try(PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "nutch-site.xml")))) {
 			pw.write("<?xml version=\"1.0\"?>" + "\n");
 			pw.write("<?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>" + "\n");
 			pw.write("<configuration>" + "\n");
 
-			for (int i = 0; i < properties.size(); i++) {
-				properties.get(i).add(pw);
-			}
+            for (Property property : properties) {
+                property.add(pw);
+            }
 
 			pw.write("</configuration>" + "\n");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (null != fichero)
-					fichero.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/* Añade una property a un fichero */
 	private void anadirProperty(PrintWriter pw, String nombre, String valor, String descripcion) {

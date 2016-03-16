@@ -4,6 +4,6 @@ import java.io.PrintWriter;
 
 public interface CrawlerBuilder {
 
-	public void crearNutchSite();
-	public void anadirDockerfile(PrintWriter pw);
+	void createNutchSite();
+	void addDockerfile(PrintWriter pw);
 }
