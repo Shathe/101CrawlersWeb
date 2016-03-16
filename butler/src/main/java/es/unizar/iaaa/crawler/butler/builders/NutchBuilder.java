@@ -8,6 +8,7 @@ package es.unizar.iaaa.crawler.butler.builders;
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 
@@ -31,101 +32,92 @@ public class NutchBuilder {
 
     public void crearNutchSite() {
         if (configuracion.isOk()) {
+            createNutchSiteXml();
+        }
+    }
 
-            FileWriter fichero = null;
-            PrintWriter pw = null;
-            try {
-                /*
-				 * Crea el fichero nutch-site.xml el cual contiene todas las configuraciones
-				 * personalizadas de nutch
-				 */
+    /*
+     * Crea el fichero nutch-site.xml el cual contiene todas las configuraciones
+     * personalizadas de nutch
+     */
+    private  void createNutchSiteXml()  {
 
-                fichero = new FileWriter("nutch-site.xml");
-                pw = new PrintWriter(fichero);
-                pw.write("<?xml version=\"1.0\"?>" + "\n");
-                pw.write("<?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>" + "\n");
-                pw.write("<configuration>" + "\n");
-				
+        try(PrintWriter pw = new PrintWriter(new FileWriter("nutch-site.xml"))) {
+            pw.write("<?xml version=\"1.0\"?>" + "\n");
+            pw.write("<?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>" + "\n");
+            pw.write("<configuration>" + "\n");
+
 				/* Añadimos el nombre aleatorio*/
-                anadirProperty(pw, "http.agent.name", getCadenaAlfanumAleatoria(10), "");
-				
+            anadirProperty(pw, "http.agent.name", getCadenaAlfanumAleatoria(10), "");
+
 				/* Añadimos si está en la configuración el tamaño máximo del fichero */
-                if (!campoVacio(configuracion.getCrawlSystem().getMaxFileLength())) {
-                    anadirProperty(pw, "http.content.limit", configuracion.getCrawlSystem().getMaxFileLength(), "");
-                    anadirProperty(pw, "file.content.limit", configuracion.getCrawlSystem().getMaxFileLength(), "");
-                } else {
-                    anadirProperty(pw, "http.content.limit", "-1", "");
-                    anadirProperty(pw, "file.content.limit", "-1", "");
-                }
-				
-				/* Añadimos si está en la configuración el el máximo de urls*/
-                if (!campoVacio(configuracion.getCrawlSystem().getLinksLimitURL())) {
-                    anadirProperty(pw, "db.max.outlinks.per.page", configuracion.getCrawlSystem().getLinksLimitURL(),
-                            "");
-                    anadirProperty(pw, "db.max.inlinks", configuracion.getCrawlSystem().getLinksLimitURL(), "");
-                } else {
-                    anadirProperty(pw, "db.max.outlinks.per.page", "-1", "");
-                    anadirProperty(pw, "db.max.inlinks", "-1", "");
-                }
-				
-				/* Añadimos si está en la configuración el modo de cola si no es el valor por defecto */
-                if (!campoVacio(configuracion.getCrawlSystem().getQueueMode()) &&
-                        !configuracion.getCrawlSystem().getQueueMode().toLowerCase().equals("byhost")) {
-                    anadirProperty(pw, "fetcher.queue.mode", configuracion.getCrawlSystem().getQueueMode(), "");
-
-                }
-				
-				/* Añadimos si está en la configuración el delay del fetch */
-                if (!campoVacio(configuracion.getCrawlSystem().getMaxCrawlDelay())) {
-                    anadirProperty(pw, "fetcher.max.crawl.delay", configuracion.getCrawlSystem().getMaxCrawlDelay(), "");
-
-                }
-				
-				/* Añadimos si está en la configuración el fetch timeout */
-                if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getFetchTimes())) {
-                    anadirProperty(pw, "http.max.delays", configuracion.getCrawlSystem().getTimeouts().getFetchTimes(), "");
-
-                }
-				
-				/* Añadimos si está en la configuración timeout del network */
-                if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getNetwork())) {
-                    anadirProperty(pw, "http.timeout", configuracion.getCrawlSystem().getTimeouts().getNetwork(), "");
-
-                }
-				
-				/* Añadimos si está en la configuración el timeout del parser */
-                if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getParser())) {
-                    anadirProperty(pw, "parser.timeout", configuracion.getCrawlSystem().getTimeouts().getParser(), "");
-
-                }
-				
-				/* Añadimos si está en la configuración los plugins */
-                String pluginsOR = "";
-                for (int i = 0; configuracion.getCrawlSystem().getPlugins() != null && !configuracion.getCrawlSystem().getPlugins().isEmpty()
-                        && i < configuracion.getCrawlSystem().getPlugins().size(); i++) {
-                    pluginsOR += configuracion.getCrawlSystem().getPlugins().get(i).split(" ")[0];
-                    if (i < configuracion.getCrawlSystem().getPlugins().size() - 1)
-                        pluginsOR += "|";
-                }
-                anadirProperty(pw, "plugin.includes", pluginsOR,
-                        "Regular expression naming plugin directory names to"
-                                + "  include.  Any plugin not matching this expression is excluded."
-                                + "  In any case you need at least include the nutch-extensionpoints plugin. By"
-                                + "  default Nutch includes crawling just HTML and plain text via HTTP,"
-                                + "  and basic indexing and search plugins.");
-
-                pw.write("</configuration>" + "\n");
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (null != fichero)
-                        fichero.close();
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
+            if (!campoVacio(configuracion.getCrawlSystem().getMaxFileLength())) {
+                anadirProperty(pw, "http.content.limit", configuracion.getCrawlSystem().getMaxFileLength(), "");
+                anadirProperty(pw, "file.content.limit", configuracion.getCrawlSystem().getMaxFileLength(), "");
+            } else {
+                anadirProperty(pw, "http.content.limit", "-1", "");
+                anadirProperty(pw, "file.content.limit", "-1", "");
             }
+
+				/* Añadimos si está en la configuración el el máximo de urls*/
+            if (!campoVacio(configuracion.getCrawlSystem().getLinksLimitURL())) {
+                anadirProperty(pw, "db.max.outlinks.per.page", configuracion.getCrawlSystem().getLinksLimitURL(),
+                        "");
+                anadirProperty(pw, "db.max.inlinks", configuracion.getCrawlSystem().getLinksLimitURL(), "");
+            } else {
+                anadirProperty(pw, "db.max.outlinks.per.page", "-1", "");
+                anadirProperty(pw, "db.max.inlinks", "-1", "");
+            }
+
+				/* Añadimos si está en la configuración el modo de cola si no es el valor por defecto */
+            if (!campoVacio(configuracion.getCrawlSystem().getQueueMode()) &&
+                    !configuracion.getCrawlSystem().getQueueMode().toLowerCase().equals("byhost")) {
+                anadirProperty(pw, "fetcher.queue.mode", configuracion.getCrawlSystem().getQueueMode(), "");
+
+            }
+
+				/* Añadimos si está en la configuración el delay del fetch */
+            if (!campoVacio(configuracion.getCrawlSystem().getMaxCrawlDelay())) {
+                anadirProperty(pw, "fetcher.max.crawl.delay", configuracion.getCrawlSystem().getMaxCrawlDelay(), "");
+
+            }
+
+				/* Añadimos si está en la configuración el fetch timeout */
+            if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getFetchTimes())) {
+                anadirProperty(pw, "http.max.delays", configuracion.getCrawlSystem().getTimeouts().getFetchTimes(), "");
+
+            }
+
+				/* Añadimos si está en la configuración timeout del network */
+            if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getNetwork())) {
+                anadirProperty(pw, "http.timeout", configuracion.getCrawlSystem().getTimeouts().getNetwork(), "");
+
+            }
+
+				/* Añadimos si está en la configuración el timeout del parser */
+            if (!campoVacio(configuracion.getCrawlSystem().getTimeouts().getParser())) {
+                anadirProperty(pw, "parser.timeout", configuracion.getCrawlSystem().getTimeouts().getParser(), "");
+
+            }
+
+				/* Añadimos si está en la configuración los plugins */
+            String pluginsOR = "";
+            for (int i = 0; configuracion.getCrawlSystem().getPlugins() != null && !configuracion.getCrawlSystem().getPlugins().isEmpty()
+                    && i < configuracion.getCrawlSystem().getPlugins().size(); i++) {
+                pluginsOR += configuracion.getCrawlSystem().getPlugins().get(i).split(" ")[0];
+                if (i < configuracion.getCrawlSystem().getPlugins().size() - 1)
+                    pluginsOR += "|";
+            }
+            anadirProperty(pw, "plugin.includes", pluginsOR,
+                    "Regular expression naming plugin directory names to"
+                            + "  include.  Any plugin not matching this expression is excluded."
+                            + "  In any case you need at least include the nutch-extensionpoints plugin. By"
+                            + "  default Nutch includes crawling just HTML and plain text via HTTP,"
+                            + "  and basic indexing and search plugins.");
+
+            pw.write("</configuration>" + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
