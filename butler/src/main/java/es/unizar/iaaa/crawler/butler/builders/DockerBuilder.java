@@ -56,7 +56,7 @@ public class DockerBuilder {
     }
 
     private void createDockerfile() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("Dockerfile"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(directoryName + "/Dockerfile"))) {
 				/* Añadir dockerOS */
             pw.println("From " + configuracion.getDockerOS().getName() + ":"
                     + configuracion.getDockerOS().getVersion());
@@ -66,7 +66,6 @@ public class DockerBuilder {
             while (scan.hasNextLine()) {
                 String linea = scan.nextLine();
                 pw.write(linea + "\n");
-                System.out.println(linea);
             }
             scan.close();
 				crawlerbuilder.anadirDockerfile(pw);
@@ -79,7 +78,7 @@ public class DockerBuilder {
 	}
 
     private void createRunSh() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("run.sh"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(directoryName + "/run.sh"))) {
         	/* Numero de rondas */
         	pw.write("#Number of rounds the crawler will run\n");
         	pw.write("rounds=" + configuracion.getCrawlSystem().getRounds() + "\n");
@@ -106,7 +105,7 @@ public class DockerBuilder {
    
 	
     private void createJuntarSalidasSh() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("juntarSalidas.sh"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(directoryName + "/juntarSalidas.sh"))) {
             Path juntarSalidas = Paths.get(new File(resources + "juntarSalidas").toURI());
 			Scanner scan = new Scanner(juntarSalidas);
 			while (scan.hasNextLine()) {
