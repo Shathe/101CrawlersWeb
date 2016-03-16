@@ -8,7 +8,8 @@ public class CrawlMaxFileValidator implements Validator {
 	public ValidationResult validate(Configuration config) {
 		try {
 			/* Valida que sea un numero entero */
-			Integer.valueOf(config.getCrawlSystem().getMaxFileLength());
+			if (config.getCrawlSystem().getMaxFileLength() != null)
+				Integer.valueOf(config.getCrawlSystem().getMaxFileLength());
 			return new LatestValidationResult();
 
 		} catch (Exception a) {

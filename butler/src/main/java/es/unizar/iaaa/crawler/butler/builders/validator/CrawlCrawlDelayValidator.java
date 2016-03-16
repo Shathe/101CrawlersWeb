@@ -8,7 +8,9 @@ public class CrawlCrawlDelayValidator implements Validator {
 	public ValidationResult validate(Configuration config) {
 		try {
 			/* Valida que sea un numero entero */
-			Integer.valueOf(config.getCrawlSystem().getMaxCrawlDelay());
+			
+			if (config.getCrawlSystem().getMaxCrawlDelay() != null)
+				Integer.valueOf(config.getCrawlSystem().getMaxCrawlDelay());
 			return new LatestValidationResult();
 
 		} catch (Exception a) {

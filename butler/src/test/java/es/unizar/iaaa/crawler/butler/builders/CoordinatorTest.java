@@ -82,19 +82,20 @@ public class CoordinatorTest {
 	}
 
 	@Test
-	public void DockerBuilder() throws URISyntaxException {
+	public void builder() throws URISyntaxException {
 		Configuration config;
 		config = readConfiguration("conf.yml");
-		AdaptadorBuilder dockerbuilder= new AdaptadorBuilder(config);
-		dockerbuilder.crearFicherosConfiguracion();
+		String id="usuarioIdCrawlId";
+		AdaptadorBuilder builder= new AdaptadorBuilder(config,id);
+		builder.crearFicherosConfiguracion();
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists("Dockerfile"));
+				true, checkFileExists(id+"/Dockerfile"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists("nutch-site.xml"));
+				true, checkFileExists(id+"/nutch-site.xml"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists("juntarSalidas.sh"));
+				true, checkFileExists(id+"/juntarSalidas.sh"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists("run.sh"));
+				true, checkFileExists(id+"/run.sh"));
 	}
 
 	private Configuration readConfiguration(String route) throws URISyntaxException {

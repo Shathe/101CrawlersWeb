@@ -1,3 +1,4 @@
+From ubuntu:14.04
 MAINTAINER inigo alonso <inigol22zgz@gmail.com>
 
 WORKDIR /root/
@@ -25,3 +26,17 @@ RUN PATH=$PATH:$HOME
 RUN echo PATH=$PATH:$HOME >> /etc/environment
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-1.9/ nutch_source && cd nutch_source && ant
+RUN ln -s nutch_source/runtime/local $HOME/crawler 
+Run mkdir crawler/urls 
+Run mkdir  crawler/salida  
+Run mkdir crawler/micrawl 
+Run mkdir crawler/micrawl/segments 
+Run mkdir crawler/micrawl/linkbd 
+Run mkdir crawler/micrawl/crawlbd 
+RUN echo https://dzone.com/articles/using-yaml-java-application >> crawler/urls/seeds.txt
+RUN echo https://dzone.com/articles/ >> crawler/urls/seeds.txt
+ADD juntarSalidas.sh crawler/juntarSalidas.sh
+ADD run.sh crawler/run.sh
+ADD nutch-site.xml crawler/conf/nutch-site.xml
+

@@ -8,6 +8,7 @@ public class CrawlLimitURLValidator implements Validator {
 	public ValidationResult validate(Configuration config) {
 		try {
 			/* Valida que sea un numero entero */
+			if (config.getCrawlSystem().getLinksLimitURL() != null)
 			Integer.valueOf(config.getCrawlSystem().getLinksLimitURL());
 			return new LatestValidationResult();
 
