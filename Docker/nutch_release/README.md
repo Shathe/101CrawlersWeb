@@ -155,3 +155,16 @@ Esta carpeta contiene el dockerfile y los scripts implementados para manejar de 
      ```
      (idContainer) stopped
      ```
+
+
+
+Si alguna vez sale el error:
+      ```
+     docker: An error occurred trying to connect: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.22/containers/create: read unix       @->/var/run/docker.sock: read: connection reset by peer.
+     ```
+Tan solo hay que ejecutar esto:
+      ```
+     sudo service docker stop
+     sudo rm /var/lib/docker/network/files/local-kv.db
+     sudo service docker start
+     ```
