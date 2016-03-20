@@ -9,30 +9,22 @@ import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.Random;
-<<<<<<< HEAD
-import java.util.Scanner;
-
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
-=======
->>>>>>> 72865597208c4a7d2a18894b95d3aba1e6e12894
-
 public class AdaptadorBuilder {
 
+
 	private Configuration configuration;
+	private final String resources = "src/test/resources/es/unizar/iaaa/crawler/butler/builders/";
 	private final String nombre;
 
 
-<<<<<<< HEAD
 	public AdaptadorBuilder(String nombre, Path fichero) {
-		configuracion= YamlConfigRunner.read(fichero);
-=======
-	public AdaptadorBuilder(Configuration config, String nombre) {
-		configuration = config;
->>>>>>> 72865597208c4a7d2a18894b95d3aba1e6e12894
+		configuration= YamlConfigRunner.read(fichero);
 		this.nombre = nombre;
 	}
+
     public Configuration getConfiguration() {
         return configuration;
     }
