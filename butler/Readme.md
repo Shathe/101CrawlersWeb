@@ -1,1 +1,15 @@
-## En desarrollo
+## Guía de uso
+
+### Requisitos
+Configuración.yml que siga esta [especificación] (https://github.com/Shathe/101CrawlersWeb/wiki/Especificaci%C3%B3n-del-fichero-de-configuraci%C3%B3n-yaml)
+
+###Ejecución 
+Crear un objeto Adaptador, indicándoles el nombre del crawler (normalmente será idUsuario+idCrawler), y el Path donde está el fichero yml de configuración.
+
+```
+AdaptadorBuilder builder= new AdaptadorBuilder(id,ruta);
+builder.crearFicherosConfiguracion();
+		
+```
+
+Se generarán los ficheros necesarios para configurar en una carpeta cuyo nombre es el nombre pasado al adaptador.
