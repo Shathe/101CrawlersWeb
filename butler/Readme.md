@@ -8,6 +8,8 @@ Crear un objeto Adaptador, indicándoles el nombre del crawler (normalmente ser�
 
 ```
 AdaptadorBuilder builder= new AdaptadorBuilder(id,ruta);
-		builder.crearFicherosConfiguracion();
+builder.crearFicherosConfiguracion();
 		
 ```
+
+Se generarán los ficheros necesarios para configurar en una carpeta cuyo nombre es el nombre pasado al adaptador.
