@@ -80,40 +80,29 @@ public class CoordinatorTest {
 
 	@Test
 	public void builder() throws URISyntaxException {
-		Configuration config;
 		String id="usuarioIdCrawlId";
 		Path ruta=readPath("conf.yml");
 		AdaptadorBuilder builder= new AdaptadorBuilder(id,ruta);
 		builder.crearFicherosConfiguracion();
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id+"/Dockerfile"));
+				true, checkFileExists(id, "Dockerfile"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id+"/nutch-site.xml"));
+				true, checkFileExists(id, "nutch-site.xml"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id+"/juntarSalidas.sh"));
+				true, checkFileExists(id, "juntarSalidas.sh"));
 		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id+"/run.sh"));
+				true, checkFileExists(id, "run.sh"));
 	}
+
     private Path readPath(String route) throws URISyntaxException {
-        return Paths.get(CoordinatorTest.class.getResource(route).toURI());
-       
+        return Paths.get(getClass().getResource(route).toURI());
     }
 
     private Configuration readConfiguration(String route) throws URISyntaxException {
-        Configuration config;
-        config = YamlConfigRunner.read(Paths.get(CoordinatorTest.class.getResource(route).toURI()));
-        return config;
+        return YamlConfigRunner.read(readPath(route));
     }
-    private boolean checkFileExists(String file) {
-        try {
-            // TODO Determinar la mejor manera de comprobar la existencia de
-            // recursos (¿Tenemos que introducir ya Spring?)
-            if (new File(file).exists()) {
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
+
+    private boolean checkFileExists(String parent, String child) {
+        return new File(parent, child).exists();
     }
 }
