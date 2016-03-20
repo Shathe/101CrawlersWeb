@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
@@ -80,9 +81,9 @@ public class CoordinatorTest {
 	@Test
 	public void builder() throws URISyntaxException {
 		Configuration config;
-		config = readConfiguration("conf.yml");
 		String id="usuarioIdCrawlId";
-		AdaptadorBuilder builder= new AdaptadorBuilder(config,id);
+		Path ruta=readPath("conf.yml");
+		AdaptadorBuilder builder= new AdaptadorBuilder(id,ruta);
 		builder.crearFicherosConfiguracion();
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id+"/Dockerfile"));
@@ -93,12 +94,16 @@ public class CoordinatorTest {
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id+"/run.sh"));
 	}
+    private Path readPath(String route) throws URISyntaxException {
+        return Paths.get(CoordinatorTest.class.getResource(route).toURI());
+       
+    }
+
     private Configuration readConfiguration(String route) throws URISyntaxException {
         Configuration config;
         config = YamlConfigRunner.read(Paths.get(CoordinatorTest.class.getResource(route).toURI()));
         return config;
     }
-
     private boolean checkFileExists(String file) {
         try {
             // TODO Determinar la mejor manera de comprobar la existencia de

@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
 public class AdaptadorBuilder {
 
@@ -22,8 +23,8 @@ public class AdaptadorBuilder {
 	private final String nombre;
 
 
-	public AdaptadorBuilder(Configuration config, String nombre) {
-		configuracion = config;
+	public AdaptadorBuilder(String nombre, Path fichero) {
+		configuracion= YamlConfigRunner.read(fichero);
 		this.nombre = nombre;
 	}
     public String getResources() {
