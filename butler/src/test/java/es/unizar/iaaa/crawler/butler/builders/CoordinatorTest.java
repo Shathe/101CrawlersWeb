@@ -1,9 +1,15 @@
 package es.unizar.iaaa.crawler.butler.builders;
 
 import es.unizar.iaaa.crawler.butler.builders.validator.*;
+import es.unizar.iaaa.crawler.butler.configuration.ConfigurationValidatorConfig;
+import es.unizar.iaaa.crawler.butler.configuration.CrawlValidatorConfig;
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -11,20 +17,31 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Created by javier on 09/03/16.
  */
+@ContextConfiguration(classes={ConfigurationValidatorConfig.class,CrawlValidatorConfig.class})
 public class CoordinatorTest {
 
+
+	@Autowired
+    private ConfigurationValidator configurationValidator;
+
+	@Autowired
+    private CrawlValidator crawlValidator;
+	
     @Test
     public void detectEverythingIsOK() throws URISyntaxException {
         Configuration config;
         config = readConfiguration("conf.yml");
         assertNotNull("YamlConfigRunner debe devolver una configuración y no null", config);
         System.out.println(config.toString());
-        Validator validator = new ConfigurationValidator();
-        ValidationResult result = validator.validate(config);
+
+        ConfigurationValidatorConfig context = new ConfigurationValidatorConfig();
+        configurationValidator = context.configurationValidator();
+        ValidationResult result = configurationValidator.validate(config);
         assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
         assertEquals("DefaultValidator dbe dar OK", Validator.ErroresValidar.OK, result.getFirstErrorCode());
     }
@@ -46,7 +63,9 @@ public class CoordinatorTest {
     public void detectUnsupportedCrawl() throws URISyntaxException {
         Configuration config;
         config = readConfiguration("conf-erroresNutch.yml");
-        Validator validator = new CrawlValidator();
+        CrawlValidatorConfig context = new CrawlValidatorConfig();
+        crawlValidator = context.crawlerValidator();
+        Validator validator = crawlValidator;
         ValidationResult result = validator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
@@ -82,7 +101,8 @@ public class CoordinatorTest {
 	public void builder() throws URISyntaxException {
 		String id="usuarioIdCrawlId";
 		Path ruta=readPath("conf.yml");
-		AdaptadorBuilder builder= new AdaptadorBuilder(id,ruta);
+		AdaptadorBuilder builder= new AdaptadorBuilder();
+		builder.setConfig(id,ruta);
 		builder.crearFicherosConfiguracion();
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id, "Dockerfile"));

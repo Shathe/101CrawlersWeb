@@ -1,4 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -8,4 +21,10 @@ compileJava {
 dependencies {
     compile 'org.yaml:snakeyaml:1.17'
     testCompile 'junit:junit:4.11'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-test'
+    compile 'org.springframework:spring-test:4.0.5.RELEASE'
+    
+    
 }

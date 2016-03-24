@@ -21,7 +21,7 @@ public class YamlConfigRunner {
         InputStream in;
         try {
             in = Files.newInputStream(file);
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             return null;
         }

@@ -9,13 +9,21 @@ import es.unizar.iaaa.crawler.butler.builders.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.builders.validator.ValidationResult;
 import es.unizar.iaaa.crawler.butler.builders.validator.Validator;
 import es.unizar.iaaa.crawler.butler.builders.validator.Validator.ErroresValidar;
+import es.unizar.iaaa.crawler.butler.configuration.ConfigurationValidatorConfig;
 import es.unizar.iaaa.crawler.butler.model.CrawlSystem;
 import es.unizar.iaaa.crawler.butler.model.DockerOS;
 
 import static java.lang.String.format;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+
+@ContextConfiguration(classes={ConfigurationValidatorConfig.class})
 public final class Configuration {
 
+	@Autowired
+	private ConfigurationValidator configurationValidator;
     private DockerOS dockerOS;
     private CrawlSystem crawlSystem;
 
@@ -44,22 +52,25 @@ public final class Configuration {
 
     /* Valida si el contenido es correcto */
     public boolean isOk() {
-        Validator validator = new ConfigurationValidator();
-        ValidationResult result = validator.validate(this);
+    	ConfigurationValidatorConfig context = new ConfigurationValidatorConfig();
+        configurationValidator = context.configurationValidator();
+        ValidationResult result = configurationValidator.validate(this);
         return result.isOk();
     }
 
     /* Devuelve el codigo de error correspondiente a esta configuracion */
     public ErroresValidar getLatestErrorCode() {
-        Validator validator = new ConfigurationValidator();
-        ValidationResult result = validator.validate(this);
+    	ConfigurationValidatorConfig context = new ConfigurationValidatorConfig();
+        configurationValidator = context.configurationValidator();
+        ValidationResult result = configurationValidator.validate(this);
         return result.getFirstErrorCode();
     }
 
     /* Devuelve el error/ok  de esta configuracion */
     public Object getLatestErrorValue() {
-        Validator validator = new ConfigurationValidator();
-        ValidationResult result = validator.validate(this);
+    	ConfigurationValidatorConfig context = new ConfigurationValidatorConfig();
+        configurationValidator = context.configurationValidator();
+        ValidationResult result = configurationValidator.validate(this);
         return result.getFirstErrorValue();
     }
 }

@@ -1,24 +1,26 @@
 package es.unizar.iaaa.crawler.butler.builders.validator;
 
+import java.util.ArrayList;
+
 import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 public class DockerValidator implements Validator {
 
-    @Override
-    public ValidationResult validate(Configuration config) {
-        /* Se comprueba el nombre */
-        Validator validadorName = new OSNameValidator();
-        ValidationResult resultado = validadorName.validate(config);
-        if (resultado.isOk()) {
-			/* Si el nombre esta bien se comprueba la version */
-            Validator validadorVersion = new OSVersionValidator();
-            resultado = validadorVersion.validate(config);
-            return resultado;
+	ArrayList<Validator> lista;
 
-        } else {
-            return resultado;
-        }
+	public DockerValidator(ArrayList<Validator> lista) {
+		this.lista = lista;
+	}
 
-    }
+	@Override
+	public ValidationResult validate(Configuration config) {
+
+		ValidationResult resultado = new LatestValidationResult();
+
+		for (int i = 0; i < lista.size() && resultado.isOk(); i++) {
+			resultado = lista.get(i).validate(config);
+		}
+		return resultado;
+	}
 
 }
