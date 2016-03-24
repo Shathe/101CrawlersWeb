@@ -1,6 +1,6 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +21,7 @@ public class CrawlSeedsValidator implements Validator {
     }
 
     @Override
-    public ValidationResult validate(Configuration config) {
+    public ValidationResult validate(CrawlConfiguration config) {
         if (config.getCrawlSystem().getSeeds() == null || config.getCrawlSystem().getSeeds().size() == 0)
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS,
                     "There's no seed in the configuration file.");

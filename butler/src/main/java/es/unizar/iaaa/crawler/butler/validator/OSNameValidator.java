@@ -1,11 +1,11 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 public class OSNameValidator implements Validator {
 
     @Override
-    public ValidationResult validate(Configuration config) {
+    public ValidationResult validate(CrawlConfiguration config) {
         if (config.getDockerOS().getName() == null)
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_NAME,
                     "There's no name in the configuration file.");

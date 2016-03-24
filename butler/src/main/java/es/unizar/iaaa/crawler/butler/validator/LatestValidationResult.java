@@ -1,6 +1,6 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.builders.validator.Validator.ErroresValidar;
+import es.unizar.iaaa.crawler.butler.validator.Validator.ErroresValidar;
 
 public class LatestValidationResult implements ValidationResult {
 

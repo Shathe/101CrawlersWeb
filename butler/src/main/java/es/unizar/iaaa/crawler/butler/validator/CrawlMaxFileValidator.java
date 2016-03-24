@@ -1,11 +1,11 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 public class CrawlMaxFileValidator implements Validator {
 
 	@Override
-	public ValidationResult validate(Configuration config) {
+	public ValidationResult validate(CrawlConfiguration config) {
 		try {
 			/* Valida que sea un numero entero */
 			if (config.getCrawlSystem().getMaxFileLength() != null)

@@ -1,13 +1,13 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.io.File;
 
 public class CrawlPluginsValidator implements Validator {
 
     @Override
-    public ValidationResult validate(Configuration config) {
+    public ValidationResult validate(CrawlConfiguration config) {
 
 		/* Para cada plugin */
         for (int i = 0; config.getCrawlSystem().getPlugins() != null && !config.getCrawlSystem().getPlugins().isEmpty()

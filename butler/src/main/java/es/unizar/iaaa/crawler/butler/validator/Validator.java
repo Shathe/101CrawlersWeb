@@ -1,10 +1,10 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 public interface Validator {
 
-    ValidationResult validate(Configuration config);
+    ValidationResult validate(CrawlConfiguration config);
 
     public enum ErroresValidar {
         OK, ERROR_UNSUPPORTED_OS_VERSION, ERROR_UNSUPPORTED_OS_NAME,

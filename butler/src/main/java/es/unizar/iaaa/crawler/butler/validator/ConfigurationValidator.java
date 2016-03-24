@@ -1,8 +1,8 @@
-package es.unizar.iaaa.crawler.butler.builders.validator;
+package es.unizar.iaaa.crawler.butler.validator;
+
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.util.ArrayList;
-
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
 
 public class ConfigurationValidator implements Validator {
 
@@ -13,7 +13,7 @@ public class ConfigurationValidator implements Validator {
 	}
 
 	@Override
-	public ValidationResult validate(Configuration config) {
+	public ValidationResult validate(CrawlConfiguration config) {
 		if (config != null) {
 			ValidationResult resultado = new LatestValidationResult();
 
