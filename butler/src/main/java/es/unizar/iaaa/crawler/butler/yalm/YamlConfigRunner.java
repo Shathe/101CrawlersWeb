@@ -5,30 +5,25 @@
 
 package es.unizar.iaaa.crawler.butler.yalm;
 
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import org.springframework.core.io.Resource;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 
 public class YamlConfigRunner {
 
-    public static Configuration read(Path file) {
-        Yaml yaml;
-        yaml = new Yaml();
-        InputStream in;
-        try {
-            in = Files.newInputStream(file);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            return null;
+    public static CrawlConfiguration read(Resource resource) {
+        CrawlConfiguration result = null;
+        Yaml yaml = new Yaml();
+        try(InputStream is = resource.getInputStream()) {
+            result = yaml.loadAs(is, CrawlConfiguration.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Configuration config;
-        config = yaml.loadAs(in, Configuration.class);
-        return config;
-
+        return result;
     }
 
 }

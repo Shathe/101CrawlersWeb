@@ -5,66 +5,47 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.util.Random;
-import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
+import java.io.IOException;
 
+@Component
 public class AdaptadorBuilder {
 
-	String nombre;
-	Path fichero;
+    @Autowired
+    private NutchBuilder builder;
 
-	public String getNombre() {
-		return nombre;
-	}
+    @Autowired
+    private DockerBuilder dockerBuilder;
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    @Autowired
+    private ApplicationContext ctx;
 
-	public void setConfig(String nombre, Path fichero) {
-		this.nombre = nombre;
-		this.fichero = fichero;
-	}
 
-	/* Crear ficheros de configuration dependiendo del sistema de crawling */
-	public void crearFicherosConfiguracion() {
-		try {
-			Configuration configuration = YamlConfigRunner.read(fichero);
+    /* Crear ficheros de configuration dependiendo del sistema de crawling */
+    public void crearFicherosConfiguracion(CrawlConfiguration configuration, String outputDir) {
 
-			/* Si está bien la configuración */
-			if (configuration.isOk()) {
+
 				/*
-				 * Aquí si hubiera varias posibilidades de sistemas de crawling
+                 * Aquí si hubiera varias posibilidades de sistemas de crawling
 				 * o OS's para docker, el adaptador
 				 */
-				String directoryName = nombre;
-				File theDir = new File(directoryName);
-				theDir.mkdir();
+        File theDir = new File(outputDir);
+        theDir.mkdir();
 				/*
 				 * Primero se llama al builder de nutch y después al de docker
 				 */
-				CrawlerBuilder builder = new NutchBuilder(configuration, directoryName);
-				builder.createNutchSite();
+        builder.createNutchSite(configuration, outputDir);
 
-				DockerBuilder dockerbuilder;
-				try {
-					dockerbuilder = new DockerBuilder(configuration,
-							new File(getClass().getResource("/templates").toURI()), directoryName, builder);
-					dockerbuilder.crearDockerfile();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
-			} else {
-				System.out.println(configuration.getLatestErrorValue());
-			}
-		} catch (Exception a) {
-			System.out.println(a.toString());
-		}
-	}
+        try {
+            dockerBuilder.crearDockerfile(configuration, ctx.getResource("classpath:/templates").getFile(), outputDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

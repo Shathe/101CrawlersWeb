@@ -5,31 +5,17 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class NutchBuilder implements CrawlerBuilder {
 
-	private final String directoryName;
-	private Configuration configuracion;
-
-	public NutchBuilder(Configuration config, String directoryName) {
-		configuracion = config;
-		this.directoryName = directoryName;
-	}
-
-	public Configuration getConfiguracion() {
-		return configuracion;
-	}
-
-	public void setConfiguracion(Configuration configuracion) {
-		this.configuracion = configuracion;
-	}
-
-	public void addDockerfile(PrintWriter pw) {
+	public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) {
 		/* Descarga y preparación de carpetas para nutch */
 		pw.write("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
 				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant\n");
@@ -86,13 +72,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 	}
 
-	public void createNutchSite() {
-		if (configuracion.isOk()) {
-			createNutchSiteXml();
-		}
-	}
-
-	private void createNutchSiteXml() {
+	public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
 		ArrayList<Property> properties = new ArrayList<>();
 		/* Añadimos posibles configuraciones */
 		properties.add(new Property("http.agent.name", directoryName));

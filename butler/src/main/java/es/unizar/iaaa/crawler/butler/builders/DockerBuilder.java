@@ -5,7 +5,9 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,47 +17,30 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+@Component
 public class DockerBuilder {
 
-	private final File resources;
-	private final String directoryName;
-	private Configuration configuracion;
-	private CrawlerBuilder crawlerbuilder;
+    @Autowired
+    private NutchBuilder crawlerBuilder;
 
-	public DockerBuilder(Configuration config, File resources, String directoryName, CrawlerBuilder crawlerbuilder) {
-		configuracion = config;
-		this.resources = resources;
-		this.directoryName = directoryName;
-		this.crawlerbuilder=crawlerbuilder;
-	}
-    public Configuration getConfiguracion() {
-        return configuracion;
-    }
-
-    public void setConfiguracion(Configuration configuracion) {
-        this.configuracion = configuracion;
-    }
-
-    public void crearDockerfile() {
-        if (configuracion.isOk()) {
+    public void crearDockerfile(CrawlConfiguration config, File resources, String directoryName) {
                 /*
                  * Crear el fichero run.sh que servirá para empezar a ejecutar
 				 * el crawler 
 				 */
-            createRunSh();
+            createRunSh(config, resources, directoryName);
                 /*
                  * Crear el fichero junstarSalidas.sh que servirá para empezar a
 				 * ejecutar el crawler
 				 */
-            createJuntarSalidasSh();
+            createJuntarSalidasSh(resources, directoryName);
 
 				/* Crear el fichero docker */
 
-            createDockerfile();
-        }
+            createDockerfile(config, resources, directoryName);
     }
 
-    private void createDockerfile() {
+    private void createDockerfile(CrawlConfiguration configuracion, File resources, String directoryName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")))) {
 				/* Añadir dockerOS */
             pw.println("From " + configuracion.getDockerOS().getName() + ":"
@@ -68,7 +53,7 @@ public class DockerBuilder {
                 pw.write(linea + "\n");
             }
             scan.close();
-				crawlerbuilder.addDockerfile(pw);
+            crawlerBuilder.addDockerfile(configuracion, directoryName, pw);
 				
 				pw.close();
 
@@ -77,7 +62,7 @@ public class DockerBuilder {
         }
 	}
 
-    private void createRunSh() {
+    private void createRunSh(CrawlConfiguration configuracion, File resources, String directoryName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "run.sh")))) {
         	/* Numero de rondas */
         	pw.write("#Number of rounds the crawler will run\n");
@@ -103,7 +88,7 @@ public class DockerBuilder {
 
    
 	
-    private void createJuntarSalidasSh() {
+    private void createJuntarSalidasSh(File resources,  String directoryName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "juntarSalidas.sh")))) {
             Scanner scan = new Scanner(new File(resources, "juntarSalidas"));
 			while (scan.hasNextLine()) {
