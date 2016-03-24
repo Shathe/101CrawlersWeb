@@ -1,46 +1,45 @@
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.builders.validator.*;
-import es.unizar.iaaa.crawler.butler.configuration.ConfigurationValidatorConfig;
-import es.unizar.iaaa.crawler.butler.configuration.CrawlValidatorConfig;
-import es.unizar.iaaa.crawler.butler.yalm.Configuration;
+import es.unizar.iaaa.crawler.butler.Application;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.validator.*;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Created by javier on 09/03/16.
  */
-@ContextConfiguration(classes={ConfigurationValidatorConfig.class,CrawlValidatorConfig.class})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes={Application.class})
 public class CoordinatorTest {
 
+    @Autowired
+    private ApplicationContext ctx;
 
 	@Autowired
     private ConfigurationValidator configurationValidator;
 
-	@Autowired
+    @Autowired
     private CrawlValidator crawlValidator;
-	
+
     @Test
     public void detectEverythingIsOK() throws URISyntaxException {
-        Configuration config;
+        CrawlConfiguration config;
         config = readConfiguration("conf.yml");
         assertNotNull("YamlConfigRunner debe devolver una configuración y no null", config);
         System.out.println(config.toString());
 
-        ConfigurationValidatorConfig context = new ConfigurationValidatorConfig();
-        configurationValidator = context.configurationValidator();
         ValidationResult result = configurationValidator.validate(config);
         assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
         assertEquals("DefaultValidator dbe dar OK", Validator.ErroresValidar.OK, result.getFirstErrorCode());
@@ -48,7 +47,7 @@ public class CoordinatorTest {
 
     @Test
     public void detectUnsupportedOS() throws URISyntaxException {
-        Configuration config;
+        CrawlConfiguration config;
         config = readConfiguration("conf-erroresDocker.yml");
         Validator validator = new OSVersionValidator();
         ValidationResult result = validator.validate(config);
@@ -61,12 +60,9 @@ public class CoordinatorTest {
 
     @Test
     public void detectUnsupportedCrawl() throws URISyntaxException {
-        Configuration config;
+        CrawlConfiguration config;
         config = readConfiguration("conf-erroresNutch.yml");
-        CrawlValidatorConfig context = new CrawlValidatorConfig();
-        crawlValidator = context.crawlerValidator();
-        Validator validator = crawlValidator;
-        ValidationResult result = validator.validate(config);
+        ValidationResult result = crawlValidator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
                 Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_VERSION, result.getFirstErrorCode());
@@ -76,7 +72,7 @@ public class CoordinatorTest {
 
     @Test
     public void detectUnsupportedSeedsCrawl() throws URISyntaxException {
-        Configuration config;
+        CrawlConfiguration config;
         config = readConfiguration("conf-erroresNutchSeeds.yml");
         Validator validator = new CrawlSeedsValidator();
         ValidationResult result = validator.validate(config);
@@ -87,7 +83,7 @@ public class CoordinatorTest {
 
     @Test
     public void detectUnsupportedplugCrawl() throws URISyntaxException {
-        Configuration config;
+        CrawlConfiguration config;
         config = readConfiguration("conf-erroresNutchPlugins.yml");
         Validator validator = new CrawlPluginsValidator();
         ValidationResult result = validator.validate(config);
@@ -100,10 +96,8 @@ public class CoordinatorTest {
 	@Test
 	public void builder() throws URISyntaxException {
 		String id="usuarioIdCrawlId";
-		Path ruta=readPath("conf.yml");
-		AdaptadorBuilder builder= new AdaptadorBuilder();
-		builder.setConfig(id,ruta);
-		builder.crearFicherosConfiguracion();
+		AdaptadorBuilder builder= ctx.getBean(AdaptadorBuilder.class);
+		builder.crearFicherosConfiguracion(readConfiguration("conf.yml"), id);
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id, "Dockerfile"));
 		assertEquals("DefaultValidator no informa del tipo de error",
@@ -114,11 +108,11 @@ public class CoordinatorTest {
 				true, checkFileExists(id, "run.sh"));
 	}
 
-    private Path readPath(String route) throws URISyntaxException {
-        return Paths.get(getClass().getResource(route).toURI());
+    private Resource readPath(String route) throws URISyntaxException {
+        return ctx.getResource("classpath:es/unizar/iaaa/crawler/butler/builders/"+route);
     }
 
-    private Configuration readConfiguration(String route) throws URISyntaxException {
+    private CrawlConfiguration readConfiguration(String route) throws URISyntaxException {
         return YamlConfigRunner.read(readPath(route));
     }
 
