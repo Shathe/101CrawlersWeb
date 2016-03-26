@@ -148,4 +148,8 @@ $RECYCLE.BIN/
 #site
 site/.springBeans
 
+#logs
+/butler/my.log
+/butler/spring-shell.log
+
 
