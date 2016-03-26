@@ -21,7 +21,7 @@ public class CrawlTimeoutsValidator implements Validator {
 
         } catch (Exception a) {
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_TIMEOUTS,
-                    config.getCrawlSystem().getTimeouts());
+            		"Timeouts error:" + config.getCrawlSystem().getTimeouts());
         }
     }
 

@@ -15,7 +15,7 @@ public class CrawlQueueModeValidator implements Validator {
                 && !"bydomain".equals(config.getCrawlSystem().getQueueMode().toLowerCase())) {
             /* Crea el resultado con el error encontrado */
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_QUEUEMODE,
-                    config.getCrawlSystem().getQueueMode());
+            		"Crawl queue mode error:" + config.getCrawlSystem().getQueueMode());
         }
 		/* Crea el resultado sin errores */
         return new LatestValidationResult();

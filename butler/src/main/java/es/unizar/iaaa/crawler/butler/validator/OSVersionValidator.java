@@ -15,7 +15,7 @@ public class OSVersionValidator implements Validator {
         if (!"14.04".equals(config.getDockerOS().getVersion())) {
             /* Crea el resultado con el error encontrado  */
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_VERSION,
-                    config.getDockerOS().getVersion());
+            		"OS version error:" + config.getDockerOS().getVersion());
         }
 		/* Crea el resultado sin errores */
         return new LatestValidationResult();

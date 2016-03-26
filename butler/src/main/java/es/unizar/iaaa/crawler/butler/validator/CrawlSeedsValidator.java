@@ -36,7 +36,8 @@ public class CrawlSeedsValidator implements Validator {
         if (correcto) {
             return new LatestValidationResult();
         } else {
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS, badSeed);
+            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS,
+            		"Bad seed error:" + badSeed);
         }
 
     }

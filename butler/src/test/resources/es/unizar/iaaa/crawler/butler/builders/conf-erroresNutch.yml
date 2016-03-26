@@ -1,12 +1,12 @@
 #Docker container Operating System
 dockerOS:
-  name: fedora
-  version: 10.0
+  name: ubuntu
+  version: 14.04
 
 #Crawling System
 crawlSystem:
     name: nutch
-    version: 1.2
+    version: 1.4
     #seeds are separated by line break and preceded by '- '
     seeds:
       - https://dzone.com/articles/using-yaml-java-application

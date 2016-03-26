@@ -13,7 +13,7 @@ public class CrawlVersionValidator implements Validator {
         if (!"1.9".equals(config.getCrawlSystem().getVersion())) {
             /* Crea el resultado con el error encontrado  */
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_VERSION,
-                    config.getCrawlSystem().getVersion());
+            		"Crawl version error:" + config.getCrawlSystem().getVersion());
         }
 		/* Crea el resultado sin errores */
         return new LatestValidationResult();

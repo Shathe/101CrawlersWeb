@@ -14,7 +14,7 @@ public class CrawlMaxFileValidator implements Validator {
 
         } catch (Exception a) {
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_FILE_LENGTH,
-                    config.getCrawlSystem().getMaxFileLength());
+            		"MaxFile error:" +  config.getCrawlSystem().getMaxFileLength());
         }
     }
 

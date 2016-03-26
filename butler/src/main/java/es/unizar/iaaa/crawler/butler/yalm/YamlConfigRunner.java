@@ -20,8 +20,7 @@ public class YamlConfigRunner {
         Yaml yaml = new Yaml();
         try(InputStream is = resource.getInputStream()) {
             result = yaml.loadAs(is, CrawlConfiguration.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
         }
         return result;
     }

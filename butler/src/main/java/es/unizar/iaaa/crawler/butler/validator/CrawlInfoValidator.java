@@ -14,7 +14,7 @@ public class CrawlInfoValidator implements Validator {
                 !"html".equals(config.getCrawlSystem().getInfoCrawled().toLowerCase())) {
             /* Crea el resultado con el error encontrado  */
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_INFO,
-                    config.getCrawlSystem().getInfoCrawled());
+                    "Crawlinfo error:" + config.getCrawlSystem().getInfoCrawled());
         }
 		/* Crea el resultado sin errores */
         return new LatestValidationResult();

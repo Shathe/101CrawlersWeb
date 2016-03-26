@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.Bootstrap;
 import org.springframework.shell.core.CommandResult;
 import org.springframework.shell.core.JLineShellComponent;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,7 +22,7 @@ public class HelloWorldCommandTests {
 	 
 	@Test
 	public void testSimple() {
-		CommandResult cr = shell.executeCommand("hw simple --message hello");
+		CommandResult cr = shell.executeCommand("date");
 		assertEquals(true, cr.isSuccess());
 		assertEquals("Message = [hello] Location = [null]", cr.getResult());
 	}

@@ -14,7 +14,7 @@ public class OSNameValidator implements Validator {
         if (!"ubuntu".equals(config.getDockerOS().getName().toLowerCase())) {
             /* Crea el resultado con el error encontrado  */
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_NAME,
-                    config.getDockerOS().getName());
+            		"OS name error:" +  config.getDockerOS().getName());
         }
 		/* Crea el resultado sin errores */
         return new LatestValidationResult();

@@ -14,7 +14,7 @@ public class MyBannerProvider extends DefaultBannerProvider  {
 		StringBuffer buf = new StringBuffer();
 		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
 		buf.append("*                                     *"+ OsUtils.LINE_SEPARATOR);
-		buf.append("*            HelloWorld               *" +OsUtils.LINE_SEPARATOR);
+		buf.append("*            101Crawlers              *" +OsUtils.LINE_SEPARATOR);
 		buf.append("*                                     *"+ OsUtils.LINE_SEPARATOR);
 		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
 		buf.append("Version:" + this.getVersion());
@@ -22,15 +22,15 @@ public class MyBannerProvider extends DefaultBannerProvider  {
 	}
 
 	public String getVersion() {
-		return "1.2.3";
+		return "0.0.1";
 	}
 
 	public String getWelcomeMessage() {
-		return "Welcome to HelloWorld CLI";
+		return "Welcome to 101Crawlers CLI";
 	}
 	
 	@Override
 	public String getProviderName() {
-		return "Hello World Banner";
+		return "101Crawlers Banner";
 	}
 }

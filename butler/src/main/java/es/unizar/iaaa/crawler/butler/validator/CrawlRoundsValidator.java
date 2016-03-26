@@ -17,7 +17,7 @@ public class CrawlRoundsValidator implements Validator {
 
         } catch (Exception a) {
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_ROUNDS,
-                    config.getCrawlSystem().getRounds());
+            		"Crawl rounds error:" +   config.getCrawlSystem().getRounds());
         }
     }
 

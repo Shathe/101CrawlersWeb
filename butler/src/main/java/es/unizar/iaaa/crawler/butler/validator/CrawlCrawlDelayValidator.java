@@ -15,7 +15,7 @@ public class CrawlCrawlDelayValidator implements Validator {
 
         } catch (Exception a) {
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_DELAY,
-                    config.getCrawlSystem().getMaxCrawlDelay());
+            		"Crawl delay error:" + config.getCrawlSystem().getMaxCrawlDelay());
         }
     }
 

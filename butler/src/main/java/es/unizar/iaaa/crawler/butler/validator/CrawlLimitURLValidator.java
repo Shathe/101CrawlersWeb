@@ -14,7 +14,7 @@ public class CrawlLimitURLValidator implements Validator {
 
         } catch (Exception a) {
             return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_LIMIT_URL,
-                    config.getCrawlSystem().getLinksLimitURL());
+            		"LimitUrl error:" + config.getCrawlSystem().getLinksLimitURL());
         }
     }
 
