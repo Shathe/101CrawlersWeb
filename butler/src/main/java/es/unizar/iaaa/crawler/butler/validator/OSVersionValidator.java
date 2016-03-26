@@ -6,19 +6,8 @@ public class OSVersionValidator implements Validator {
 
     @Override
     public ValidationResult validate(CrawlConfiguration config) {
-
-        if (config.getDockerOS().getVersion() == null)
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_VERSION,
-                    "There's no version in the configuration file.");
-
-
-        if (!"14.04".equals(config.getDockerOS().getVersion())) {
-            /* Crea el resultado con el error encontrado  */
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_VERSION,
-            		"OS version error:" + config.getDockerOS().getVersion());
-        }
-		/* Crea el resultado sin errores */
-        return new LatestValidationResult();
+        String value = config.getDockerOS().getVersion();
+        return validateStringValue(value, "14.04", Status.ERROR_UNSUPPORTED_OS_VERSION);
     }
 
 }

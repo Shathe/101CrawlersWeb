@@ -6,19 +6,8 @@ public class CrawlQueueModeValidator implements Validator {
 
     @Override
     public ValidationResult validate(CrawlConfiguration config) {
-        if (config.getCrawlSystem().getQueueMode() == null)
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_QUEUEMODE,
-                    "There's no info queue mode in the configuration file.");
-
-        if (!"byhost".equals(config.getCrawlSystem().getQueueMode().toLowerCase())
-                && !"byip".equals(config.getCrawlSystem().getQueueMode().toLowerCase())
-                && !"bydomain".equals(config.getCrawlSystem().getQueueMode().toLowerCase())) {
-            /* Crea el resultado con el error encontrado */
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_QUEUEMODE,
-            		"Crawl queue mode error:" + config.getCrawlSystem().getQueueMode());
-        }
-		/* Crea el resultado sin errores */
-        return new LatestValidationResult();
+        String value = config.getCrawlSystem().getQueueMode();
+        return validateStringValue(value, "byhost|byip|bydomain", Status.ERROR_UNSUPPORTED_CRAWL_QUEUEMODE);
     }
 
 }

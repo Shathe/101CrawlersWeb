@@ -1,12 +1,12 @@
 package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.validator.Validator.ErroresValidar;
+import es.unizar.iaaa.crawler.butler.validator.Validator.Status;
 
 public interface ValidationResult {
 
     boolean isOk();
 
-    ErroresValidar getFirstErrorCode();
+    Status getFirstErrorCode();
 
     Object getFirstErrorValue();
 

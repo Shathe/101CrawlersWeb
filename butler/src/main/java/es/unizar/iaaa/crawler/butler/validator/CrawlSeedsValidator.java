@@ -23,8 +23,7 @@ public class CrawlSeedsValidator implements Validator {
     @Override
     public ValidationResult validate(CrawlConfiguration config) {
         if (config.getCrawlSystem().getSeeds() == null || config.getCrawlSystem().getSeeds().size() == 0)
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS,
-                    "There's no seed in the configuration file.");
+            return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, null);
 
         boolean correcto = true;
         String badSeed = "";
@@ -36,8 +35,7 @@ public class CrawlSeedsValidator implements Validator {
         if (correcto) {
             return new LatestValidationResult();
         } else {
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS,
-            		"Bad seed error:" + badSeed);
+            return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, badSeed);
         }
 
     }

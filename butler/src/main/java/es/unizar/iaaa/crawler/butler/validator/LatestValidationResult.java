@@ -1,29 +1,29 @@
 package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.validator.Validator.ErroresValidar;
+import es.unizar.iaaa.crawler.butler.validator.Validator.Status;
 
 public class LatestValidationResult implements ValidationResult {
 
     /* Por defectos valores que indiquen que no hay error */
-    private ErroresValidar errorCode = Validator.ErroresValidar.OK;
+    private Status errorCode = Status.OK;
     private Object errorValue;
 
     public LatestValidationResult() {
 
     }
 
-    public LatestValidationResult(ErroresValidar errorCode, Object errorValue) {
+    public LatestValidationResult(Status errorCode, Object errorValue) {
         this.errorCode = errorCode;
         this.errorValue = errorValue;
     }
 
     @Override
     public boolean isOk() {
-        return errorCode == Validator.ErroresValidar.OK;
+        return errorCode == Status.OK;
     }
 
     @Override
-    public ErroresValidar getFirstErrorCode() {
+    public Status getFirstErrorCode() {
         return errorCode;
     }
 
