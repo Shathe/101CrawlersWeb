@@ -7,9 +7,8 @@
             <Pattern>[%p] %c - %m%n</Pattern>
         </encoder>
     </appender>
-    <logger name="ch.erni.community.ideasboard" level="DEBUG"/>
-    <logger name="org.springframework" level="OFF"/>
-    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.crsh" level="WARN"/>
 
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>

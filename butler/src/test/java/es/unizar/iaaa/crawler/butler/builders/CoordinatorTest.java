@@ -42,7 +42,7 @@ public class CoordinatorTest {
 
         ValidationResult result = configurationValidator.validate(config);
         assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
-        assertEquals("DefaultValidator dbe dar OK", Validator.ErroresValidar.OK, result.getFirstErrorCode());
+        assertEquals("DefaultValidator dbe dar OK", Validator.Status.OK, result.getFirstErrorCode());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class CoordinatorTest {
         ValidationResult result = validator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.ErroresValidar.ERROR_UNSUPPORTED_OS_VERSION, result.getFirstErrorCode());
+                Validator.Status.ERROR_UNSUPPORTED_OS_VERSION, result.getFirstErrorCode());
         assertEquals("DefaultValidator no informa del que el error es el valor 10.0", "10.0",
                 result.getFirstErrorValue());
     }
@@ -65,8 +65,8 @@ public class CoordinatorTest {
         ValidationResult result = crawlValidator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_VERSION, result.getFirstErrorCode());
-        assertEquals("DefaultValidator no informa del que el error es el valor 1.2", "1.2",
+                Validator.Status.ERROR_UNSUPPORTED_CRAWL_VERSION, result.getFirstErrorCode());
+        assertEquals("DefaultValidator no informa del que el error es el valor 1.4", "1.4",
                 result.getFirstErrorValue());
     }
 
@@ -78,7 +78,7 @@ public class CoordinatorTest {
         ValidationResult result = validator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_SEEDS, result.getFirstErrorCode());
+                Validator.Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, result.getFirstErrorCode());
     }
 
     @Test
@@ -89,15 +89,15 @@ public class CoordinatorTest {
         ValidationResult result = validator.validate(config);
         assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
         assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
+                Validator.Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
     }
 
 
 	@Test
 	public void builder() throws URISyntaxException {
 		String id="usuarioIdCrawlId";
-		AdaptadorBuilder builder= ctx.getBean(AdaptadorBuilder.class);
-		builder.crearFicherosConfiguracion(readConfiguration("conf.yml"), id);
+		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
+		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);
 		assertEquals("DefaultValidator no informa del tipo de error",
 				true, checkFileExists(id, "Dockerfile"));
 		assertEquals("DefaultValidator no informa del tipo de error",
