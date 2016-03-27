@@ -10,9 +10,14 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO @Iñigo Document me!
+// TODO @Iñigo Verify that the plugins framework works as expected!
 @Component
 public class NutchBuilder implements CrawlerBuilder {
 
@@ -45,36 +50,42 @@ public class NutchBuilder implements CrawlerBuilder {
 		 */
 		pw.println("ADD nutch-site.xml crawler/conf/nutch-site.xml");
         pw.println();
-		/* Para cada plugin */
-		for (int i = 0; configuracion.getCrawlSystem().getPlugins() != null
-				&& !configuracion.getCrawlSystem().getPlugins().isEmpty()
-				&& i < configuracion.getCrawlSystem().getPlugins().size(); i++) {
-			/* Estructura: nombre file.xml (file.jar)+ */
-			String[] all = configuracion.getCrawlSystem().getPlugins().get(i).split(" ");
-			String plugin = all[0];
-			/* Creas la carpeta para cada plugin */
-			String nombrePlugin = plugin.split("/")[plugin.split("/").length - 1];
-			pw.write("Run mkdir crawler/plugins/" + nombrePlugin + "\n");
-			/* Se añade su fichero de configuracion */
-			String xmlName = all[1].split("/")[all[1].split("/").length - 1];
-			try {
-				copiarFichero(all[1], directoryName + "/" + xmlName);
-				pw.println("ADD " + xmlName + " crawler/plugins/" + nombrePlugin + "/plugin.xml");
+        try {
+            configurePlugins(configuracion, directoryName, pw);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-				for (int j = 2; j < all.length; j++) {
-					/* Para cada jar se añade */
-					String jarName = all[j].split("/")[all[j].split("/").length - 1];
-					copiarFichero(all[j], directoryName + "/" + jarName);
-					pw.println("ADD " + jarName + " crawler/plugins/" + nombrePlugin + "/" + jarName);
+    }
 
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    private void configurePlugins(CrawlConfiguration configuration, String directoryName, PrintWriter pw) throws IOException {
+        final List<String> plugins = configuration.getCrawlSystem().getPlugins();
+        if (plugins == null)
+            return;
+        for(String pluginDesc : plugins) {
+            /* Estructura: nombre file.xml (file.jar)+ */
+            String[] all = pluginDesc.split(" ");
+            // Create folder name
+            String pluginName = all[0];
+            pw.println("Run mkdir crawler/plugins/" + pluginName);
+            // Create plugin.xml
+            Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
+            Path target = directory.resolve("plugin.xml");
+            Path source = FileSystems.getDefault().getPath(all[1]);
+            Files.createDirectory(directory);
+            Files.copy(source, target);
+            pw.println("ADD " + pluginName + "/plugin.xml crawler/plugins/" + pluginName + "/plugin.xml");
+            // Create (file.jar)+
+            for(int i = 2; i< all.length; i++) {
+                source = FileSystems.getDefault().getPath(all[i]);
+                Files.copy(source, directory);
+                pw.println("ADD " + pluginName + "/" + source.getFileName() +
+                        " crawler/plugins/" + pluginName + "/" + source.getFileName());
+            }
+        }
+    }
 
-	public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
+    public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
 		ArrayList<Property> properties = new ArrayList<>();
 		/* Añadimos posibles configuraciones */
 		properties.add(new Property("http.agent.name", directoryName));
@@ -133,23 +144,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		return campo == null || campo.toString().equals("");
 	}
 
-	private void copiarFichero(String origenF, String destinoF) throws Exception {
-		File origen = new File(origenF);
-		File destino = new File(destinoF);
-		InputStream in = new FileInputStream(origen);
-		OutputStream out = new FileOutputStream(destino);
-		byte[] buf = new byte[1024];
-		int len;
-
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		in.close();
-		out.close();
-
-	}
-
-	private String pluginsValue(List<String> list) {
+    private String pluginsValue(List<String> list) {
 		String pluginsOR = "";
 		boolean hayPlugin = false;
 		for (int i = 0; list != null && i < list.size(); i++) {
