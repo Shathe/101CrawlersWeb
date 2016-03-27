@@ -18,33 +18,33 @@ public class NutchBuilder implements CrawlerBuilder {
 
 	public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) {
 		/* Descarga y preparación de carpetas para nutch */
-		pw.write("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
-				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant\n");
-		pw.write("RUN ln -s nutch_source/runtime/local $HOME/crawler \n");
-		pw.write("Run mkdir crawler/"+directoryName+" \n");
-		pw.write("Run mkdir crawler/urls \n");
-		pw.write("Run mkdir  crawler/salida  \n");
-		pw.write("Run mkdir crawler/micrawl \n");
-		pw.write("Run mkdir crawler/micrawl/segments \n");
-		pw.write("Run mkdir crawler/micrawl/linkbd \n");
-		pw.write("Run mkdir crawler/micrawl/crawlbd \n");
+		pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
+				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant");
+		pw.println("RUN ln -s nutch_source/runtime/local $HOME/crawler");
+		pw.println("Run mkdir crawler/"+directoryName);
+		pw.println("Run mkdir crawler/urls");
+		pw.println("Run mkdir crawler/salida");
+		pw.println("Run mkdir crawler/micrawl");
+		pw.println("Run mkdir crawler/micrawl/segments");
+		pw.println("Run mkdir crawler/micrawl/linkbd");
+		pw.println("Run mkdir crawler/micrawl/crawlbd");
 
 		/* Añade las seeds */
 		for (int i = 0; i < configuracion.getCrawlSystem().getSeeds().size(); i++) {
-			pw.write("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt"
-					+ "\n");
+			pw.println("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
 		}
 
 		/* Añade los ficheros a docker creados */
-		pw.write("ADD " + "juntarSalidas.sh" + " crawler/juntarSalidas.sh" + "\n");
-		pw.write("ADD " + "run.sh" + " crawler/run.sh" + "\n");
+		pw.println("ADD juntarSalidas.sh crawler/juntarSalidas.sh");
+		pw.println("ADD run.sh crawler/run.sh");
 
 		/*
 		 * Pasar el fichero nutch-site a su carpeta correspondiente y después
 		 * por cada plugin, crear su carpeta con su nombre, pasar allí sus jar y
 		 * su plugin.xml con ese nombre
 		 */
-		pw.write("ADD " + "nutch-site.xml" + " crawler/conf/nutch-site.xml" + "\n\n");
+		pw.println("ADD nutch-site.xml crawler/conf/nutch-site.xml");
+        pw.println();
 		/* Para cada plugin */
 		for (int i = 0; configuracion.getCrawlSystem().getPlugins() != null
 				&& !configuracion.getCrawlSystem().getPlugins().isEmpty()
@@ -59,13 +59,13 @@ public class NutchBuilder implements CrawlerBuilder {
 			String xmlName = all[1].split("/")[all[1].split("/").length - 1];
 			try {
 				copiarFichero(all[1], directoryName + "/" + xmlName);
-				pw.write("ADD " + xmlName + " crawler/plugins/" + nombrePlugin + "/plugin.xml" + "\n");
+				pw.println("ADD " + xmlName + " crawler/plugins/" + nombrePlugin + "/plugin.xml");
 
 				for (int j = 2; j < all.length; j++) {
 					/* Para cada jar se añade */
 					String jarName = all[j].split("/")[all[j].split("/").length - 1];
 					copiarFichero(all[j], directoryName + "/" + jarName);
-					pw.write("ADD " + jarName + " crawler/plugins/" + nombrePlugin + "/" + jarName + "\n");
+					pw.println("ADD " + jarName + " crawler/plugins/" + nombrePlugin + "/" + jarName);
 
 				}
 			} catch (Exception e) {
@@ -98,15 +98,15 @@ public class NutchBuilder implements CrawlerBuilder {
 			 */
 
 		try(PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "nutch-site.xml")))) {
-			pw.write("<?xml version=\"1.0\"?>" + "\n");
-			pw.write("<?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>" + "\n");
-			pw.write("<configuration>" + "\n");
+			pw.println("<?xml version=\"1.0\"?>");
+			pw.println("<?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>");
+			pw.println("<configuration>");
 
             for (Property property : properties) {
 				anadirProperty(pw, property);
             }
 
-			pw.write("</configuration>" + "\n");
+			pw.println("</configuration>");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,13 +115,14 @@ public class NutchBuilder implements CrawlerBuilder {
 	/* Añade una property a un fichero */
 	private void anadirProperty(PrintWriter pw, Property prop) {
 		if (!Strings.isNullOrEmpty(prop.getValue())) {
-			pw.write("	<property>" + "\n");
-			pw.write("		<name>" + "\n");
-			pw.write("		" + prop.getName() + "\n");
-			pw.write("		</name>" + "\n");
-			pw.write("		<value>" + "\n");
-			pw.write("		" + prop.getValue() + "\n");
-			pw.write("		</value>" + "\n");
+			pw.println("	<property>");
+			pw.println("		<name>");
+			pw.println("		" + prop.getName());
+			pw.println("		</name>");
+			pw.println("		<value>");
+			pw.println("		" + prop.getValue());
+			pw.println("		</value>");
+            pw.println("	</property>");
 		}
 	}
 
