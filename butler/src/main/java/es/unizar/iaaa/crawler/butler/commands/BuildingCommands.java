@@ -1,19 +1,20 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
-import java.io.File;
-import java.util.logging.Logger;
+import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
+import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
-import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
-import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 
+import java.io.File;
+import java.util.logging.Logger;
+
+// TODO @Iñigo Document me!
 @Component
 public class BuildingCommands implements CommandMarker {
 

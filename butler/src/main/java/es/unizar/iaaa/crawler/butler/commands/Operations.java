@@ -1,19 +1,20 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.stereotype.Component;
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+// TODO @Iñigo Document me!
 @Component
 public class Operations implements CommandMarker {
 
@@ -24,7 +25,7 @@ public class Operations implements CommandMarker {
 
 
 	public BufferedReader executeCommand(String comando, boolean print) throws IOException {
-		String s = "";
+		String s;
 		Process p = Runtime.getRuntime().exec(comando);
 
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -38,14 +39,12 @@ public class Operations implements CommandMarker {
 			while ((s = stdInput.readLine()) != null) {
 				if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
 					log.log(Level.INFO, s);
-					System.out.println(s);
 				}
 			}
 		}
 		while ((s = stdError.readLine()) != null) {
 			if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
 				log.log(Level.SEVERE, s);
-				System.out.println(s);
 			}
 		}
 		return stdInput;

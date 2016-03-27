@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 /**
  * Created by javier on 09/03/16.
  */
+// TODO @Iñigo Document me!
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={Application.class})
 public class CoordinatorTest {
@@ -95,7 +96,7 @@ public class CoordinatorTest {
 
 	@Test
 	public void builder() throws URISyntaxException {
-		String id="idusuario_idCrawl";
+		String id="usuarioIdCrawlId";
 		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
 		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);
 		assertEquals("DefaultValidator no informa del tipo de error",

@@ -1,8 +1,5 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
-import java.io.File;
-import java.util.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -10,6 +7,10 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.util.logging.Logger;
+
+// TODO @Iñigo Document me!
 @Component
 public class CrawlerCommands implements CommandMarker {
 

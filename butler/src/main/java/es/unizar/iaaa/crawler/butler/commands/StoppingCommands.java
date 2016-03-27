@@ -1,8 +1,5 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
-import java.io.BufferedReader;
-import java.util.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -10,6 +7,10 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.util.logging.Logger;
+
+// TODO @Iñigo Document me!
 @Component
 public class StoppingCommands implements CommandMarker {
 
@@ -52,9 +53,9 @@ public class StoppingCommands implements CommandMarker {
 			while ((process = out.readLine()) != null) {
 				/* Para todos los procesos busca los procesos a eliminar */
 				if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
-					System.out.println(process);
+					log.info(process);
 					comando = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
-					System.out.println(comando);
+					log.info(comando);
 					ops.executeCommand(comando, true);
 
 				}
