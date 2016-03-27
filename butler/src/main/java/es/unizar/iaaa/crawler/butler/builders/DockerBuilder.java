@@ -28,16 +28,19 @@ public class DockerBuilder {
     private NutchBuilder crawlerBuilder;
 
     public void crearDockerfile(CrawlConfiguration config, File resources, String directoryName) {
+        // TODO @Iñigo Documentar en inglés
                 /*
                  * Crear el fichero run.sh que servirá para empezar a ejecutar
 				 * el crawler 
 				 */
             createRunSh(config, resources, directoryName);
+        // TODO @Iñigo Documentar en inglés
                 /*
                  * Crear el fichero junstarSalidas.sh que servirá para empezar a
 				 * ejecutar el crawler
 				 */
             createJuntarSalidasSh(resources, directoryName);
+        // TODO @Iñigo Documentar en inglés
 
 				/* Crear el fichero docker */
 
@@ -46,10 +49,12 @@ public class DockerBuilder {
 
     private void createDockerfile(CrawlConfiguration configuracion, File resources, String directoryName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")))) {
+            // TODO @Iñigo Documentar en inglés
 				/* Añadir dockerOS */
             pw.println("From " + configuracion.getDockerOS().getName() + ":"
                     + configuracion.getDockerOS().getVersion());
             Path dockerbase = Paths.get(new File(resources, "DockerBase").toURI());
+            // TODO @Iñigo Documentar en inglés
 				/* Añadir contenido fijo */
             Scanner scan = new Scanner(dockerbase);
             while (scan.hasNextLine()) {
@@ -68,10 +73,12 @@ public class DockerBuilder {
 
     private void createRunSh(CrawlConfiguration configuracion, File resources, String directoryName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "run.sh")))) {
+            // TODO @Iñigo Documentar en inglés
         	/* Numero de rondas */
         	pw.write("#Number of rounds the crawler will run\n");
         	pw.write("rounds=" + configuracion.getCrawlSystem().getRounds() + "\n");
         	pw.write("#readseg options \n");
+            // TODO @Iñigo Documentar en inglés
         	/* Qué información se recuperará */
         	if (configuracion.getCrawlSystem().getInfoCrawled().toLowerCase().equals("html")) {
         		pw.write("dumpOptions=\"-nogenerate -nofetch -noparsetext -noparse -noparsedata\"\n");

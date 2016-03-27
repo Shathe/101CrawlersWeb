@@ -23,6 +23,7 @@ import java.util.List;
 public class NutchBuilder implements CrawlerBuilder {
 
 	public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) {
+        // TODO @Iñigo Documentar en inglés
 		/* Descarga y preparación de carpetas para nutch */
 		pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
 				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant");
@@ -35,15 +36,18 @@ public class NutchBuilder implements CrawlerBuilder {
 		pw.println("Run mkdir crawler/micrawl/linkbd");
 		pw.println("Run mkdir crawler/micrawl/crawlbd");
 
+        // TODO @Iñigo Documentar en inglés
 		/* Añade las seeds */
 		for (int i = 0; i < configuracion.getCrawlSystem().getSeeds().size(); i++) {
 			pw.println("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
 		}
 
+        // TODO @Iñigo Documentar en inglés
 		/* Añade los ficheros a docker creados */
 		pw.println("ADD juntarSalidas.sh crawler/juntarSalidas.sh");
 		pw.println("ADD run.sh crawler/run.sh");
 
+        // TODO @Iñigo Documentar en inglés
 		/*
 		 * Pasar el fichero nutch-site a su carpeta correspondiente y después
 		 * por cada plugin, crear su carpeta con su nombre, pasar allí sus jar y
@@ -64,13 +68,16 @@ public class NutchBuilder implements CrawlerBuilder {
         if (plugins == null)
             return;
         for(String pluginDesc : plugins) {
+            // TODO @Iñigo Documentar en inglés
             /* Estructura: nombre file.xml (file.jar)+ */
             String[] all = pluginDesc.split(" ");
+            // TODO @Iñigo Documentar en inglés
             // Create folder name
             int siguiente=nextNotVoid(all,0);
             String pluginName = all[siguiente];
             siguiente=nextNotVoid(all,siguiente+1);
             pw.println("Run mkdir crawler/plugins/" + pluginName);
+            // TODO @Iñigo Documentar en inglés
             // Create plugin.xml
             Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
             Path target = directory.resolve("plugin.xml");
@@ -78,6 +85,7 @@ public class NutchBuilder implements CrawlerBuilder {
             Files.createDirectory(directory);
             Files.copy(source, target);
             pw.println("ADD " + pluginName + "/plugin.xml crawler/plugins/" + pluginName + "/plugin.xml");
+            // TODO @Iñigo Documentar en inglés
             // Create (file.jar)+
             
             for(siguiente=nextNotVoid(all,siguiente+1); siguiente< all.length; siguiente=nextNotVoid(all,siguiente+1)) {
@@ -92,6 +100,7 @@ public class NutchBuilder implements CrawlerBuilder {
 
     public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
 		ArrayList<Property> properties = new ArrayList<>();
+        // TODO @Iñigo Documentar en inglés
 		/* Añadimos posibles configuraciones */
 		properties.add(new Property("http.agent.name", directoryName));
 		properties.add(new Property("http.content.limit", configuracion.getCrawlSystem().getMaxFileLength()));
@@ -108,6 +117,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 		properties.add(new Property("plugin.includes", pluginsValue(configuracion.getCrawlSystem().getPlugins())));
 
+        // TODO @Iñigo Documentar en inglés
 			/*
 			 * Crea el fichero nutch-site.xml el cual contiene todas las
 			 * configuraciones personalizadas de nutch
@@ -128,6 +138,7 @@ public class NutchBuilder implements CrawlerBuilder {
         }
     }
 
+    // TODO @Iñigo Documentar en inglés
 	/* Añade una property a un fichero */
 	private void anadirProperty(PrintWriter pw, Property prop) {
 		if (!Strings.isNullOrEmpty(prop.getValue())) {
@@ -142,13 +153,13 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 	}
 
-	/* Genera una cadena aleatoria */
-
+    // TODO @Iñigo Documentar en inglés
 	/* Comprueba si en la confiuración ese campo está vacío o no */
 	private boolean campoVacio(Object campo) {
 		return campo == null || campo.toString().equals("");
 	}
 
+    // TODO @Iñigo Documentar en inglés
     private String pluginsValue(List<String> list) {
 		String pluginsOR = "";
 		boolean hayPlugin = false;
@@ -164,7 +175,7 @@ public class NutchBuilder implements CrawlerBuilder {
 			return null;
 	}
 
-
+    // TODO @Iñigo Documentar en inglés
     private int nextNotVoid(String [] array, int i){
     	while (i< array.length && array[i].equals(""))i++;
     	return i;

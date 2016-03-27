@@ -38,8 +38,10 @@ public class Operations implements CommandMarker {
 
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
+		// TODO @Iñigo Documentar en inglés
 		// Leemos la salida del comando
 
+		// TODO @Iñigo Documentar en inglés
 		// Leemos los errores si los hubiera
 		if (print) {
 			while ((s = stdInput.readLine()) != null) {

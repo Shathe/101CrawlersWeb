@@ -6,18 +6,20 @@
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-/* 
+
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
+/*
  * Validates if the Crawl timeouts is well formed
  * in this case it's well formed if they are  integer number s
  */
-
 public class CrawlTimeoutsValidator implements Validator {
 
 	@Override
 	public ValidationResult validate(CrawlConfiguration config) {
 		try {
 			if (config.getCrawlSystem().getTimeouts() != null) {
-				/* Valida que sea un numero entero */
+				// TODO @Iñigo Documentar en Inglés
+			/* Valida que sea un numero entero */
 				if (config.getCrawlSystem().getTimeouts().getFetchTimes() != null)
 					Integer.valueOf(config.getCrawlSystem().getTimeouts().getFetchTimes());
 				if (config.getCrawlSystem().getTimeouts().getNetwork() != null)

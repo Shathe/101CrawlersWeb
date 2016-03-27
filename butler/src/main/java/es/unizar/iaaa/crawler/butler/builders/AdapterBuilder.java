@@ -29,17 +29,20 @@ public class AdapterBuilder {
     private ApplicationContext ctx;
 
 
+    // TODO @Iñigo Documentar en inglés
     /* Crear ficheros de configuration dependiendo del sistema de crawling */
     public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) {
 
 
-				/*
+        // TODO @Iñigo Documentar en inglés
+                /*
                  * Aquí si hubiera varias posibilidades de sistemas de crawling
 				 * o OS's para docker, el adaptador
 				 */
         File theDir = new File(outputDir);
         theDir.mkdir();
-				/*
+        // TODO @Iñigo Documentar en inglés
+                /*
 				 * Primero se llama al builder de nutch y después al de docker
 				 */
         builder.createNutchSite(configuration, outputDir);
