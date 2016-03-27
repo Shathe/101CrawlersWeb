@@ -6,6 +6,7 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO @Iñigo Document me!
 public interface Validator {
 
 	ValidationResult validate(CrawlConfiguration config);
@@ -15,7 +16,12 @@ public interface Validator {
 	}
 
 	default ValidationResult validateIntValue(String value, Status status) {
-			if (Ints.tryParse(value) != null) {
+		return validateIntValue(value, status, true);
+	}
+
+
+	default ValidationResult validateIntValue(String value, Status status, boolean mandatory) {
+			if ((value == null && !mandatory) || (Ints.tryParse(value) != null)) {
 				return new LatestValidationResult();
 			} else {
 				return new LatestValidationResult(status, value);
