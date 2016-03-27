@@ -95,7 +95,7 @@ public class CoordinatorTest {
 
 	@Test
 	public void builder() throws URISyntaxException {
-		String id="usuario_IdCrawlId";
+		String id="idusuario_idCrawl";
 		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
 		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);
 		assertEquals("DefaultValidator no informa del tipo de error",
