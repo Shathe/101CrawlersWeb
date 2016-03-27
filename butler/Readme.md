@@ -13,7 +13,9 @@ Así serán únicos y fácilmente identificables.
 
 CONFIG:
 - El comando config, crea todos los ficheros the configuración necesarios si el fichero está correctamente formado
+- Si el fichero está mal formado se informará que tipo de error y qué valor es el erróneo
 - Config command, the one which crates every configuration file as long as the configuration file is well formed
+- If there's any error, the system will infom about it, both the error name and the value
 ```sh
 $> config --file conf.yml --idUser 1 --idCrawl 1
 $> config --help
@@ -63,8 +65,8 @@ STOPCRAWL:
 - El comando stopCrawl, para el crawler siempre que el contenedor exista
 - stopCrawl command, the one which stops the crawler as long as the container exists
 ```sh
-$> extract --idUser 1 --idCrawl 1
-$> extract --help
+$> stopCrawl --idUser 1 --idCrawl 1
+$> stopCrawl --help
 ```
 
 
@@ -72,8 +74,8 @@ STOPCONTAINER:
 - El comando stopContainer, para el contenedor siempre que este exista
 - StopContainer command, the one which stops the container as long as the container exists
 ```sh
-$> extract --idUser 1 --idCrawl 1
-$> extract --help
+$> stopContainer --idUser 1 --idCrawl 1
+$> stopContainer --help
 ```
 
 
