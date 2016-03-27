@@ -66,29 +66,26 @@ public class NutchBuilder implements CrawlerBuilder {
     }
 
     private void configurePlugins(CrawlConfiguration configuration, String directoryName, PrintWriter pw) throws IOException {
-        final List<String> plugins = configuration.getCrawlSystem().getPlugins();
+        final List<List<String>> plugins = configuration.getCrawlSystem().getPlugins();
         if (plugins == null)
             return;
-        for(String pluginDesc : plugins) {
+        for(List<String> all : plugins) {
             /* Structure: nombre file.xml (file.jar)+ */
             /* Estructura: nombre file.xml (file.jar)+ */
-            String[] all = pluginDesc.split(" ");
-            // Create folder name
-            int siguiente=nextNotVoid(all,0);
-            String pluginName = all[siguiente];
-            siguiente=nextNotVoid(all,siguiente+1);
+            String pluginName = all.get(0);
+            
             pw.println("Run mkdir crawler/plugins/" + pluginName);
             // Create plugin.xml
             Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
             Path target = directory.resolve("plugin.xml");
-            Path source = FileSystems.getDefault().getPath(all[siguiente]);
+            Path source = FileSystems.getDefault().getPath(all.get(1));
             Files.createDirectory(directory);
             Files.copy(source, target);
             pw.println("ADD " + pluginName + "/plugin.xml crawler/plugins/" + pluginName + "/plugin.xml");
             // Create (file.jar)+
             
-            for(siguiente=nextNotVoid(all,siguiente+1); siguiente< all.length; siguiente=nextNotVoid(all,siguiente+1)) {
-                source = FileSystems.getDefault().getPath(all[siguiente]);
+            for(int siguiente=2; siguiente< all.size(); siguiente++) {
+                source = FileSystems.getDefault().getPath(all.get(siguiente));
                 target = directory.resolve(source.getFileName());
                 Files.copy(source, target);
                 pw.println("ADD " + pluginName + "/" + target.getFileName() +
@@ -157,11 +154,11 @@ public class NutchBuilder implements CrawlerBuilder {
 	}
 
     /* returns the value property of a plugin */
-    private String pluginsValue(List<String> list) {
+    private String pluginsValue(List<List<String>> list) {
 		String pluginsOR = "";
 		boolean hayPlugin = false;
 		for (int i = 0; list != null && i < list.size(); i++) {
-			pluginsOR += list.get(i).split(" ")[0] + "|";
+			pluginsOR += list.get(i).get(0) + "|";
 			hayPlugin = true;
 		}
 		/* Devuelves el resultado */
@@ -172,9 +169,4 @@ public class NutchBuilder implements CrawlerBuilder {
 			return null;
 	}
 
-    /** Returns the next not void index */
-    private int nextNotVoid(String [] array, int i){
-    	while (i< array.length && array[i].equals(""))i++;
-    	return i;
-    }
 }

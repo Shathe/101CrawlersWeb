@@ -14,7 +14,7 @@ public final class CrawlSystem {
     private String version;
     private List<String> seeds;
     private String rounds;
-    private List<String> plugins;
+    private List<List<String>> plugins;
     private String infoCrawled;
     private String maxFileLength;
     private String maxCrawlDelay;
@@ -56,11 +56,11 @@ public final class CrawlSystem {
         this.rounds = rounds;
     }
 
-    public List<String> getPlugins() {
+    public List<List<String> > getPlugins() {
         return plugins;
     }
 
-    public void setPlugins(List<String> plugins) {
+    public void setPlugins(List<List<String> > plugins) {
         this.plugins = plugins;
     }
 

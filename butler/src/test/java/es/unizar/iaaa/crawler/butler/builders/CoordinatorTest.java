@@ -38,8 +38,7 @@ public class CoordinatorTest {
     @Autowired
     private CrawlValidator crawlValidator;
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-    /* Detects if a well formed configuration file, pass the validation */
+    /** Detects if a well formed configuration file, pass the validation */
     @Test
     public void detectEverythingIsOK() throws URISyntaxException {
         CrawlConfiguration config;
@@ -52,26 +51,20 @@ public class CoordinatorTest {
         assertEquals("DefaultValidator dbe dar OK", Validator.Status.OK, result.getFirstErrorCode());
     }
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/*
-	 * Detects if a bad formed configuration file, dont pass the validation the
-	 * error is a OS not supported
+	/**
+	 * Detects if a well formed plugin is detected as such 
 	 */
     @Test
-    public void detectUnsupportedOS() throws URISyntaxException {
+    public void detectSuportedPlugin() throws URISyntaxException {
         CrawlConfiguration config;
-        config = readConfiguration("conf-erroresDocker.yml");
-        Validator validator = new OSVersionValidator();
+        config = readConfiguration("conf-Well-Plugin.yml");
+        Validator validator = new CrawlPluginsValidator();
         ValidationResult result = validator.validate(config);
-        assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
-        assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.Status.ERROR_UNSUPPORTED_OS_VERSION, result.getFirstErrorCode());
-        assertEquals("DefaultValidator no informa del que el error es el valor 10.0", "10.0",
-                result.getFirstErrorValue());
+        assertTrue("DefaultValidator no informa que es una buena configuración", result.isOk());
+   
     }
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/*
+	/**
 	 * Detects if a bad formed configuration file, dont pass the validation the
 	 * error is a crawl system not supported
 	 */
@@ -87,8 +80,7 @@ public class CoordinatorTest {
                 result.getFirstErrorValue());
     }
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/*
+	/**
 	 * Detects if a bad formed configuration file, dont pass the validation the
 	 * error is a bad seed 
 	 */
@@ -103,8 +95,7 @@ public class CoordinatorTest {
                 Validator.Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, result.getFirstErrorCode());
     }
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/*
+	/**
 	 * Detects if a bad formed configuration file, dont pass the validation
 	 * The plugin has no xml file
 	 */
@@ -119,8 +110,7 @@ public class CoordinatorTest {
                 Validator.Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
     }
 
-    // TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/*
+	/**
 	 * Detects if a well form configuration file, creates the building files
 	 */
     @Test

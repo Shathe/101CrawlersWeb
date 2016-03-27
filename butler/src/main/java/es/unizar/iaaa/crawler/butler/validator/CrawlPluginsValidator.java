@@ -8,6 +8,8 @@ package es.unizar.iaaa.crawler.butler.validator;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validates if the plugins part is well formed
@@ -22,20 +24,16 @@ public class CrawlPluginsValidator implements Validator {
         for (int i = 0; config.getCrawlSystem().getPlugins() != null && !config.getCrawlSystem().getPlugins().isEmpty()
                 && i < config.getCrawlSystem().getPlugins().size(); i++) {
             /* Structure: nombre file.xml (file.jar)+ */
-        	int siguiente=0;
-            String[] all = config.getCrawlSystem().getPlugins().get(i).split(" ");
-            String plugin = all[nextNotVoid(all,siguiente)];
-            siguiente++;
+        	List<String> all=config.getCrawlSystem().getPlugins().get(i);
+            String plugin = all.get(0);
 			/* Check whether the files exists */
 
-            if (!checkFileExists(all[nextNotVoid(all,siguiente)])) {
-                return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all[nextNotVoid(all,siguiente)]);
+            if (!checkFileExists(all.get(1))) {
+                return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all.get(1));
             }
-            siguiente++;
-            for (siguiente = nextNotVoid(all,siguiente); siguiente < all.length; siguiente++) {
-            	siguiente = nextNotVoid(all,siguiente);
-                if (!checkFileExists(all[siguiente])) {
-                    return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all[siguiente]);
+            for (int siguiente = 2; siguiente < all.size(); siguiente++) {
+                if (!checkFileExists(all.get(siguiente))) {
+                    return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all.get(siguiente));
                 }
             }
 
@@ -54,9 +52,4 @@ public class CrawlPluginsValidator implements Validator {
         return false;
     }
 
-    /** Returns the next not void index */
-    private int nextNotVoid(String [] array, int i){
-    	while (i< array.length && array[i].equals(""))i++;
-    	return i;
-    }
 }

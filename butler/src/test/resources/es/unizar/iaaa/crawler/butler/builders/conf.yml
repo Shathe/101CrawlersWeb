@@ -13,14 +13,6 @@ crawlSystem:
       - https://dzone.com/articles/
     #number of rounds the crawler is going to iterate
     rounds: 2
-    #plugins are separated by line break and preceded by '- '
-    #First goes the plugin named followed by the jar files.
-    #The plugin.xml must be in the same directory and it has to be named as
-    #the plugin
-    
-    #plugins:
-    #  - protocol-file src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.xml src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.jar
-    
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
     # Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.
@@ -30,6 +22,14 @@ crawlSystem:
     
     #Optionals
    
+    #plugins are separated by line break and preceded by '- '
+    #First goes the plugin named followed by the jar files.
+    #The plugin.xml must be in the same directory and it has to be named as
+    #the plugin
+    
+    plugins:
+      - [protocol-file, src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.xml, src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.jar]
+    
     
     #The length limit for downloaded content (-1 for o limit)
     maxFileLength: 65536 # file.content.limit  and http.content.limit
