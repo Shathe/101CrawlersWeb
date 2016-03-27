@@ -22,8 +22,6 @@ public final class CrawlSystem {
     private String queueMode;
     private Timeouts timeouts;
 
-	/* Getters and setters */
-
     public List<String> getSeeds() {
         return seeds;
     }

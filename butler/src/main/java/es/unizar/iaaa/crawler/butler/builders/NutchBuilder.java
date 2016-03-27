@@ -23,6 +23,7 @@ import java.util.List;
 public class NutchBuilder implements CrawlerBuilder {
 
 	public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) {
+        // TODO Use // for comments wihtin methods
 		/* Download and preapare folder for nutch */
 		/* Descarga y preparación de carpetas para nutch */
 		pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
@@ -36,18 +37,21 @@ public class NutchBuilder implements CrawlerBuilder {
 		pw.println("Run mkdir crawler/micrawl/linkbd");
 		pw.println("Run mkdir crawler/micrawl/crawlbd");
 
+        // TODO Use // for comments wihtin methods
 		/* Add seeds */
 		/* Añade las seeds */
 		for (int i = 0; i < configuracion.getCrawlSystem().getSeeds().size(); i++) {
 			pw.println("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
 		}
 
+        // TODO Use // for comments wihtin methods
 		/* Add docker files  */
 		/* Añade los ficheros a docker creados */
 		pw.println("ADD juntarSalidas.sh crawler/juntarSalidas.sh");
 		pw.println("ADD run.sh crawler/run.sh");
 
         // TODO @Iñigo Documentar en inglés
+        // TODO Use // for comments wihtin methods
 		/*
 		 * Put nutch-site file to its folder and then for each plugin,
 		 * create its folder with its name and put there its jars and xml file
@@ -70,6 +74,7 @@ public class NutchBuilder implements CrawlerBuilder {
         if (plugins == null)
             return;
         for(List<String> all : plugins) {
+            // TODO Use // for comments wihtin methods
             /* Structure: nombre file.xml (file.jar)+ */
             /* Estructura: nombre file.xml (file.jar)+ */
             String pluginName = all.get(0);
@@ -96,6 +101,7 @@ public class NutchBuilder implements CrawlerBuilder {
 
     public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
 		ArrayList<Property> properties = new ArrayList<>();
+        // TODO Use // for comments wihtin methods
 		/* Add possible configurations */
 		/* Añadimos posibles configuraciones */
 		properties.add(new Property("http.agent.name", directoryName));
@@ -113,6 +119,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		}
 		properties.add(new Property("plugin.includes", pluginsValue(configuracion.getCrawlSystem().getPlugins())));
 
+        // TODO Use // for comments wihtin methods
 			/* Creates the nutch-site file which contains all the customized nutch configurations
 			 * 
 			 * Crea el fichero nutch-site.xml el cual contiene todas las
@@ -153,7 +160,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		return campo == null || campo.toString().equals("");
 	}
 
-    /* returns the value property of a plugin */
+    /** returns the value property of a plugin */
     private String pluginsValue(List<List<String>> list) {
 		String pluginsOR = "";
 		boolean hayPlugin = false;
@@ -161,7 +168,8 @@ public class NutchBuilder implements CrawlerBuilder {
 			pluginsOR += list.get(i).get(0) + "|";
 			hayPlugin = true;
 		}
-		/* Devuelves el resultado */
+        // TODO Translate to english
+		// Devuelves el resultado
 		if (hayPlugin) {
 			pluginsOR += "protocol-http|urlfilter-regex|parse-(text|html|js)|index-basic|query-(basic|site|url)|summary-basic|scoring-opic|urlnormalizer-(pass|regex|basic)";
 			return pluginsOR;

@@ -8,7 +8,6 @@ package es.unizar.iaaa.crawler.butler.validator;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,12 +19,15 @@ public class CrawlPluginsValidator implements Validator {
     @Override
     public ValidationResult validate(CrawlConfiguration config) {
 
+        // TODO Use // for comments wihtin methods
 		/* For each plugin */
         for (int i = 0; config.getCrawlSystem().getPlugins() != null && !config.getCrawlSystem().getPlugins().isEmpty()
                 && i < config.getCrawlSystem().getPlugins().size(); i++) {
+            // TODO Use // for comments wihtin methods
             /* Structure: nombre file.xml (file.jar)+ */
         	List<String> all=config.getCrawlSystem().getPlugins().get(i);
             String plugin = all.get(0);
+            // TODO Use // for comments wihtin methods
 			/* Check whether the files exists */
 
             if (!checkFileExists(all.get(1))) {

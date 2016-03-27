@@ -17,6 +17,7 @@ public class CrawlTimeoutsValidator implements Validator {
 	public ValidationResult validate(CrawlConfiguration config) {
 		try {
 			if (config.getCrawlSystem().getTimeouts() != null) {
+				// TODO Use // for comments wihtin methods
 			/* Validates whether they are integer numbers */
 				if (config.getCrawlSystem().getTimeouts().getFetchTimes() != null)
 					Integer.valueOf(config.getCrawlSystem().getTimeouts().getFetchTimes());

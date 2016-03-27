@@ -29,26 +29,23 @@ public class AdapterBuilder {
     private ApplicationContext ctx;
 
 
-    /** 
-     * Creates the configuration files, according the crawling system 
-     * Crear ficheros de configuration dependiendo del sistema de crawling 
+    /**
+     * Creates the configuration files, according the crawling system
+     * Crear ficheros de configuration dependiendo del sistema de crawling
      */
     public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) {
 
 
-        
-                /* 
-                 * The adapter choose the correct builers according the configuration
-                 * 
-                 * Aquí si hubiera varias posibilidades de sistemas de crawling
-				 * o OS's para docker, el adaptador eligiría la adecuada segun la configuarión
-				 */
+        // The adapter choose the correct builers according the configuration
+        // TODO Translate to english
+        // Aquí si hubiera varias posibilidades de sistemas de crawling
+        // o OS's para docker, el adaptador eligiría la adecuada segun la configuarión
         File theDir = new File(outputDir);
         theDir.mkdir();
-                /*
-                 * First crawl builder and then docker builder
-				 * Primero se llama al builder de nutch y después al de docker
-				 */
+
+        // First crawl builder and then docker builder
+        // TODO Translate to english
+		// Primero se llama al builder de nutch y después al de docker
         builder.createNutchSite(configuration, outputDir);
 
         try {
