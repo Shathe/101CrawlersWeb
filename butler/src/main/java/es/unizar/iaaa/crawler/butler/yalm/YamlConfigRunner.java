@@ -11,7 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 
-
+// TODO @Iñigo Document me!
 public class YamlConfigRunner {
 
     public static CrawlConfiguration read(Resource resource) {
@@ -20,7 +20,7 @@ public class YamlConfigRunner {
         try(InputStream is = resource.getInputStream()) {
             result = yaml.loadAs(is, CrawlConfiguration.class);
         } catch (Exception e) {
-            e.toString();
+            e.printStackTrace();
         }
         return result;
     }
