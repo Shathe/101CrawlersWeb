@@ -2,6 +2,8 @@ package es.unizar.iaaa.crawler.butler.commands;
 
 import java.io.File;
 import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Component;
 public class CrawlerCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(CrawlerCommands.class.getName());
-
-	private Operations ops = new Operations();
+	@Autowired
+	private Operations ops;
 
 	@CliAvailabilityIndicator({ "start" })
 	public boolean startAvailable() {

@@ -6,27 +6,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
-import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
-
-import es.unizar.iaaa.crawler.butler.Application;
-import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
-import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
 @Component
-@ContextConfiguration(classes = { Application.class })
 public class Operations implements CommandMarker {
 
 	static Logger log = Logger.getLogger(Operations.class.getName());

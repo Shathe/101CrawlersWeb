@@ -18,16 +18,13 @@ import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 public class BuildingCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(BuildingCommands.class.getName());
-
-	private Operations ops=new Operations();
+	@Autowired
+	private Operations ops;
 	
 
 	@Autowired
 	private AdapterBuilder builder;
 	 
-	@Autowired
-	private ApplicationContext ctx;
-
 	@Autowired
 	private ConfigurationValidator configurationValidator;
 
@@ -39,7 +36,7 @@ public class BuildingCommands implements CommandMarker {
 
 	@CliAvailabilityIndicator({ "build" })
 	public boolean buildAvailable() {
-		// always available start --idUser 1 -- idCrawler 1
+		// always available 
 		return true;
 	}
 
