@@ -70,7 +70,7 @@ public class BuildingCommands implements CommandMarker {
 		return response;
 	}
 
-	/* Build docker and crawler files */
+	/* Creates the docker image  */
 	@CliCommand(value = "build", help = "the directory with the files must exist")
 	public String build(
 

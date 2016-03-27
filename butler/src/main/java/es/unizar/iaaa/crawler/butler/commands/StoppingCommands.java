@@ -21,7 +21,7 @@ public class StoppingCommands implements CommandMarker {
 	@Autowired
 	private Operations ops;
 
-	@CliAvailabilityIndicator({ "stopNutch" })
+	@CliAvailabilityIndicator({ "stopCrawl" })
 	public boolean stopNutchAvailable() {
 		// always available
 		return true;
@@ -34,7 +34,7 @@ public class StoppingCommands implements CommandMarker {
 	}
 
 	/* Stop the crawl in the docker container */
-	@CliCommand(value = "stopNutch", help = "Stops the crawler int the docker container")
+	@CliCommand(value = "stopCrawl", help = "Stops the crawler int the docker container")
 	public String stopNutch(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
