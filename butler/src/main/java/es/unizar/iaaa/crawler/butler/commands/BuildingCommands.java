@@ -45,7 +45,7 @@ public class BuildingCommands implements CommandMarker {
 	}
 
 
-	/* Config command, the one which crates every configuration file */
+	/** Config command, the one which crates every configuration file */
 	@CliCommand(value = "config", help = "If the configuration file is ok, creates every file needed for the crawling system")
 	public String config(
 
@@ -70,7 +70,7 @@ public class BuildingCommands implements CommandMarker {
 		return response;
 	}
 
-	/* Creates the docker image  */
+	/** Creates the docker image  */
 	@CliCommand(value = "build", help = "the directory with the files must exist")
 	public String build(
 

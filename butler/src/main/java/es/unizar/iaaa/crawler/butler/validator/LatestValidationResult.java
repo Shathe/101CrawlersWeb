@@ -7,10 +7,8 @@ package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.validator.Validator.Status;
 
-// TODO @Iñigo Documentar como Javadoc (recuerda /**)
 public class LatestValidationResult implements ValidationResult {
 
-    // TODO @Iñigo Documentar en inglés
     /* Por defectos valores que indiquen que no hay error */
     private Status errorCode = Status.OK;
     private Object errorValue;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 
-/*
+/**
  * Builds the system. Depending the configuration the adapter will choose the correct builders
  */
 @Component
@@ -29,20 +29,24 @@ public class AdapterBuilder {
     private ApplicationContext ctx;
 
 
-    // TODO @Iñigo Documentar en inglés
-    /* Crear ficheros de configuration dependiendo del sistema de crawling */
+    /** 
+     * Creates the configuration files, according the crawling system 
+     * Crear ficheros de configuration dependiendo del sistema de crawling 
+     */
     public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) {
 
 
-        // TODO @Iñigo Documentar en inglés
-                /*
+        
+                /* 
+                 * The adapter choose the correct builers according the configuration
+                 * 
                  * Aquí si hubiera varias posibilidades de sistemas de crawling
-				 * o OS's para docker, el adaptador
+				 * o OS's para docker, el adaptador eligiría la adecuada segun la configuarión
 				 */
         File theDir = new File(outputDir);
         theDir.mkdir();
-        // TODO @Iñigo Documentar en inglés
                 /*
+                 * First crawl builder and then docker builder
 				 * Primero se llama al builder de nutch y después al de docker
 				 */
         builder.createNutchSite(configuration, outputDir);

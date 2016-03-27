@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.util.logging.Logger;
 
-/* 
+/**
  * Stopping commands. This class contains every command which stops the crawling system 
  * or a part of it
- */@Component
+ */
+@Component
 public class StoppingCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(StoppingCommands.class.getName());
@@ -33,7 +34,7 @@ public class StoppingCommands implements CommandMarker {
 		return true;
 	}
 
-	/* Stop the crawl in the docker container */
+	/** Stop the crawl in the docker container */
 	@CliCommand(value = "stopCrawl", help = "Stops the crawler int the docker container")
 	public String stopNutch(
 
@@ -71,7 +72,7 @@ public class StoppingCommands implements CommandMarker {
 		return response;
 	}
 
-	/* Stop the docker container */
+	/** Stop the docker container */
 	@CliCommand(value = "stopContainer", help = "stops the docker Container")
 	public String stopContainer(
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.logging.Logger;
 
-/* 
+/**
  * Crawler commands. This class contains every command which deals with the 
  * crawl system once it's built and created.
  */
@@ -38,7 +38,7 @@ public class CrawlerCommands implements CommandMarker {
 		return true;
 	}
 
-	/* Start docker container */
+	/** Start docker container */
 	@CliCommand(value = "start", help = "the docker image must be created")
 	public String start(
 
@@ -65,7 +65,7 @@ public class CrawlerCommands implements CommandMarker {
 		return response;
 	}
 
-	/* Run the crawl in the docker container */
+	/** Run the crawl in the docker container */
 	@CliCommand(value = "run", help = "the docker cointainer must be running")
 	public String run(
 
@@ -87,7 +87,7 @@ public class CrawlerCommands implements CommandMarker {
 		return response;
 	}
 
-	/* "Extracts the info crawled in the docker container to an output path */
+	/** Extracts the info crawled in the docker container to an output path */
 	@CliCommand(value = "extract", help = "Extracts the info crawled in the docker container to an output path")
 	public String extract(
 

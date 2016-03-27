@@ -11,11 +11,9 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 
-// TODO @Iñigo Documentar como Javadoc (recuerda /**)
 public class YamlConfigRunner {
 
-	// TODO @Iñigo Documentar como Javadoc (recuerda /**)
-	/* Given a file configuration, returns a poblated Configuration class  if it's a well form file
+	/** Given a file configuration, returns a poblated Configuration class  if it's a well form file
 	 * the structure of the file is explained in 
 	 * https://github.com/Shathe/101CrawlersWeb/wiki/Especificaci%C3%B3n-del-fichero-de-configuraci%C3%B3n-yaml
 	 */

@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/* 
+/**
  * Operations related with the commads.
  */
 @Component
@@ -26,7 +26,7 @@ public class Operations implements CommandMarker {
 	private ApplicationContext ctx;
 
 
-	/*
+	/**
 	 * Executes a command it the OS system shell. if the print flag is activated, it shows the output
 	 * in the console, it it's not, it will return a bufferedReader with the output.
 	 */
@@ -38,11 +38,7 @@ public class Operations implements CommandMarker {
 
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-		// TODO @Iñigo Documentar en inglés
-		// Leemos la salida del comando
-
-		// TODO @Iñigo Documentar en inglés
-		// Leemos los errores si los hubiera
+		//  Read command error output
 		if (print) {
 			while ((s = stdInput.readLine()) != null) {
 				if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {

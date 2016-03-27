@@ -5,11 +5,10 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import java.util.ArrayList;
 
 
-// TODO @Iñigo Documentar como Javadoc (recuerda /**)
-/*
+/**
  * Validates a list of validatiors, it validates if the configuration file
  * is well formed concerning the crawling system
- *  */
+ */
 public class CrawlValidator implements Validator {
 
 	ArrayList<Validator> list;
