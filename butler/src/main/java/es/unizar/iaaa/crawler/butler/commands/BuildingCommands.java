@@ -62,7 +62,7 @@ public class BuildingCommands implements CommandMarker {
 				String id = idUser + "_" + idCrawler;
 				builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
 			} else {
-				response = result.getFirstErrorValue().toString();
+				response = result.getFirstErrorCode().name()+": "+result.getFirstErrorValue().toString();
 			}
 		} catch (Exception e) {
 			response = "File not found";
