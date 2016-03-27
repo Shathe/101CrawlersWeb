@@ -20,6 +20,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		pw.write("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
 				+ configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant\n");
 		pw.write("RUN ln -s nutch_source/runtime/local $HOME/crawler \n");
+		pw.write("Run mkdir crawler/"+directoryName+" \n");
 		pw.write("Run mkdir crawler/urls \n");
 		pw.write("Run mkdir  crawler/salida  \n");
 		pw.write("Run mkdir crawler/micrawl \n");

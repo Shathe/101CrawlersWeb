@@ -1,10 +1,13 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
-import static org.junit.Assert.assertNotNull;
-
+import java.io.BufferedReader;
 import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -26,52 +29,99 @@ import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 @ContextConfiguration(classes = { Application.class })
 public class CrawlerCommands implements CommandMarker {
 
-	@Autowired
-	private ApplicationContext ctx;
+	static Logger log = Logger.getLogger(CrawlerCommands.class.getName());
+	
+	private Operations ops=new Operations();
 
-	@Autowired
-	private ConfigurationValidator configurationValidator;
 
-	@CliAvailabilityIndicator({ "config" })
-	public boolean isSimpleAvailable() {
+	@CliAvailabilityIndicator({ "start" })
+	public boolean startAvailable() {
 		// always available
 		return true;
 	}
 
-	@CliCommand(value = "config", help = "If the configuration file is ok, creates every file needed for the crawling system")
-	public String simple(
+	@CliAvailabilityIndicator({ "extract" })
+	public boolean extractAvailable() {
+		// always available
+		return true;
+	}
+
+
+	@CliAvailabilityIndicator({ "run" })
+	public boolean stopNutchAvailable() {
+		// always available
+		return true;
+	}
+
+
+	/* Start docker container */
+	@CliCommand(value = "start", help = "the docker image must be created")
+	public String start(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler,
 			@CliOption(key = {
-					"file" }, mandatory = true, help = "The name onf the configuration file") final String configuration) {
+					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
 		String respuesta = "";
-		CrawlConfiguration config;
 		try {
-			config = readConfiguration(configuration);
-			ValidationResult result = configurationValidator.validate(config);
-			if (result.isOk()) {
-				String id = idUser+idCrawler;
-				AdaptadorBuilder builder = ctx.getBean(AdaptadorBuilder.class);
-				builder.crearFicherosConfiguracion(readConfiguration(configuration), id);
+			String id = idUser + "_" + idCrawler;
+			File directorio = new File(id);
+			if (directorio.isDirectory()) {
+				// docker run -i -d nameOfImage nameOfContainer
+				String comando = "docker run -i -d --name=\"" + id + "\" " + id;
+				ops.executeCommand(comando, true);
+				respuesta += " with name " + id;
 			} else {
-				respuesta = result.getFirstErrorValue().toString();
+				respuesta = "Docker image dont exist, please, try executing the build command";
 			}
+
 		} catch (Exception e) {
-			respuesta = "File not found";
+			respuesta = "Files not found";
 		}
+
 		return respuesta;
 	}
 
-	private Resource readPath(String route) throws Exception {
-		return ctx.getResource("classpath:es/unizar/iaaa/crawler/butler/builders/" + route);
-	}
+	/* Run the crawl in the docker container */
+	@CliCommand(value = "run", help = "the docker cointainer must be running")
+	public String run(
 
-	private CrawlConfiguration readConfiguration(String route) throws Exception {
-		return YamlConfigRunner.read(readPath(route));
-	}
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = {
+					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
+		String respuesta = "";
+		try {
+			String id = idUser + "_" + idCrawler;
 
-	private boolean checkFileExists(String parent, String child) {
-		return new File(parent, child).exists();
+			// docker exec idContainer sh crawler/run.sh
+			String comando = "docker exec " + id + " sh crawler/run.sh";
+			ops.executeCommand(comando, true);
+
+		} catch (Exception e) {
+			respuesta = "Docker container dont exist, please, try executing the start command";
+		}
+
+		return respuesta;
 	}
-}
+	/* "Extracts the info crawled in the docker container to an output path*/
+	@CliCommand(value = "extract", help = "Extracts the info crawled in the docker container to an output path")
+	public String extract(
+
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = { "path" }, mandatory = true, help = "output path") final String path, @CliOption(key = {
+					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
+		String respuesta = "";
+		try {
+			String id = idUser + "_" + idCrawler;
+			// docker exec idContainer sh crawler/juntarSalidas.sh
+			String comando = "docker exec " + id + " sh crawler/juntarSalidas.sh";
+			ops.executeCommand(comando, true);
+			// docker cp $idContainer:root/crawler/salida/salida $path
+			comando = "docker exec " + id + ":root/crawler/salida/salida " + path;
+			ops.executeCommand(comando, true);
+
+		} catch (Exception e) {
+			respuesta = "Docker container dont exist, please, try executing the start command";
+		}
+
+		return respuesta;
+	}}

@@ -1,0 +1,107 @@
+package es.unizar.iaaa.crawler.butler.commands;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.logging.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.shell.core.CommandMarker;
+import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
+import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
+
+import es.unizar.iaaa.crawler.butler.Application;
+import es.unizar.iaaa.crawler.butler.builders.AdaptadorBuilder;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
+import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
+import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
+
+@Component
+@ContextConfiguration(classes = { Application.class })
+public class StoppingCommands implements CommandMarker {
+
+	static Logger log = Logger.getLogger(StoppingCommands.class.getName());
+
+	private Operations ops=new Operations();
+
+	@CliAvailabilityIndicator({ "stopNutch" })
+	public boolean stopNutchAvailable() {
+		// always available
+		return true;
+	}
+
+	@CliAvailabilityIndicator({ "stopContainer" })
+	public boolean stopContainerAvailable() {
+		// always available
+		return true;
+	}
+
+	/* Stop the crawl in the docker container */
+	@CliCommand(value = "stopNutch", help = "Stops the crawler int the docker container")
+	public String stopNutch(
+
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = {
+					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
+		String respuesta = "";
+		try {
+			String id = idUser + "_" + idCrawler;
+			// docker exec $idContainer kill -9 $(docker exec $idContainer ps |
+			// grep crawl | awk '{print $1;}')
+			// docker exec $idContainer kill -9 $(docker exec $idContainer ps |
+			// grep sh | awk '{print $1;}')
+			// docker exec $idContainer kill -9 $(docker exec $idContainer ps |
+			// grep java | awk '{print $1;}')
+			String comando = "docker exec  " + id + " ps";
+			BufferedReader out = ops.executeCommand(comando, false);
+			String process = "";
+			while ((process = out.readLine()) != null) {
+				/* Para todos los procesos busca los procesos a eliminar */
+				if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
+					System.out.println(process);
+					comando = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
+					System.out.println(comando);
+					ops.executeCommand(comando, true);
+
+				}
+			}
+
+		} catch (Exception e) {
+			respuesta = "Docker container dont exist, please, try executing the start command";
+		}
+
+		return respuesta;
+	}
+
+	/* Stop the docker container */
+	@CliCommand(value = "stopContainer", help = "stops the docker Container")
+	public String stopContainer(
+
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = {
+					"time" }, mandatory = false, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") final String time,
+			@CliOption(key = {
+					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
+		String respuesta = "";
+		try {
+			String id = idUser + "_" + idCrawler;
+			// docker stop -t $tiempo $idContainer
+			String comando = "docker stop -t " + time + " " + id;
+			ops.executeCommand(comando, true);
+
+		} catch (Exception e) {
+			respuesta = "Docker container dont exist, please, try executing the start command";
+		}
+
+		return respuesta;
+	}
+}
