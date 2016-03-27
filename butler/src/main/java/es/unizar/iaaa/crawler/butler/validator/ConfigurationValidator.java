@@ -1,9 +1,18 @@
+/**
+ * Autor: Iñigo Alonso Ruiz
+ * Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 import java.util.ArrayList;
 
+/* 
+ * Validates a list of validatiors, it validates if the configuration file
+ * is totally well formed
+ */
 public class ConfigurationValidator implements Validator {
 
 	ArrayList<Validator> lista;
@@ -21,6 +30,7 @@ public class ConfigurationValidator implements Validator {
 				resultado = lista.get(i).validate(config);
 			}
 			return resultado;
-		}else return null;
+		} else
+			return null;
 	}
 }

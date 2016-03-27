@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.logging.Logger;
 
-// TODO @Iñigo Document me!
-@Component
+/* 
+ * Crawler commands. This class contains every command which deals with the 
+ * crawl system once it's built and created.
+ */
 public class CrawlerCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(CrawlerCommands.class.getName());

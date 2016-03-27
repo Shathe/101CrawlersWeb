@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.util.logging.Logger;
 
-// TODO @Iñigo Document me!
-@Component
+/* 
+ * Stopping commands. This class contains every command which stops the crawling system 
+ * or a part of it
+ */@Component
 public class StoppingCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(StoppingCommands.class.getName());

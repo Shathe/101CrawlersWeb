@@ -16,8 +16,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO @Iñigo Document me!
-// TODO @Iñigo Verify that the plugins framework works as expected!
+/* 
+ * Builds the nutch system. Creates every file needed and writes in the dockerfile every command needed
+ */
 @Component
 public class NutchBuilder implements CrawlerBuilder {
 
@@ -66,20 +67,24 @@ public class NutchBuilder implements CrawlerBuilder {
             /* Estructura: nombre file.xml (file.jar)+ */
             String[] all = pluginDesc.split(" ");
             // Create folder name
-            String pluginName = all[0];
+            int siguiente=nextNotVoid(all,0);
+            String pluginName = all[siguiente];
+            siguiente=nextNotVoid(all,siguiente+1);
             pw.println("Run mkdir crawler/plugins/" + pluginName);
             // Create plugin.xml
             Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
             Path target = directory.resolve("plugin.xml");
-            Path source = FileSystems.getDefault().getPath(all[1]);
+            Path source = FileSystems.getDefault().getPath(all[siguiente]);
             Files.createDirectory(directory);
             Files.copy(source, target);
             pw.println("ADD " + pluginName + "/plugin.xml crawler/plugins/" + pluginName + "/plugin.xml");
             // Create (file.jar)+
-            for(int i = 2; i< all.length; i++) {
-                source = FileSystems.getDefault().getPath(all[i]);
-                Files.copy(source, directory);
-                pw.println("ADD " + pluginName + "/" + source.getFileName() +
+            
+            for(siguiente=nextNotVoid(all,siguiente+1); siguiente< all.length; siguiente=nextNotVoid(all,siguiente+1)) {
+                source = FileSystems.getDefault().getPath(all[siguiente]);
+                target = directory.resolve(source.getFileName());
+                Files.copy(source, target);
+                pw.println("ADD " + pluginName + "/" + target.getFileName() +
                         " crawler/plugins/" + pluginName + "/" + source.getFileName());
             }
         }
@@ -159,4 +164,9 @@ public class NutchBuilder implements CrawlerBuilder {
 			return null;
 	}
 
+
+    private int nextNotVoid(String [] array, int i){
+    	while (i< array.length && array[i].equals(""))i++;
+    	return i;
+    }
 }

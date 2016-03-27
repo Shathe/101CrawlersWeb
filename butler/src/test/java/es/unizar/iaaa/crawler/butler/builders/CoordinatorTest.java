@@ -20,7 +20,10 @@ import static org.junit.Assert.*;
 /**
  * Created by javier on 09/03/16.
  */
-// TODO @Iñigo Document me!
+
+/*
+ * Test the configuration builder and validation
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={Application.class})
 public class CoordinatorTest {
@@ -34,6 +37,8 @@ public class CoordinatorTest {
     @Autowired
     private CrawlValidator crawlValidator;
 
+    /* Detects if a well formed configuration file, pass the validation */
+    
     @Test
     public void detectEverythingIsOK() throws URISyntaxException {
         CrawlConfiguration config;
@@ -45,6 +50,11 @@ public class CoordinatorTest {
         assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
         assertEquals("DefaultValidator dbe dar OK", Validator.Status.OK, result.getFirstErrorCode());
     }
+
+	/*
+	 * Detects if a bad formed configuration file, dont pass the validation the
+	 * error is a OS not supported
+	 */
 
     @Test
     public void detectUnsupportedOS() throws URISyntaxException {
@@ -58,7 +68,12 @@ public class CoordinatorTest {
         assertEquals("DefaultValidator no informa del que el error es el valor 10.0", "10.0",
                 result.getFirstErrorValue());
     }
-
+    
+	/*
+	 * Detects if a bad formed configuration file, dont pass the validation the
+	 * error is a crawl system not supported
+	 */
+    
     @Test
     public void detectUnsupportedCrawl() throws URISyntaxException {
         CrawlConfiguration config;
@@ -71,6 +86,10 @@ public class CoordinatorTest {
                 result.getFirstErrorValue());
     }
 
+	/*
+	 * Detects if a bad formed configuration file, dont pass the validation the
+	 * error is a bad seed 
+	 */
     @Test
     public void detectUnsupportedSeedsCrawl() throws URISyntaxException {
         CrawlConfiguration config;
@@ -82,6 +101,10 @@ public class CoordinatorTest {
                 Validator.Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, result.getFirstErrorCode());
     }
 
+	/*
+	 * Detects if a bad formed configuration file, dont pass the validation
+	 * The plugin has no xml file
+	 */
     @Test
     public void detectUnsupportedplugCrawl() throws URISyntaxException {
         CrawlConfiguration config;
@@ -93,10 +116,13 @@ public class CoordinatorTest {
                 Validator.Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
     }
 
+	/*
+	 * Detects if a well form configuration file, creates the building files
+	 */
 
 	@Test
 	public void builder() throws URISyntaxException {
-		String id="usuarioIdCrawlId";
+		String id="usuarioId_CrawlId";
 		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
 		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);
 		assertEquals("DefaultValidator no informa del tipo de error",

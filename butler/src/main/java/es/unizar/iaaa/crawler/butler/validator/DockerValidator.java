@@ -1,9 +1,19 @@
+/**
+ * Autor: Iñigo Alonso Ruiz
+ * Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package es.unizar.iaaa.crawler.butler.validator;
 
 import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
+
+/* 
+ * Validates a list of validatiors, it validates if the configuration file
+ * is well formed concerning the docker part
+ */
 public class DockerValidator implements Validator {
 
 	ArrayList<Validator> lista;

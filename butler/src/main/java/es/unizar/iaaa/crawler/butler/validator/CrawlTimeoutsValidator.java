@@ -1,6 +1,15 @@
+/**
+ * Autor: Iñigo Alonso Ruiz
+ * Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+/* 
+ * Validates if the Crawl timeouts is well formed
+ * in this case it's well formed if they are  integer number s
+ */
 
 public class CrawlTimeoutsValidator implements Validator {
 

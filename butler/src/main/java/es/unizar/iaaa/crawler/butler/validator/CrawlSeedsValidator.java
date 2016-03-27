@@ -1,3 +1,8 @@
+/**
+ * Autor: Iñigo Alonso Ruiz
+ * Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
@@ -5,6 +10,10 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* 
+ * Validates if the Crawl seeds configuration  is well formed
+ * in this case it's well formed if they are urls
+ */
 public class CrawlSeedsValidator implements Validator {
 
     private static boolean isUrl(String s) {

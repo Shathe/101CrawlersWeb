@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.logging.Logger;
 
-// TODO @Iñigo Document me!
+/* 
+ * Building commands. This class contains every command which deals with the building
+ * of the docker and crawlsystem.
+ */
 @Component
 public class BuildingCommands implements CommandMarker {
 

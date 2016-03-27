@@ -17,6 +17,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+/* 
+ * Builds the dockerbuilder creates the dockerfile and the files needed for the system
+ */
+
 @Component
 public class DockerBuilder {
 

@@ -1,9 +1,16 @@
+/**
+ * Autor: Iñigo Alonso Ruiz
+ * Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
-// TODO @Iñigo Document me!
-public class CrawlLimitURLValidator implements Validator {
+/* 
+ * Validates if the Url limit is well formed
+ * in this case it's well formed if it's an integer number 
+ */public class CrawlLimitURLValidator implements Validator {
 
 	@Override
 	public ValidationResult validate(CrawlConfiguration config) {

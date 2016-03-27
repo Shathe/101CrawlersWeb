@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 
+/*
+ * Builds the system. Depending the configuration the adapter will choose the correct builders
+ */
 @Component
 public class AdapterBuilder {
 

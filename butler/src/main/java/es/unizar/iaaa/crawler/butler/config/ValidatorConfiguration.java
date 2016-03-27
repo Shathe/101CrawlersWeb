@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 
+/*  Configuration of the validators */
+
 @Configuration
 public class ValidatorConfiguration {
 
