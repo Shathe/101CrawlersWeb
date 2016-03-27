@@ -53,6 +53,7 @@ public class StoppingCommands implements CommandMarker {
 			BufferedReader out = ops.executeCommand(comando, false);
 			String process = "";
 			while ((process = out.readLine()) != null) {
+				// TODO @Iñigo Documentar en inglés
 				/* Para todos los procesos busca los procesos a eliminar */
 				if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
 					log.info(process);

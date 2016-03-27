@@ -11,7 +11,7 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO @Iñigo Document me!
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
 public interface Validator {
 
 	ValidationResult validate(CrawlConfiguration config);

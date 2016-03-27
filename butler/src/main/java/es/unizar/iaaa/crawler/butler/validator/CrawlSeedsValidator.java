@@ -10,7 +10,8 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/* 
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
+/*
  * Validates if the Crawl seeds configuration  is well formed
  * in this case it's well formed if they are urls
  */

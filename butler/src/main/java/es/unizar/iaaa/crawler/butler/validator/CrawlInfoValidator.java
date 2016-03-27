@@ -6,7 +6,9 @@
 package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-/* 
+
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
+/*
  * Validates if the information carlwed configuration is well formed
  * in this case it's well formed if it's text or html 
  */

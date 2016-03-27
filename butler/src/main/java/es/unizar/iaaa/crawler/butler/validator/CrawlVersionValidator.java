@@ -7,7 +7,8 @@ package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
-/* 
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
+/*
  * Validates if the Crawl version is well formed
  * in this case it's well formed if it's 1.9 
  */

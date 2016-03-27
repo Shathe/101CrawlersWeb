@@ -7,10 +7,12 @@ package es.unizar.iaaa.crawler.butler.validator;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
-/* 
+// TODO @Iñigo Documentar como Javadoc (recuerda /**)
+/*
  * Validates if the Url limit is well formed
  * in this case it's well formed if it's an integer number 
- */public class CrawlLimitURLValidator implements Validator {
+ */
+public class CrawlLimitURLValidator implements Validator {
 
 	@Override
 	public ValidationResult validate(CrawlConfiguration config) {
