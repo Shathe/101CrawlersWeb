@@ -7,7 +7,7 @@ Configuración.yml que siga esta [especificación] (https://github.com/Shathe/10
 
 ### Comandos
 ```sh
-$> config --file config.yml --idUser 1 --idCrawl 1
+$> config --file conf.yml --idUser 1 --idCrawl 1
 $> config --help
 ```
 
