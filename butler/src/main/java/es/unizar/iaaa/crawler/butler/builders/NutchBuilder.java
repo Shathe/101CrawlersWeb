@@ -5,6 +5,7 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
+import com.google.common.base.Strings;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.stereotype.Component;
 
@@ -102,7 +103,7 @@ public class NutchBuilder implements CrawlerBuilder {
 			pw.write("<configuration>" + "\n");
 
             for (Property property : properties) {
-                property.add(pw);
+				anadirProperty(pw, property);
             }
 
 			pw.write("</configuration>" + "\n");
@@ -112,21 +113,16 @@ public class NutchBuilder implements CrawlerBuilder {
     }
 
 	/* Añade una property a un fichero */
-	private void anadirProperty(PrintWriter pw, String nombre, String valor, String descripcion) {
-		pw.write("	<property>" + "\n");
-		pw.write("		<name>" + "\n");
-		pw.write("		" + nombre + "\n");
-		pw.write("		</name>" + "\n");
-		pw.write("		<value>" + "\n");
-		pw.write("		" + valor + "\n");
-		pw.write("		</value>" + "\n");
-		if (descripcion != null && !descripcion.equals("")) {
-			pw.write("		<description>" + "\n");
-			pw.write("		" + descripcion + "\n");
-			pw.write("		</description>" + "\n");
+	private void anadirProperty(PrintWriter pw, Property prop) {
+		if (!Strings.isNullOrEmpty(prop.getValue())) {
+			pw.write("	<property>" + "\n");
+			pw.write("		<name>" + "\n");
+			pw.write("		" + prop.getName() + "\n");
+			pw.write("		</name>" + "\n");
+			pw.write("		<value>" + "\n");
+			pw.write("		" + prop.getValue() + "\n");
+			pw.write("		</value>" + "\n");
 		}
-		pw.write("	</property>" + "\n");
-
 	}
 
 	/* Genera una cadena aleatoria */

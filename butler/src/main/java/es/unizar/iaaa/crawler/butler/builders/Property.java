@@ -1,7 +1,5 @@
 package es.unizar.iaaa.crawler.butler.builders;
 
-import java.io.PrintWriter;
-
 public class Property {
 
 	private String name;
@@ -26,24 +24,5 @@ public class Property {
 	public Property(String nombre, String valor) {
 		name = nombre;
 		value = valor;
-	}
-
-	/* Añade una property a un fichero */
-	public void add(PrintWriter pw) {
-		if (!campoVacio(value)) {
-			pw.write("	<property>" + "\n");
-			pw.write("		<name>" + "\n");
-			pw.write("		" + name + "\n");
-			pw.write("		</name>" + "\n");
-			pw.write("		<value>" + "\n");
-			pw.write("		" + value + "\n");
-			pw.write("		</value>" + "\n");
-			pw.write("	</property>" + "\n");
-		}
-
-	}
-
-	private boolean campoVacio(Object campo) {
-		return campo == null || campo.toString().equals("");
 	}
 }

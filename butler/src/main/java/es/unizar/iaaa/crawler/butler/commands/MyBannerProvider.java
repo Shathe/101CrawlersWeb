@@ -8,29 +8,28 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class MyBannerProvider extends DefaultBannerProvider  {
+public class MyBannerProvider extends DefaultBannerProvider {
 
-	public String getBanner() {
-		StringBuffer buf = new StringBuffer();
-		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
-		buf.append("*                                     *"+ OsUtils.LINE_SEPARATOR);
-		buf.append("*            101Crawlers              *" +OsUtils.LINE_SEPARATOR);
-		buf.append("*                                     *"+ OsUtils.LINE_SEPARATOR);
-		buf.append("=======================================" + OsUtils.LINE_SEPARATOR);
-		buf.append("Version:" + this.getVersion());
-		return buf.toString();
-	}
+    public String getBanner() {
+        return new StringBuilder().
+                append("=======================================").append(OsUtils.LINE_SEPARATOR).
+                append("*                                     *").append(OsUtils.LINE_SEPARATOR).
+                append("*            101Crawlers              *").append(OsUtils.LINE_SEPARATOR).
+                append("*                                     *").append(OsUtils.LINE_SEPARATOR).
+                append("=======================================").append(OsUtils.LINE_SEPARATOR).
+                append("Version:").append(this.getVersion()).toString();
+    }
 
-	public String getVersion() {
-		return "0.0.1";
-	}
+    public String getVersion() {
+        return "0.0.1";
+    }
 
-	public String getWelcomeMessage() {
-		return "Welcome to 101Crawlers CLI";
-	}
-	
-	@Override
-	public String getProviderName() {
-		return "101Crawlers Banner";
-	}
+    public String getWelcomeMessage() {
+        return "Welcome to 101Crawlers CLI";
+    }
+
+    @Override
+    public String getProviderName() {
+        return "101Crawlers Banner";
+    }
 }

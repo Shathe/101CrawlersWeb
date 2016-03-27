@@ -6,16 +6,8 @@ public class CrawlLimitURLValidator implements Validator {
 
 	@Override
 	public ValidationResult validate(CrawlConfiguration config) {
-		try {
-			/* Valida que sea un numero entero */
-			if (config.getCrawlSystem().getLinksLimitURL() != null)
-			Integer.valueOf(config.getCrawlSystem().getLinksLimitURL());
-			return new LatestValidationResult();
-
-        } catch (Exception a) {
-            return new LatestValidationResult(Validator.ErroresValidar.ERROR_UNSUPPORTED_CRAWL_LIMIT_URL,
-            		"LimitUrl error:" + config.getCrawlSystem().getLinksLimitURL());
-        }
+        String value = config.getCrawlSystem().getLinksLimitURL();
+        return validateIntValue(value, Status.ERROR_UNSUPPORTED_CRAWL_LIMIT_URL);
     }
 
 }

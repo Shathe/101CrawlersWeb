@@ -18,13 +18,11 @@ public class CrawlPluginsValidator implements Validator {
 			/* Compruebas que los ficheros existen */
 
             if (!checkFileExists(all[1])) {
-                return new LatestValidationResult(ErroresValidar.ERROR_UNSUPPORTED_CRAWL_PLUGINS,
-                        "Error en el plugin: " + plugin + ", no se encuentra: " + all[1]);
+                return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all[1]);
             }
             for (int j = 2; j < all.length; j++) {
                 if (!checkFileExists(all[j])) {
-                    return new LatestValidationResult(ErroresValidar.ERROR_UNSUPPORTED_CRAWL_PLUGINS,
-                            "Error en el plugin: " + plugin + ", no se encuentra: " + all[j]);
+                    return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all[j]);
                 }
             }
 

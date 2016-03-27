@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Component
-public class AdaptadorBuilder {
+public class AdapterBuilder {
 
     @Autowired
     private NutchBuilder builder;
@@ -27,7 +27,7 @@ public class AdaptadorBuilder {
 
 
     /* Crear ficheros de configuration dependiendo del sistema de crawling */
-    public void crearFicherosConfiguracion(CrawlConfiguration configuration, String outputDir) {
+    public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) {
 
 
 				/*

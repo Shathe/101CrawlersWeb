@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 
 import es.unizar.iaaa.crawler.butler.Application;
-import es.unizar.iaaa.crawler.butler.builders.AdaptadorBuilder;
+import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.ValidationResult;

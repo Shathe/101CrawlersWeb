@@ -1,32 +1,14 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.logging.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
-
-import es.unizar.iaaa.crawler.butler.Application;
-import es.unizar.iaaa.crawler.butler.builders.AdaptadorBuilder;
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
-import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
-import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
 @Component
-@ContextConfiguration(classes = { Application.class })
 public class StoppingCommands implements CommandMarker {
 
 	static Logger log = Logger.getLogger(StoppingCommands.class.getName());
@@ -52,7 +34,7 @@ public class StoppingCommands implements CommandMarker {
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
 			@CliOption(key = {
 					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
-		String respuesta = "";
+		String response = "";
 		try {
 			String id = idUser + "_" + idCrawler;
 			// docker exec $idContainer kill -9 $(docker exec $idContainer ps |
@@ -76,10 +58,10 @@ public class StoppingCommands implements CommandMarker {
 			}
 
 		} catch (Exception e) {
-			respuesta = "Docker container dont exist, please, try executing the start command";
+			response = "Docker container dont exist, please, try executing the start command";
 		}
 
-		return respuesta;
+		return response;
 	}
 
 	/* Stop the docker container */
@@ -91,7 +73,7 @@ public class StoppingCommands implements CommandMarker {
 					"time" }, mandatory = false, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") final String time,
 			@CliOption(key = {
 					"idCrawler" }, mandatory = true, help = "id of the new crawler") final String idCrawler) {
-		String respuesta = "";
+		String response = "";
 		try {
 			String id = idUser + "_" + idCrawler;
 			// docker stop -t $tiempo $idContainer
@@ -99,9 +81,9 @@ public class StoppingCommands implements CommandMarker {
 			ops.executeCommand(comando, true);
 
 		} catch (Exception e) {
-			respuesta = "Docker container dont exist, please, try executing the start command";
+			response = "Docker container dont exist, please, try executing the start command";
 		}
 
-		return respuesta;
+		return response;
 	}
 }

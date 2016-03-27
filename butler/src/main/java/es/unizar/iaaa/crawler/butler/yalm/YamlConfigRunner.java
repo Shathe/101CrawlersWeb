@@ -9,7 +9,6 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.core.io.Resource;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -21,6 +20,7 @@ public class YamlConfigRunner {
         try(InputStream is = resource.getInputStream()) {
             result = yaml.loadAs(is, CrawlConfiguration.class);
         } catch (Exception e) {
+            e.toString();
         }
         return result;
     }

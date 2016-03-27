@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public class CrawlValidator implements Validator {
 
-	ArrayList<Validator> lista;
+	ArrayList<Validator> list;
 
-	public CrawlValidator(ArrayList<Validator> lista) {
-		this.lista = lista;
+	public CrawlValidator(ArrayList<Validator> list) {
+		this.list = list;
 	}
 
     @Override
@@ -17,8 +17,8 @@ public class CrawlValidator implements Validator {
     	
         ValidationResult resultado =  new LatestValidationResult();
 
-        for (int i=0; i<lista.size() && resultado.isOk() ;i++){
-        	resultado=lista.get(i).validate(config);
+        for (int i = 0; i< list.size() && resultado.isOk() ; i++){
+        	resultado= list.get(i).validate(config);
         }
         return resultado;
     }
