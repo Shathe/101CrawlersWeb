@@ -1,11 +1,9 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+
 /**
  * Builds the dockerbuilder creates the dockerfile and the files needed for the
  * system
@@ -27,7 +27,7 @@ public class DockerBuilder {
     @Autowired
     private NutchBuilder crawlerBuilder;
 
-    public void crearDockerfile(CrawlConfiguration config, File resources, String directoryName) {
+    public void crearDockerfile(CrawlConfiguration config, File resources, String directoryName) throws IOException {
         // Creates the run.sh file  which will be used for executing the crawl
         createRunSh(config, resources, directoryName);
         // Creates the juntarSalidas.sh file which will be used for executing the crawl
@@ -36,7 +36,7 @@ public class DockerBuilder {
         createDockerfile(config, resources, directoryName);
     }
 
-    private void createDockerfile(CrawlConfiguration configuracion, File resources, String directoryName) {
+    private void createDockerfile(CrawlConfiguration configuracion, File resources, String directoryName) throws IOException {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")))) {
             // Add dockerOS
             pw.println(
@@ -53,8 +53,6 @@ public class DockerBuilder {
 
             pw.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

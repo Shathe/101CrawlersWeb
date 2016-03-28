@@ -1,17 +1,17 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 /**
  * Builds the system. Depending the configuration the adapter will choose the correct builders
@@ -30,10 +30,10 @@ public class AdapterBuilder {
 
 
     /**
-     * Creates the configuration files, according the crawling system
-     * Crear ficheros de configuration dependiendo del sistema de crawling
+     * Creates the configuration files, according the crawling system Crear ficheros de
+     * configuration dependiendo del sistema de crawling
      */
-    public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) {
+    public void createConfigurationFiles(CrawlConfiguration configuration, String outputDir) throws IOException {
 
 
         // The adapter choose the correct builers according the configuration
@@ -43,14 +43,10 @@ public class AdapterBuilder {
         theDir.mkdir();
 
         // First crawl builder and then docker builder
-		// Primero se llama al builder de nutch y después al de docker
+        // Primero se llama al builder de nutch y después al de docker
         builder.createNutchSite(configuration, outputDir);
 
-        try {
-            dockerBuilder.crearDockerfile(configuration, ctx.getResource("classpath:/templates").getFile(), outputDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dockerBuilder.crearDockerfile(configuration, ctx.getResource("classpath:/templates").getFile(), outputDir);
     }
 
 }
