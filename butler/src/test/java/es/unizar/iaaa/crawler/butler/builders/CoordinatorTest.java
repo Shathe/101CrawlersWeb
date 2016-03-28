@@ -21,8 +21,7 @@ import static org.junit.Assert.*;
  * Created by javier on 09/03/16.
  */
 
-// TODO @Iñigo Documentar como Javadoc (recuerda /**)
-/*
+/**
  * Test the configuration builder and validation
  */
 @RunWith(SpringJUnit4ClassRunner.class)

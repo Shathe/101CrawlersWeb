@@ -8,8 +8,8 @@ package es.unizar.iaaa.crawler.butler.validator;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 /**
- * Validates if the Crawl timeouts is well formed
- * in this case it's well formed if they are  integer number s
+ * Validates if the Crawl timeouts is well formed in this case it's well formed
+ * if they are integer number s
  */
 public class CrawlTimeoutsValidator implements Validator {
 
@@ -17,8 +17,7 @@ public class CrawlTimeoutsValidator implements Validator {
 	public ValidationResult validate(CrawlConfiguration config) {
 		try {
 			if (config.getCrawlSystem().getTimeouts() != null) {
-				// TODO Use // for comments wihtin methods
-			/* Validates whether they are integer numbers */
+				// Validates whether they are integer numbers
 				if (config.getCrawlSystem().getTimeouts().getFetchTimes() != null)
 					Integer.valueOf(config.getCrawlSystem().getTimeouts().getFetchTimes());
 				if (config.getCrawlSystem().getTimeouts().getNetwork() != null)
@@ -28,11 +27,10 @@ public class CrawlTimeoutsValidator implements Validator {
 			}
 			return new LatestValidationResult();
 
-
-        } catch (Exception a) {
-            return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_TIMEOUTS,
-            		config.getCrawlSystem().getTimeouts());
-        }
-    }
+		} catch (Exception a) {
+			return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_TIMEOUTS,
+					config.getCrawlSystem().getTimeouts());
+		}
+	}
 
 }

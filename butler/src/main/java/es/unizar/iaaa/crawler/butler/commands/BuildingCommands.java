@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.logging.Logger;
 
-/* 
+/** 
  * Building commands. This class contains every command which deals with the building
  * of the docker and crawlsystem.
  */

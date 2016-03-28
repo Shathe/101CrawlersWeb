@@ -37,14 +37,12 @@ public class AdapterBuilder {
 
 
         // The adapter choose the correct builers according the configuration
-        // TODO Translate to english
         // Aquí si hubiera varias posibilidades de sistemas de crawling
         // o OS's para docker, el adaptador eligiría la adecuada segun la configuarión
         File theDir = new File(outputDir);
         theDir.mkdir();
 
         // First crawl builder and then docker builder
-        // TODO Translate to english
 		// Primero se llama al builder de nutch y después al de docker
         builder.createNutchSite(configuration, outputDir);
 
