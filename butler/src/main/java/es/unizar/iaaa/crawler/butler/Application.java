@@ -9,10 +9,10 @@ import java.io.IOException;
 @SpringBootApplication
 public class Application {
 
-	public static void main(String[] args)throws IOException {
-		SpringApplication app = new SpringApplication(Application.class);
+    public static void main(String[] args) throws IOException {
+        SpringApplication app = new SpringApplication(Application.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
-	}
+    }
 
 }

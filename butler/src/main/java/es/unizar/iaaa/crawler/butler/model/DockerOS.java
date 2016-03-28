@@ -1,6 +1,5 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.model;

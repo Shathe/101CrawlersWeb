@@ -1,6 +1,5 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.validator;
@@ -13,10 +12,10 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 public class CrawlMaxFileValidator implements Validator {
 
-	@Override
-	public ValidationResult validate(CrawlConfiguration config) {
-		String value = config.getCrawlSystem().getMaxFileLength();
-		return validateIntValue(value, Status.ERROR_UNSUPPORTED_CRAWL_FILE_LENGTH, false);
-	}
+    @Override
+    public ValidationResult validate(CrawlConfiguration config) {
+        String value = config.getCrawlSystem().getMaxFileLength();
+        return validateIntValue(value, Status.ERROR_UNSUPPORTED_CRAWL_FILE_LENGTH, false);
+    }
 
 }

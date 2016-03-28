@@ -15,7 +15,7 @@ public class SpringShellLauncher implements CommandLineRunner {
     private JLineShellComponent shell;
 
     @Override
-    public void run( String... args ) throws Exception {
+    public void run(String... args) throws Exception {
         shell.start();
         shell.promptLoop();
         shell.waitForComplete();

@@ -1,6 +1,5 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.validator;
@@ -13,8 +12,8 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 public class CrawlLimitURLValidator implements Validator {
 
-	@Override
-	public ValidationResult validate(CrawlConfiguration config) {
+    @Override
+    public ValidationResult validate(CrawlConfiguration config) {
         String value = config.getCrawlSystem().getLinksLimitURL();
         return validateIntValue(value, Status.ERROR_UNSUPPORTED_CRAWL_LIMIT_URL, false);
     }

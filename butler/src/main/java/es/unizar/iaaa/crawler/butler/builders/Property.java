@@ -2,27 +2,27 @@ package es.unizar.iaaa.crawler.butler.builders;
 
 public class Property {
 
-	private String name;
-	private String value;
+    private String name;
+    private String value;
 
-	public String getValue() {
-		return value;
-	}
+    public Property(String nombre, String valor) {
+        name = nombre;
+        value = valor;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Property(String nombre, String valor) {
-		name = nombre;
-		value = valor;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 }

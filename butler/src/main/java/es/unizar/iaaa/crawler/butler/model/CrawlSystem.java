@@ -1,6 +1,5 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.model;
@@ -54,11 +53,11 @@ public final class CrawlSystem {
         this.rounds = rounds;
     }
 
-    public List<List<String> > getPlugins() {
+    public List<List<String>> getPlugins() {
         return plugins;
     }
 
-    public void setPlugins(List<List<String> > plugins) {
+    public void setPlugins(List<List<String>> plugins) {
         this.plugins = plugins;
     }
 

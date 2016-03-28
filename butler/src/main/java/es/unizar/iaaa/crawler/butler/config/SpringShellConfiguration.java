@@ -14,11 +14,12 @@ import org.springframework.shell.core.JLineShellComponent;
         "org.springframework.shell.plugin.support"})
 public class SpringShellConfiguration {
     @Bean
-    public JLineShellComponent shell(){
+    public JLineShellComponent shell() {
         return new JLineShellComponent();
     }
+
     @Bean
-    public CommandLine commandLine(){
-        return new CommandLine(null,3000,null);
+    public CommandLine commandLine() {
+        return new CommandLine(null, 3000, null);
     }
 }

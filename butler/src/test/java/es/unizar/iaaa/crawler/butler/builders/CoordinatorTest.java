@@ -1,9 +1,5 @@
 package es.unizar.iaaa.crawler.butler.builders;
 
-import es.unizar.iaaa.crawler.butler.Application;
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-import es.unizar.iaaa.crawler.butler.validator.*;
-import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +9,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.*;
+import es.unizar.iaaa.crawler.butler.Application;
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
+import es.unizar.iaaa.crawler.butler.validator.CrawlPluginsValidator;
+import es.unizar.iaaa.crawler.butler.validator.CrawlSeedsValidator;
+import es.unizar.iaaa.crawler.butler.validator.CrawlValidator;
+import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
+import es.unizar.iaaa.crawler.butler.validator.Validator;
+import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
-/**
- * Created by javier on 09/03/16.
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the configuration builder and validation
@@ -113,7 +119,7 @@ public class CoordinatorTest {
 	 * Detects if a well form configuration file, creates the building files
 	 */
     @Test
-	public void builder() throws URISyntaxException {
+	public void builder() throws URISyntaxException, IOException {
 		String id="usuarioId_CrawlId";
 		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
 		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);

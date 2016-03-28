@@ -1,15 +1,15 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.yalm;
 
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import org.springframework.core.io.Resource;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 public class YamlConfigRunner {
 

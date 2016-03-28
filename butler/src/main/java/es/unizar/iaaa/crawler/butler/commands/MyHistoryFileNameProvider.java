@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MyHistoryFileNameProvider extends DefaultHistoryFileNameProvider {
 
-	public String getHistoryFileName() {
-		return "my.log";
-	}
+    public String getHistoryFileName() {
+        return "my.log";
+    }
 
-	@Override
-	public String getProviderName() {
-		return "My history file name provider";
-	}
-	
+    @Override
+    public String getProviderName() {
+        return "My history file name provider";
+    }
+
 }

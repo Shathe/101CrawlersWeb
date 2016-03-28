@@ -1,14 +1,13 @@
 /**
- * Autor: Iñigo Alonso Ruiz
- * Quality supervised by: F.J. Lopez Pellicer
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
  */
 
 package es.unizar.iaaa.crawler.butler.validator;
 
-import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 
 /**
  * Validates if the Crawl seeds configuration  is well formed

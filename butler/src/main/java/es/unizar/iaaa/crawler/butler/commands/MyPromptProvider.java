@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MyPromptProvider extends DefaultPromptProvider {
 
-	@Override
-	public String getPrompt() {
-		return "101shell>";
-	}
+    @Override
+    public String getPrompt() {
+        return "101shell>";
+    }
 
-	
-	@Override
-	public String getProviderName() {
-		return "My prompt provider";
-	}
+
+    @Override
+    public String getProviderName() {
+        return "My prompt provider";
+    }
 
 }
