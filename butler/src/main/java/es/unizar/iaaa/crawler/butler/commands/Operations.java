@@ -60,7 +60,7 @@ public class Operations implements CommandMarker {
 		// The first one is the final one
 		// The second one is for debugging
 		Resource res = ctx.getResource("file:../" + route);
-		if (res == null)
+		if (!res.exists())
 			return ctx.getResource("classpath:es/unizar/iaaa/crawler/butler/builders/" + route);
 		else
 			return res;
