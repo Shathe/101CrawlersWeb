@@ -110,7 +110,7 @@ public class CrawlerCommands implements CommandMarker {
             ops.executeCommand(comando, true);
 
         } catch (Exception e) {
-            response = "Docker container dont exist, please, try executing the start command";
+            response = "Docker container don't exist, please, try executing the start command";
         }
 
         return response;

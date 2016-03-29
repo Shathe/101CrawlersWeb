@@ -6,6 +6,7 @@ package es.unizar.iaaa.crawler.butler.builders;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,10 @@ public class AdapterBuilder {
 
     @Autowired
     private ApplicationContext ctx;
+
+    @Value("${butler.templates}" +
+            "")
+    private String templatesDir;
 
 
     /**
@@ -65,7 +70,7 @@ public class AdapterBuilder {
         // Primero se llama al builder de nutch y después al de docker
         builder.createNutchSite(configuration, outputDir);
 
-        dockerBuilder.crearDockerfile(configuration, ctx.getResource("classpath:/templates").getFile(), outputDir);
+        dockerBuilder.crearDockerfile(configuration, ctx.getResource(templatesDir).getFile(), outputDir);
     }
 
 }

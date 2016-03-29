@@ -3,9 +3,10 @@ package es.unizar.iaaa.crawler.butler.builders;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
@@ -31,7 +32,8 @@ import static org.junit.Assert.assertTrue;
  * Test the configuration builder and validation
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={Application.class})
+@SpringApplicationConfiguration(Application.class)
+@ActiveProfiles("test")
 public class CoordinatorTest {
 
     @Autowired
@@ -42,6 +44,9 @@ public class CoordinatorTest {
 
     @Autowired
     private CrawlValidator crawlValidator;
+
+    @Value("${butler.base}")
+    private String baseDir;
 
     /** Detects if a well formed configuration file, pass the validation */
     @Test
@@ -133,12 +138,8 @@ public class CoordinatorTest {
 				true, checkFileExists(id, "run.sh"));
 	}
 
-    private Resource readPath(String route) throws URISyntaxException {
-        return ctx.getResource("classpath:es/unizar/iaaa/crawler/butler/builders/"+route);
-    }
-
-    private CrawlConfiguration readConfiguration(String route) throws URISyntaxException {
-        return YamlConfigRunner.read(readPath(route));
+    public CrawlConfiguration readConfiguration(String route)  {
+        return YamlConfigRunner.read(ctx.getResource(baseDir + route));
     }
 
     private boolean checkFileExists(String parent, String child) {
