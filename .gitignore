@@ -152,4 +152,5 @@ site/.springBeans
 /butler/my.log
 /butler/spring-shell.log
 
-
+#Tests
+/butler/usuarioId_CrawlId
