@@ -4,6 +4,8 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 @Component
 public class DockerBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockerBuilder.class);
 
     @Autowired
     private NutchBuilder crawlerBuilder;
@@ -37,59 +40,56 @@ public class DockerBuilder {
     }
 
     private void createDockerfile(CrawlConfiguration configuracion, File resources, String directoryName) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")))) {
+        Path dockerbase = Paths.get(new File(resources, "DockerBase").toURI());
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")));
+             Scanner scan = new Scanner(dockerbase)
+        ) {
             // Add dockerOS
             pw.println(
                     "From " + configuracion.getDockerOS().getName() + ":" + configuracion.getDockerOS().getVersion());
-            Path dockerbase = Paths.get(new File(resources, "DockerBase").toURI());
             // Add static content
-            Scanner scan = new Scanner(dockerbase);
             while (scan.hasNextLine()) {
                 String linea = scan.nextLine();
-                pw.write(linea + "\n");
+                pw.println(linea);
             }
-            scan.close();
             crawlerBuilder.addDockerfile(configuracion, directoryName, pw);
-
-            pw.close();
-
         }
     }
 
     private void createRunSh(CrawlConfiguration configuracion, File resources, String directoryName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "run.sh")))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "run.sh")));
+             Scanner scan = new Scanner(new File(resources, "runNutch"))
+        ) {
             // rounds number
-            pw.write("#Number of rounds the crawler will run\n");
-            pw.write("rounds=" + configuracion.getCrawlSystem().getRounds() + "\n");
-            pw.write("#readseg options \n");
+            pw.println("#!/usr/bin/env bash");
+            pw.println("#Number of rounds the crawler will run");
+            pw.println("rounds=" + configuracion.getCrawlSystem().getRounds());
+            pw.println("#readseg options");
             // What information will be crawled
             if (configuracion.getCrawlSystem().getInfoCrawled().toLowerCase().equals("html")) {
-                pw.write("dumpOptions=\"-nogenerate -nofetch -noparsetext -noparse -noparsedata\"\n");
+                pw.println("dumpOptions=\"-nogenerate -nofetch -noparsetext -noparse -noparsedata\"");
             } else {
-                pw.write("dumpOptions=\"-nogenerate -nofetch -nocontent -noparse -noparsedata\"\n");
+                pw.println("dumpOptions=\"-nogenerate -nofetch -nocontent -noparse -noparsedata\"");
             }
-
-            Scanner scan = new Scanner(new File(resources, "runNutch"));
             while (scan.hasNextLine()) {
                 String linea = scan.nextLine();
-                pw.write(linea + "\n");
+                pw.println(linea);
             }
-            scan.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("IOException: "+e.getMessage(), e);
         }
     }
 
     private void createJuntarSalidasSh(File resources, String directoryName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "juntarSalidas.sh")))) {
-            Scanner scan = new Scanner(new File(resources, "juntarSalidas"));
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "juntarSalidas.sh")));
+             Scanner scan = new Scanner(new File(resources, "juntarSalidas"));
+        ) {
             while (scan.hasNextLine()) {
                 String linea = scan.nextLine();
-                pw.write(linea + "\n");
+                pw.println(linea);
             }
-            scan.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("IOException: "+e.getMessage(), e);
         }
     }
 
