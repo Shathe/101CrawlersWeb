@@ -70,4 +70,93 @@ public class Operations implements CommandMarker {
 		return YamlConfigRunner.read(readPath(route));
 	}
 
+
+	public boolean containerExists(String idUser, String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		boolean exist = false;
+		String s = "";
+		try {
+			BufferedReader out = executeCommand("docker ps -a ", false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains(" " + id + " "))
+					exist = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return exist;
+	}
+
+	public boolean containerRunning(String idUser, String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		boolean exist = false;
+		String s = "";
+		try {//docker ps -f=[name='1_1']
+			String command="docker ps -a --filter \"status=running\" --filter \"name="+id+"\"";
+
+			BufferedReader out = executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains(id))
+					exist = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return exist ;
+	}
+
+	public boolean imageExists(String idUser, String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		boolean exist = false;
+		String s = "";
+		try {
+			BufferedReader out = executeCommand("docker images " + id, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains( id ))
+					exist = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return exist;
+	}
+	public boolean containerStopped(String idUser, String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		boolean exist = false;
+		String s = "";
+		try {// docker ps --filter "status=exited" --filter "name=1_1"
+			String command="docker ps -a --filter \"status=exited\" --filter \"name="+id+"\"";
+			BufferedReader out = executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains(id) && s.contains("Exited"))
+					exist = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return exist && ! containerPaused(idUser,idCrawl);
+	}
+
+	public boolean containerPaused(String idUser, String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		boolean exist = false;
+		String s = "";
+		try {// docker ps -f=[name='1_1']
+			String command="docker ps -a --filter \"status=paused\" --filter \"name="+id+"\"";
+
+			BufferedReader out = executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains(id) && s.contains("Paused"))
+					exist = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return exist;
+	}
 }

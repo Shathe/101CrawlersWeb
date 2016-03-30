@@ -7,7 +7,9 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
@@ -53,7 +55,7 @@ public class BuildingCommands implements CommandMarker {
     public String config(
 
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
-            @CliOption(key = {"idCrawler"}, mandatory = true, help = "id of the new crawler") final String idCrawler,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl,
             @CliOption(key = {
                     "file"}, mandatory = true, help = "The name onf the configuration file") final String configuration) {
         String response = "configurated successfully";
@@ -62,7 +64,7 @@ public class BuildingCommands implements CommandMarker {
             config = ops.readConfiguration(configuration);
             ValidationResult result = configurationValidator.validate(config);
             if (result.isOk()) {
-                String id = idUser + "_" + idCrawler;
+                String id = idUser + "_" + idCrawl;
                 builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
             } else {
                 response = result.getFirstErrorCode().name() + ": " + result.getFirstErrorValue().toString();
@@ -81,10 +83,10 @@ public class BuildingCommands implements CommandMarker {
 
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
             @CliOption(key = {
-                    "idCrawler"}, mandatory = true, help = "id of the new crawler") final String idCrawler) {
+                    "idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
         String response = "Image built successfully";
         try {
-            String id = idUser + "_" + idCrawler;
+            String id = idUser + "_" + idCrawl;
             File directorio = new File(id);
             if (directorio.isDirectory()) {
                 // docker build -t nameOfImage directory
@@ -92,7 +94,7 @@ public class BuildingCommands implements CommandMarker {
                 ops.executeCommand(comando, true);
 
             } else {
-                response = "Files dont exist, please, try executing the config command";
+                response = "Files don't exist, please, try executing the config command";
             }
 
         } catch (Exception e) {

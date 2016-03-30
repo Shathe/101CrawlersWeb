@@ -1,3 +1,7 @@
+#Number of rounds the crawler will run
+rounds=2
+#readseg options 
+dumpOptions="-nogenerate -nofetch -nocontent -noparse -noparsedata"
 # note that some of the options listed here could be set in the 
 # corresponding hadoop site xml param file 
 commonOptions="-D mapred.reduce.tasks=$numTasks -D mapred.child.java.opts=-Xmx1000m -D mapred.reduce.tasks.speculative.execution=false -D mapred.map.tasks.speculative.execution=false -D mapred.compress.map.output=true"
@@ -34,5 +38,3 @@ while test $rounds -gt $i ; do
 	bin/nutch readseg -dump $(echo $s1) salida/$(echo $s1) $dumpOptions
 	i=$(($i+1))
 done
-
-touch FIN
