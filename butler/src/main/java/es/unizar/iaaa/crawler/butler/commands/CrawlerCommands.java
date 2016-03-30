@@ -190,5 +190,4 @@ public class CrawlerCommands implements CommandMarker {
 		
 		return finished;
 	}
-
 }

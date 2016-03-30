@@ -1,16 +1,16 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
@@ -21,10 +21,13 @@ import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 @Component
 public class Operations implements CommandMarker {
 
-	static Logger log = Logger.getLogger(Operations.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Operations.class);
 
 	@Autowired
 	private ApplicationContext ctx;
+
+	@Value("${butler.base}")
+	private String baseDir;
 
 	/**
 	 * Executes a command it the OS system shell. if the print flag is
@@ -43,31 +46,20 @@ public class Operations implements CommandMarker {
 		if (print) {
 			while ((s = stdInput.readLine()) != null) {
 				if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
-					log.log(Level.INFO, s);
+					LOGGER.warn(s);
 				}
 			}
 		}
 		while ((s = stdError.readLine()) != null) {
 			if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
-				log.log(Level.SEVERE, s);
+				LOGGER.warn(s);
 			}
 		}
 		return stdInput;
 	}
 
-	public Resource readPath(String route) throws Exception {
-		// Get the file from 2 possible routes
-		// The first one is the final one
-		// The second one is for debugging
-		Resource res = ctx.getResource("file:../" + route);
-		if (!res.exists())
-			return ctx.getResource("classpath:es/unizar/iaaa/crawler/butler/builders/" + route);
-		else
-			return res;
-	}
-
-	public CrawlConfiguration readConfiguration(String route) throws Exception {
-		return YamlConfigRunner.read(readPath(route));
+	public CrawlConfiguration readConfiguration(String route) {
+		return YamlConfigRunner.read(ctx.getResource(baseDir + route));
 	}
 
 

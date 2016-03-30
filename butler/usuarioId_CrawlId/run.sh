@@ -38,3 +38,5 @@ while test $rounds -gt $i ; do
 	bin/nutch readseg -dump $(echo $s1) salida/$(echo $s1) $dumpOptions
 	i=$(($i+1))
 done
+
+touch FIN
