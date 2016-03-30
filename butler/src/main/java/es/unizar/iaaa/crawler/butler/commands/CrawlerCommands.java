@@ -171,7 +171,7 @@ public class CrawlerCommands implements CommandMarker {
         String s;
         try (BufferedReader out = ops.executeCommand(command, false)) {
             while ((s = out.readLine()) != null) {
-                if (s.contains(id) && s.contains("FIN"))
+                if (s.contains("FIN"))
                     return "Yes, the crawler has finished";
             }
         } catch (IOException e) {

@@ -66,7 +66,7 @@ public class Operations implements CommandMarker {
 	public boolean containerExists(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
 		String s;
-        String command="docker ps - a";
+        String command="docker ps -a";
 		try(BufferedReader out = executeCommand(command, false)){
 			while ((s = out.readLine()) != null) {
 				if (s.contains(" " + id + " "))

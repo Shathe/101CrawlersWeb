@@ -94,7 +94,7 @@ public class StoppingCommands implements CommandMarker {
                 return "Docker container don't exist, please, try executing the start command";
             }
         }
-        return "Docker has to be running in order to be able to extract the information";
+        return "Docker container has to be running in order to be able to extract the information";
     }
 
 
