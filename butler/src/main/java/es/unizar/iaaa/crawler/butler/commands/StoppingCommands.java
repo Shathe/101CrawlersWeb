@@ -10,223 +10,205 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.logging.Level;
 
 /**
- * Stopping commands. This class contains every command which stops the crawling
- * system or a part of it
+ * Stopping commands. This class contains every command which stops the crawling system or a part of
+ * it
  */
 @Component
 public class StoppingCommands implements CommandMarker {
 
-	private static final Logger LOGGER = Logger.getLogger(StoppingCommands.class);
+    private static final Logger LOGGER = Logger.getLogger(StoppingCommands.class);
 
-	@Autowired
-	private Operations ops;
+    @Autowired
+    private Operations ops;
 
-	@CliAvailabilityIndicator({ "stopCrawl" })
-	public boolean stopNutchAvailable() {
-		// always available
-		return true;
-	}
+    @CliAvailabilityIndicator({"stopCrawl"})
+    public boolean stopNutchAvailable() {
+        // always available
+        return true;
+    }
 
-	@CliAvailabilityIndicator({ "stopContainer" })
-	public boolean stopContainerAvailable() {
-		// always available
-		return true;
-	}
+    @CliAvailabilityIndicator({"stopContainer"})
+    public boolean stopContainerAvailable() {
+        // always available
+        return true;
+    }
 
-	@CliAvailabilityIndicator({ "deleteContainer" })
-	public boolean deleteContainerAvailable() {
-		// always available
-		return true;
-	}
-	@CliAvailabilityIndicator({ "pauseContainer" })
-	public boolean pauseContainerAvailable() {
-		// always available
-		return true;
-	}
+    @CliAvailabilityIndicator({"deleteContainer"})
+    public boolean deleteContainerAvailable() {
+        // always available
+        return true;
+    }
 
-	@CliAvailabilityIndicator({ "deleteImage" })
-	public boolean deleteImageAvailable() {
-		// always available
-		return true;
-	}
+    @CliAvailabilityIndicator({"pauseContainer"})
+    public boolean pauseContainerAvailable() {
+        // always available
+        return true;
+    }
 
-	/**
-	 * Stop the crawl in the docker container
-	 */
-	@CliCommand(value = "stopCrawl", help = "Stops the crawler int the docker container")
-	public String stopNutch(
+    @CliAvailabilityIndicator({"deleteImage"})
+    public boolean deleteImageAvailable() {
+        // always available
+        return true;
+    }
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response = "";
-		if (!ops.containerExists(idUser, idCrawl)) {
-			response = "The container where it is trying to stop the crawl don't exist";
-		} else if (ops.containerRunning(idUser, idCrawl)) {
+    /**
+     * Stop the crawl in the docker container
+     */
+    @CliCommand(value = "stopCrawl", help = "Stops the crawler int the docker container")
+    public String stopNutch(
 
-			try {
-				String id = idUser + "_" + idCrawl;
-				// docker exec $idContainer kill -9 $(docker exec $idContainer
-				// ps |
-				// grep crawl | awk '{print $1;}')
-				// docker exec $idContainer kill -9 $(docker exec $idContainer
-				// ps |
-				// grep sh | awk '{print $1;}')
-				// docker exec $idContainer kill -9 $(docker exec $idContainer
-				// ps |
-				// grep java | awk '{print $1;}')
-				String comando = "docker exec  " + id + " ps";
-				BufferedReader out = ops.executeCommand(comando, false);
-				String process;
-				while ((process = out.readLine()) != null) {
-					// Para todos los procesos busca los procesos a eliminar
-					if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
-						LOGGER.info(process);
-						comando = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
-						LOGGER.info(comando);
-						ops.executeCommand(comando, true);
-						response = "Crawl stopped correctly";
+            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+        String id = idUser + "_" + idCrawl;
+        // docker exec $idContainer kill -9 $(docker exec $idContainer
+        // ps |
+        // grep crawl | awk '{print $1;}')
+        // docker exec $idContainer kill -9 $(docker exec $idContainer
+        // ps |
+        // grep sh | awk '{print $1;}')
+        // docker exec $idContainer kill -9 $(docker exec $idContainer
+        // ps |
+        // grep java | awk '{print $1;}')
+        String command = "docker exec  " + id + " ps";
+        String process;
+        if (!ops.containerExists(idUser, idCrawl)) {
+            return "The container where it is trying to stop the crawl don't exist";
+        }
+        if (ops.containerRunning(idUser, idCrawl)) {
+            try (BufferedReader out = ops.executeCommand(command, false)) {
+                while ((process = out.readLine()) != null) {
+                    // Para todos los procesos busca los procesos a eliminar
+                    if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
+                        LOGGER.info(process);
+                        command = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
+                        LOGGER.info(command);
+                        ops.executeCommand(command, true);
+                        return "Crawl stopped correctly";
 
-					}
-				}
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.warn("IOException: " + e.getMessage(), e);
+                return "Docker container don't exist, please, try executing the start command";
+            }
+        }
+        return "Docker has to be running in order to be able to extract the information";
+    }
 
-			} catch (Exception e) {
-				response = "Docker container don't exist, please, try executing the start command";
-			}
-		} else {
-			response = "Docker has to be running in order to be able to extract the information";
-		}
 
-		return response;
-	}
-	
+    /**
+     * Pause the docker container
+     */
+    @CliCommand(value = "pauseContainer", help = "Pause the docker Container")
+    public String pauseContainer(
 
-	/**
-	 * Pause the docker container
-	 */
-	@CliCommand(value = "pauseContainer", help = "Pause the docker Container")
-	public String pauseContainer(
+            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+        String id = idUser + "_" + idCrawl;
+        // docker pause $idContainer
+        String command = "docker pause " + id;
+        if (!ops.containerExists(idUser, idCrawl)) {
+            return "The container trying to pause don't exist";
+        }
+        if (!ops.containerRunning(idUser, idCrawl)) {
+            return "The container trying to pause is not up";
+        }
+        try {
+            ops.executeCommand(command, true);
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response = "";
-		if (!ops.containerExists(idUser, idCrawl)) {
-			response = "The container trying to pause don't exist";
-		} else if (!ops.containerRunning(idUser, idCrawl)) {
-			response = "The container trying to pause is not up";
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+            return "Docker container don't exist, please, try executing the start command";
+        }
+        return "Container paused correctly";
+    }
 
-		} else {
-			try {
-				String id = idUser + "_" + idCrawl;
-				
-				// docker pause $idContainer
-				String comando = "docker pause "+id;
-				ops.executeCommand(comando, true);
-				response = "Container paused correctly";
 
-			} catch (Exception e) {
-				response = "Docker container don't exist, please, try executing the start command";
-			}
-		}
+    /**
+     * Stop the docker container
+     */
+    @CliCommand(value = "stopContainer", help = "stops the docker Container")
+    public String stopContainer(
 
-		return response;
-	}
+            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
+            @CliOption(key = {
+                    "time"}, mandatory = false, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") String time,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+        String id = idUser + "_" + idCrawl;
+        if (time == null)
+            time = "1";
+        // docker stop -t $tiempo $idContainer
+        String command = "docker stop -t " + time + " " + id;
+        if (!ops.containerExists(idUser, idCrawl)) {
+            return "The container trying to stop don't exist";
+        }
+        if (!ops.containerRunning(idUser, idCrawl)) {
+            return "The container trying to stop is not up";
+        }
+        try {
+            ops.executeCommand(command, true);
 
-	
-	
-	/**
-	 * Stop the docker container
-	 */
-	@CliCommand(value = "stopContainer", help = "stops the docker Container")
-	public String stopContainer(
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+            return "Docker container don't exist, please, try executing the start command";
+        }
+        return "Container stopped correctly";
+    }
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = {
-					"time" }, mandatory = false, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") String time,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response = "";
-		if (!ops.containerExists(idUser, idCrawl)) {
-			response = "The container trying to stop don't exist";
-		} else if (!ops.containerRunning(idUser, idCrawl)) {
-			response = "The container trying to stop is not up";
+    /**
+     * delete the docker container
+     */
+    @CliCommand(value = "deleteContainer", help = "deletes the docker Container")
+    public String deleteContainer(
 
-		} else {
-			try {
-				String id = idUser + "_" + idCrawl;
-				if (time == null)
-					time = "1";
-				// docker stop -t $tiempo $idContainer
-				String comando = "docker stop -t " + time + " " + id;
-				ops.executeCommand(comando, true);
-				response = "Container stopped correctly";
+            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+        String id = idUser + "_" + idCrawl;
+        // docker stop -t $tiempo $idContainer
+        String command = "docker rm " + id;
+        if (!ops.containerExists(idUser, idCrawl)) {
+            return "The container trying to delete don't exist";
+        }
+        if (!ops.containerStopped(idUser, idCrawl)) {
+            return "The container has to be stopped in order to deleted it";
+        }
+        try {
+            ops.executeCommand(command, true);
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+            return "Docker container don't exist, please, try executing the start command";
+        }
+        return "Container deleted correctly";
+    }
 
-			} catch (Exception e) {
-				response = "Docker container don't exist, please, try executing the start command";
-			}
-		}
+    /**
+     * delete the docker image
+     */
+    @CliCommand(value = "deleteImage", help = "deletes the docker Image")
+    public String deleteImage(
 
-		return response;
-	}
+            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
+            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+        String id = idUser + "_" + idCrawl;
+        // docker stop -t $tiempo $idContainer
+        String comando = "docker rmi " + id;
 
-	/**
-	 * delete the docker container
-	 */
-	@CliCommand(value = "deleteContainer", help = "deletes the docker Container")
-	public String deleteContainer(
+        if (!ops.imageExists(idUser, idCrawl)) {
+            return "The image don't exists";
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response = "";
-		if (!ops.containerExists(idUser, idCrawl)) {
-			response = "The container trying to delete don't exist";
-		} else if (!ops.containerStopped(idUser, idCrawl)) {
-			response = "The container has to be stopped in order to deleted it";
-		} else {
-			try {
-				String id = idUser + "_" + idCrawl;
-				// docker stop -t $tiempo $idContainer
-				String comando = "docker rm " + id;
-				ops.executeCommand(comando, true);
-				response = "Container deleted correctly";
-
-			} catch (Exception e) {
-				response = "Docker container don't exist, please, try executing the start command";
-			}
-		}
-		return response;
-	}
-
-	/**
-	 * delete the docker image
-	 */
-	@CliCommand(value = "deleteImage", help = "deletes the docker Image")
-	public String deleteImage(
-
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response = "";
-		if (!ops.imageExists(idUser, idCrawl)) {
-			response = "The image don't exists";
-
-		}  else if (ops.containerExists(idUser, idCrawl)) {
-			response = "The image couldn't be deleted due to a container of this image exists";
-
-		} else {
-
-			try {
-				String id = idUser + "_" + idCrawl;
-				// docker stop -t $tiempo $idContainer
-				String comando = "docker rmi " + id;
-				ops.executeCommand(comando, true);
-				response = "Image delete correctly";
-
-			} catch (Exception e) {
-				response = "Docker image don't exist, please, try executing the start command";
-			}
-		}
-		return response;
-	}
+        }
+        if (ops.containerExists(idUser, idCrawl)) {
+            return "The image couldn't be deleted due to a container of this image exists";
+        }
+        try {
+            ops.executeCommand(comando, true);
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+            return "Docker image don't exist, please, try executing the start command";
+        }
+        return "Image delete correctly";
+    }
 
 }

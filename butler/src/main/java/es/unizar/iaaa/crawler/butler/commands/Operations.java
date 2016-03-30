@@ -65,90 +65,79 @@ public class Operations implements CommandMarker {
 
 	public boolean containerExists(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		boolean exist = false;
-		String s = "";
-		try {
-			BufferedReader out = executeCommand("docker ps -a ", false);
+		String s;
+        String command="docker ps - a";
+		try(BufferedReader out = executeCommand(command, false)){
 			while ((s = out.readLine()) != null) {
 				if (s.contains(" " + id + " "))
-					exist = true;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return exist;
+                    return true;
+            }
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+        }
+        return false;
 	}
 
 	public boolean containerRunning(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		boolean exist = false;
-		String s = "";
-		try {//docker ps -f=[name='1_1']
-			String command="docker ps -a --filter \"status=running\" --filter \"name="+id+"\"";
-
-			BufferedReader out = executeCommand(command, false);
+		String s;
+        String command="docker ps -a --filter \"status=running\" --filter \"name="+id+"\"";
+        //docker ps -f=[name='1_1']
+		try(BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains(id))
-					exist = true;
+                    return true;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return exist ;
+        } catch (IOException e) {
+            LOGGER.warn("IOException: " + e.getMessage(), e);
+        }
+        return false;
 	}
 
 	public boolean imageExists(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		boolean exist = false;
-		String s = "";
-		try {
-			BufferedReader out = executeCommand("docker images " + id, false);
+		String s;
+		try (BufferedReader out = executeCommand("docker images " + id, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains( id ))
-					exist = true;
+					return true;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            LOGGER.warn("IOException: " + e.getMessage(), e);
 		}
-
-		return exist;
+		return false;
 	}
+
 	public boolean containerStopped(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		boolean exist = false;
-		String s = "";
-		try {// docker ps --filter "status=exited" --filter "name=1_1"
-			String command="docker ps -a --filter \"status=exited\" --filter \"name="+id+"\"";
-			BufferedReader out = executeCommand(command, false);
+		String command="docker ps -a --filter \"status=exited\" --filter \"name="+id+"\"";
+		String s;
+		// docker ps --filter "status=exited" --filter "name=1_1"
+		try(BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains(id) && s.contains("Exited"))
-					exist = true;
+                    return ! containerPaused(idUser,idCrawl);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("IOException: " + e.getMessage(), e);
 		}
-
-		return exist && ! containerPaused(idUser,idCrawl);
+		return false;
 	}
 
 	public boolean containerPaused(String idUser, String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		boolean exist = false;
-		String s = "";
-		try {// docker ps -f=[name='1_1']
-			String command="docker ps -a --filter \"status=paused\" --filter \"name="+id+"\"";
-
-			BufferedReader out = executeCommand(command, false);
+		String command="docker ps -a --filter \"status=paused\" --filter \"name="+id+"\"";
+		String s;
+		// docker ps -f=[name='1_1']
+		try(BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains(id) && s.contains("Paused"))
-					exist = true;
+					return true;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("IOException: " + e.getMessage(), e);
 		}
+		return false;
 
-		return exist;
 	}
 }

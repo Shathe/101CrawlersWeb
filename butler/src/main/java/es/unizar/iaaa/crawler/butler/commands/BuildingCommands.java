@@ -1,5 +1,7 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -7,10 +9,8 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import es.unizar.iaaa.crawler.butler.builders.AdapterBuilder;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
@@ -24,7 +24,7 @@ import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 @Component
 public class BuildingCommands implements CommandMarker {
 
-    static Logger log = Logger.getLogger(BuildingCommands.class.getName());
+    static Logger LOGGER = LoggerFactory.getLogger(BuildingCommands.class);
     @Autowired
     private Operations ops;
 
@@ -58,21 +58,20 @@ public class BuildingCommands implements CommandMarker {
             @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl,
             @CliOption(key = {
                     "file"}, mandatory = true, help = "The name onf the configuration file") final String configuration) {
-        String response = "configurated successfully";
-        CrawlConfiguration config;
-        try {
-            config = ops.readConfiguration(configuration);
-            ValidationResult result = configurationValidator.validate(config);
-            if (result.isOk()) {
-                String id = idUser + "_" + idCrawl;
-                builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
-            } else {
-                response = result.getFirstErrorCode().name() + ": " + result.getFirstErrorValue().toString();
-            }
-        } catch (Exception e) {
-            response = "File not found";
+        String id = idUser + "_" + idCrawl;
+
+        CrawlConfiguration config = ops.readConfiguration(configuration);
+        ValidationResult result = configurationValidator.validate(config);
+        if (!result.isOk()) {
+            return result.getFirstErrorCode().name() + ": " + result.getFirstErrorValue().toString();
         }
-        return response;
+        try {
+            builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
+        } catch (IOException e) {
+            LOGGER.warn("IOException: "+e.getMessage(), e);
+            return "File not found";
+        }
+        return "Configured successfully";
     }
 
     /**
@@ -84,24 +83,21 @@ public class BuildingCommands implements CommandMarker {
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
             @CliOption(key = {
                     "idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-        String response = "Image built successfully";
-        try {
-            String id = idUser + "_" + idCrawl;
-            File directorio = new File(id);
-            if (directorio.isDirectory()) {
-                // docker build -t nameOfImage directory
-                String comando = "docker build -t " + id + " " + id;
-                ops.executeCommand(comando, true);
+        String id = idUser + "_" + idCrawl;
+        String command = "docker build -t " + id + " " + id;
 
-            } else {
-                response = "Files don't exist, please, try executing the config command";
-            }
-
-        } catch (Exception e) {
-            response = "File not found";
+        File dir = new File(id);
+        if (!dir.isDirectory()) {
+            return "Files don't exist, please, try executing the config command";
         }
-
-        return response;
+        try {
+            // docker build -t nameOfImage directory
+            ops.executeCommand(command, true);
+        } catch (IOException e) {
+            LOGGER.warn("IOException: "+e.getMessage(), e);
+            return "File not found";
+        }
+        return "Image built successfully";
     }
 
 }
