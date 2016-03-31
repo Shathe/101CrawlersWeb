@@ -1,3 +1,5 @@
 cd butler
 gradle build
-java -jar build/libs/butler.jar
+cd ..
+cp butler/build/libs/butler.jar butler/butler.jar
+java -jar butler/butler.jar
