@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd butler
 gradle build
 cd ..
