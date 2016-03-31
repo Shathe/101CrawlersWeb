@@ -150,6 +150,7 @@ site/.springBeans
 
 #logs
 /butler/my.log
+my.log
 /butler/spring-shell.log
 
 #Tests
