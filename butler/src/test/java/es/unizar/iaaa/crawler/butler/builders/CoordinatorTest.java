@@ -45,7 +45,7 @@ public class CoordinatorTest {
     @Autowired
     private CrawlValidator crawlValidator;
 
-    @Value("${butler.base}")
+    @Value("${butler.base}/")
     private String baseDir;
 
     /** Detects if a well formed configuration file, pass the validation */

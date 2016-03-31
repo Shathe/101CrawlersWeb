@@ -26,7 +26,7 @@ public class Operations implements CommandMarker {
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Value("${butler.base}")
+	@Value("${butler.base:file:}/")
 	private String baseDir;
 
 	/**
