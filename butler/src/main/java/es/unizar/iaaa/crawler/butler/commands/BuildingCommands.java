@@ -57,7 +57,7 @@ public class BuildingCommands implements CommandMarker {
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
             @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl,
             @CliOption(key = {
-                    "file"}, mandatory = true, help = "The name onf the configuration file") final String configuration) {
+                    "file"}, mandatory = true, help = "The name of the configuration file") final String configuration) {
         String id = idUser + "_" + idCrawl;
 
         CrawlConfiguration config = ops.readConfiguration(configuration);
