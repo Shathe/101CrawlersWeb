@@ -75,6 +75,7 @@ public class Operations implements CommandMarker {
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
+				s=" "+s+" ";
 				if (s.contains(" " + id + " "))
 					return true;
 			}

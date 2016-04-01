@@ -83,7 +83,7 @@ public class StoppingCommands implements CommandMarker {
             try (BufferedReader out = ops.executeCommand(command, false)) {
                 while ((process = out.readLine()) != null) {
                     // Para todos los procesos busca los procesos a eliminar
-                    if (process.contains("crawl") || process.contains("java") || process.contains("java")) {
+                    if (process.contains("crawl") || process.contains("java") || process.contains("sh")) {
                         LOGGER.info(process);
                         command = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
                         LOGGER.info(command);
@@ -97,7 +97,7 @@ public class StoppingCommands implements CommandMarker {
                 return "Docker container don't exist, please, try executing the start command";
             }
         }
-        return "Docker container has to be running in order to be able to extract the information";
+        return "Docker container has to be running in order to be able to stop the crawl";
     }
 
 

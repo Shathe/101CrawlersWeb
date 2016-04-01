@@ -22,6 +22,9 @@ numThreads=50
 skipRecordsOptions="-D mapred.skip.attempts.to.start.skipping=2 -D mapred.skip.map.max.skip.records=1"
 
 cd $HOME/crawler
+
+touch STARTED
+
 bin/nutch inject micrawl/crawldb/ urls
 i=0
 while test $rounds -gt $i ; do
@@ -36,4 +39,5 @@ while test $rounds -gt $i ; do
 	i=$(($i+1))
 done
 
+rm STARTED
 touch FIN
