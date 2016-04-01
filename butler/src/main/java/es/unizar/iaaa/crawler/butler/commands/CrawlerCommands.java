@@ -200,7 +200,7 @@ public class CrawlerCommands implements CommandMarker {
 	 * Gives information about the crawl, if the crawl is actually running
 	 */
 	@CliCommand(value = "info", help = "information about the crawl")
-	public String stopNutch(
+	public String info(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
