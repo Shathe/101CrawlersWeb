@@ -46,8 +46,8 @@ import es.unizar.iaaa.crawler.butler.model.SearchResult;
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
-	static String ficheroSalida = "result.txt";
-	final static int NUM_MAXIMO_DOCS = 7052;
+	private String ficheroSalida = "out.txt";
+	private final int NUM_MAXIMO_DOCS = 7052;
 
 	public SearchFiles() {
 	}

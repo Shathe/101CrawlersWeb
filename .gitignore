@@ -157,3 +157,5 @@ my.log
 
 #Tests
 /butler/usuarioId_CrawlId
+/butler/index
+/butler/result.txt
