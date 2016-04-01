@@ -46,7 +46,8 @@ public class Operations implements CommandMarker {
 		if (print) {
 			while ((s = stdInput.readLine()) != null) {
 				if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
-					LOGGER.warn(s);
+					System.out.println("[Docker] "+s);
+					LOGGER.info(s);
 				}
 			}
 		}
