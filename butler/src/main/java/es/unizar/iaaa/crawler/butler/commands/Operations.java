@@ -26,7 +26,7 @@ public class Operations implements CommandMarker {
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Value("${butler.base:file:}/")
+	@Value("${butler.base:file:}")
 	private String baseDir;
 
 	/**
@@ -59,6 +59,7 @@ public class Operations implements CommandMarker {
 	}
 
 	public CrawlConfiguration readConfiguration(String route) {
+		System.out.println("basedir: "+baseDir);
 		return YamlConfigRunner.read(ctx.getResource(baseDir + route));
 	}
 
