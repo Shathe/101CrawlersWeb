@@ -24,7 +24,7 @@ import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 @Component
 public class BuildingCommands implements CommandMarker {
 
-    static Logger LOGGER = LoggerFactory.getLogger(BuildingCommands.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(BuildingCommands.class);
     @Autowired
     private Operations ops;
 
