@@ -57,9 +57,12 @@ public class CrawlerCommands implements CommandMarker {
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
             @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
         String response = "";
-
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         try {
             String id = idUser + "_" + idCrawl;
+            
             if (ops.imageExists(idUser, idCrawl)) {
                 // docker run -i -d nameOfImage nameOfContainer
                 String comando = "";
@@ -98,7 +101,9 @@ public class CrawlerCommands implements CommandMarker {
             @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
             @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
         String response;
-
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (ops.containerExists(idUser, idCrawl) && ops.containerRunning(idUser, idCrawl)) {
             try {
                 String id = idUser + "_" + idCrawl;
@@ -130,7 +135,9 @@ public class CrawlerCommands implements CommandMarker {
         String id = idUser + "_" + idCrawl;
         String command1 = "docker exec " + id + " sh crawler/juntarSalidas.sh";
         String command2 = "docker cp " + id + ":root/crawler/salida/salida " + path;
-
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
             return "Docker container don't exist, please, try executing the start command";
         }
@@ -162,7 +169,9 @@ public class CrawlerCommands implements CommandMarker {
             @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
         String id = idUser + "_" + idCrawl;
         String command = "docker exec " + id + " ls crawler/FIN";
-
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
             return "Docker container don't exist, please, try executing the start command";
         }

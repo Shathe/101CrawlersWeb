@@ -90,6 +90,9 @@ public class BuildingCommands implements CommandMarker {
         if (!dir.isDirectory()) {
             return "Files don't exist, please, try executing the config command";
         }
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         try {
             // docker build -t nameOfImage directory
             ops.executeCommand(command, true);

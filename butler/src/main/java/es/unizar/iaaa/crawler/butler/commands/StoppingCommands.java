@@ -73,6 +73,9 @@ public class StoppingCommands implements CommandMarker {
         // grep java | awk '{print $1;}')
         String command = "docker exec  " + id + " ps";
         String process;
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl)) {
             return "The container where it is trying to stop the crawl don't exist";
         }
@@ -109,6 +112,9 @@ public class StoppingCommands implements CommandMarker {
         String id = idUser + "_" + idCrawl;
         // docker pause $idContainer
         String command = "docker pause " + id;
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl)) {
             return "The container trying to pause don't exist";
         }
@@ -141,6 +147,9 @@ public class StoppingCommands implements CommandMarker {
             time = "1";
         // docker stop -t $tiempo $idContainer
         String command = "docker stop -t " + time + " " + id;
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl)) {
             return "The container trying to stop don't exist";
         }
@@ -168,6 +177,9 @@ public class StoppingCommands implements CommandMarker {
         String id = idUser + "_" + idCrawl;
         // docker stop -t $tiempo $idContainer
         String command = "docker rm " + id;
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.containerExists(idUser, idCrawl)) {
             return "The container trying to delete don't exist";
         }
@@ -194,7 +206,9 @@ public class StoppingCommands implements CommandMarker {
         String id = idUser + "_" + idCrawl;
         // docker stop -t $tiempo $idContainer
         String comando = "docker rmi " + id;
-
+        if (!ops.dockerIsRunning()) {
+            return "Docker is not running, please start it with sudo service docker start";
+        }
         if (!ops.imageExists(idUser, idCrawl)) {
             return "The image don't exists";
 
