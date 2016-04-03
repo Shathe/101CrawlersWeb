@@ -13,6 +13,7 @@ crawlSystem:
       - https://dzone.com/articles/
     #number of rounds the crawler is going to iterate
     rounds: 2
+    extraction: round
     #the structure of the crawled info, you can choose between text or hmtl
     infoCrawled: text
     # Determines how to put URLs into queues. Default value is 'byHost', also takes 'byDomain' or 'byIP'.

@@ -12,6 +12,7 @@ crawlSystem:
       - https://dzone.com/articles/using-yaml-java-application
       - https://dzone.com/articles/
     #number of rounds the crawler is going to iterate
+    extraction: round
     rounds: 2
     #plugins are separated by line break and preceded by '- '
     #First goes the plugin named followed by the jar files.

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlCrawlDelayValidator;
+import es.unizar.iaaa.crawler.butler.validator.CrawlExtractionValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlInfoValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlLimitURLValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlMaxFileValidator;
@@ -54,6 +55,7 @@ public class ValidatorConfiguration {
         validators.add(new CrawlVersionValidator());
         validators.add(new CrawlSeedsValidator());
         validators.add(new CrawlRoundsValidator());
+        validators.add(new CrawlExtractionValidator());
         validators.add(new CrawlPluginsValidator());
         validators.add(new CrawlInfoValidator());
         validators.add(new CrawlCrawlDelayValidator());

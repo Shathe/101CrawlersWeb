@@ -14,6 +14,7 @@ crawlSystem:
     #number of rounds the crawler is going to iterate
     rounds: 2
         #plugins are separated by line break and preceded by '- '
+    extraction: round
     #First goes the plugin named followed by the jar files.
     #The plugin.xml must be in the same directory and it has to be named as
     #the plugin

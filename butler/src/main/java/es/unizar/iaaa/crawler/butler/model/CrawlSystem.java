@@ -13,6 +13,7 @@ public final class CrawlSystem {
     private String version;
     private List<String> seeds;
     private String rounds;
+    private String extraction;
     private List<List<String>> plugins;
     private String infoCrawled;
     private String maxFileLength;
@@ -45,10 +46,20 @@ public final class CrawlSystem {
         this.name = nombre;
     }
 
-    public String getRounds() {
+   
+    public String getExtraction() {
+		return extraction;
+	}
+
+	public void setExtraction(String extraction) {
+		this.extraction = extraction;
+	}
+
+	public String getRounds() {
         return rounds;
     }
 
+    
     public void setRounds(String rounds) {
         this.rounds = rounds;
     }
@@ -114,9 +125,10 @@ public final class CrawlSystem {
         return format("Crawler system: %s version %s\n", getName(), getVersion()) +
                 format("	Seeds: %s\n", seeds) +
                 format("	Plugins: %s\n", plugins) +
-                format("	Links limit for URL: %s\n", rounds) +
+                format("	Links limit for URL: %s\n", linksLimitURL) +
                 format("	format of the info Crawled: %s\n", infoCrawled) +
-                format("	Number of rounds: %s\n", linksLimitURL) +
+                format("	Number of rounds: %s\n", rounds) +
+                format("	Extraction: %s\n", extraction) +
                 format("	Max Crawl delay to fetch: %s\n", maxCrawlDelay) +
                 format("	length limit for downloaded content: %s\n", maxFileLength) +
                 format("	queue Mode: %s\n", queueMode) +

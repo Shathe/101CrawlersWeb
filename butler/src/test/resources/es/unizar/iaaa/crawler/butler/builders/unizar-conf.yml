@@ -10,5 +10,6 @@ crawlSystem:
       - https://eina.unizar.es/
       - http://www.unizar.es/
     rounds: 2
+    extraction: round
     infoCrawled: text
     queueMode: byHost
