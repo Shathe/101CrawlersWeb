@@ -34,7 +34,7 @@ public class RWFicheros {
 		PrintWriter pw = null;
 		ArrayList<SearchResult> result= new ArrayList<>();
 		try {
-			fichero = new FileWriter(ficheroSalida, true);
+			fichero = new FileWriter(ficheroSalida, false);
 			pw = new PrintWriter(fichero);
 			Document doc;
 			String url;
