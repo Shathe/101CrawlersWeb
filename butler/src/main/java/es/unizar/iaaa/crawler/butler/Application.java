@@ -17,12 +17,12 @@ public class Application {
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
-            // Executing the terminal
+        	// No arguments for executing the terminal
             SpringApplication app = new SpringApplication(Application.class);
             app.setBannerMode(Banner.Mode.OFF);
             app.run(args);
         } else if (args[0].contains("index")) {
-            // The docker will be index
+        	// Argument for indexing from inside the docker container
             DockerIndexer dockerI = new DockerIndexer();
             String indexPath="index";
     		Path outputPath = Paths.get(indexPath);

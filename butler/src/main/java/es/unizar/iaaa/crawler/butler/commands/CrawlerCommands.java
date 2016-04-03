@@ -80,6 +80,9 @@ public class CrawlerCommands implements CommandMarker {
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
+		if (!ops.containerRunning(idUser, idCrawl)) {
+			return "The container is already running";
+		}
 		try {
 			String id = idUser + "_" + idCrawl;
 
@@ -186,6 +189,7 @@ public class CrawlerCommands implements CommandMarker {
 			return "Docker cp failed";
 		}
 
+		//Index
 		IndexFiles nuevo = new IndexFiles();
 		nuevo.index(id+"_index/index",new File(id+"_index/output.txt"));
 
@@ -209,7 +213,6 @@ public class CrawlerCommands implements CommandMarker {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 
-		// docker exec idContainer sh crawler/juntarSalidas.sh
 		String s;
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
@@ -222,7 +225,6 @@ public class CrawlerCommands implements CommandMarker {
 		}
 		return "The crawler hasn't finished yet";
 	}
-
 	/**
 	 * Gives information about the crawl, if the crawl is actually running
 	 */
@@ -270,6 +272,33 @@ public class CrawlerCommands implements CommandMarker {
 		}
 		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
 			return "Docker container don't exist, please, try executing the start command";
+		}
+		// Check if there is any index locally pending in the container
+		String command = "docker exec " + id + " ls crawler/IndexPending";
+		String s;
+		try (BufferedReader out = ops.executeCommand(command, false)) {
+			while ((s = out.readLine()) != null) {
+				if (s.contains("IndexPending")){
+					//copy the index files
+					String indexPath=id+"_index";
+					Path outputPath = Paths.get(indexPath);
+					try {
+						FileUtils.deleteDirectory(outputPath.toFile());
+
+					} catch (IOException e1) {
+						return "Failing managing the index folder";
+					}
+					// copy the index to the system
+					command = "docker cp " + id + ":root/crawler/index " + indexPath;
+					ops.executeCommand(command, true);
+					// It is not pending now
+					command = "docker exec " + id + " rm crawler/IndexPending";
+					ops.executeCommand(command, true);
+				}
+
+			}
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
 		}
 
 		SearchFiles searcher = new SearchFiles();

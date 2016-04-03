@@ -79,12 +79,15 @@ public class DockerBuilder {
 					// Indexing in every round
 					pw.println("sh juntarSalidas.sh");
 					pw.println("java -jar $HOME/101CrawlersWeb/butler.jar index");
+					pw.println("touch IndexPending");
 				}
 				if (linea.contains("rm STARTED") && configuracion.getCrawlSystem().getExtraction().contains("finish")) {
 
 					// Indexing when it's finished
 					pw.println("sh juntarSalidas.sh");
 					pw.println("java -jar $HOME/101CrawlersWeb/butler.jar index");
+					pw.println("touch IndexPending");
+
 				}
 				pw.println(linea);
 			}

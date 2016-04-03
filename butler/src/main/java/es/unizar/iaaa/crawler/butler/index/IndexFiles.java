@@ -100,9 +100,7 @@ public class IndexFiles {
 				// you require.
 				// For example the long value 2011021714 would mean
 				// February 17, 2011, 2-3 PM.
-				System.out.println("adding ");
-				System.out.println();
-
+				LOGGER.info("adding ");
 				int i=0;
 				while (scan.hasNextLine()) {
 					String line = scan.nextLine();
@@ -137,7 +135,7 @@ public class IndexFiles {
 							writer.updateDocument(new Term("path", file.getPath()), doc);
 						}
 						if(i%100==0)
-							System.out.println(i+" lines");
+							LOGGER.info(i+" lines");
 						i++;
 
 					}
@@ -152,7 +150,7 @@ public class IndexFiles {
 				// encoding.
 				// If that's not the case searching for special characters
 				// will fail
-				System.out.println("added "+i);
+				LOGGER.info("added "+i);
 			}
 		}
 	}
@@ -179,7 +177,7 @@ public class IndexFiles {
 
 			Date start = new Date();
 			try {
-				System.out.println("Indexing to directory '" + indexPath );
+				LOGGER.info("Indexing to directory '" + indexPath );
 				Directory dir = FSDirectory.open(new File(indexPath));
 				Analyzer analyzer = new EnglishAnalyzer();
 				IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, analyzer);
@@ -205,13 +203,13 @@ public class IndexFiles {
 				writer.close();
 
 				Date end = new Date();
-				System.out.println(end.getTime() - start.getTime() + " total milliseconds");
+				LOGGER.info(end.getTime() - start.getTime() + " total milliseconds");
 
 			} catch (IOException e) {
-				System.out.println(" caught a " + e.getClass() + "\n with message: " + e.getMessage());
+				LOGGER.error(" caught a " + e.getClass() + "\n with message: " + e.getMessage());
 			}
 		} else {
-			System.out.println(file.getName() + " don't exists");
+			LOGGER.info(file.getName() + " don't exists");
 		}
 	}
 }
