@@ -21,7 +21,7 @@ public interface Validator {
     }
 
     default ValidationResult validateIntValue(String value, Status status, boolean mandatory) {
-        if ((value == null && !mandatory) || (Ints.tryParse(value) != null)) {
+        if ((value == null && !mandatory) || (value != null && Ints.tryParse(value) != null)) {
             return new LatestValidationResult();
         } else {
             return new LatestValidationResult(status, value);
