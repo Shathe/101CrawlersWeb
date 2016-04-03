@@ -25,3 +25,5 @@ RUN PATH=$PATH:$HOME
 RUN echo PATH=$PATH:$HOME >> /etc/environment
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+
+RUN git clone https://github.com/Shathe/101CrawlersWeb

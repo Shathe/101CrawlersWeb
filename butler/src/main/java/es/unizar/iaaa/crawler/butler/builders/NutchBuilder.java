@@ -28,7 +28,6 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 public class NutchBuilder implements CrawlerBuilder {
 
     public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) throws IOException {
-        // TODO Use // for comments wihtin methods
         /* Download and preapare folder for nutch */
         /* Descarga y preparación de carpetas para nutch */
         pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
@@ -49,14 +48,11 @@ public class NutchBuilder implements CrawlerBuilder {
             pw.println("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
         }
 
-        // TODO Use // for comments wihtin methods
 		/* Add docker files */
 		/* Añade los ficheros a docker creados */
         pw.println("ADD juntarSalidas.sh crawler/juntarSalidas.sh");
         pw.println("ADD run.sh crawler/run.sh");
 
-        // TODO @Iñigo Documentar en inglés
-        // TODO Use // for comments wihtin methods
 		/*
 		 * Put nutch-site file to its folder and then for each plugin, create
 		 * its folder with its name and put there its jars and xml file Pasar el

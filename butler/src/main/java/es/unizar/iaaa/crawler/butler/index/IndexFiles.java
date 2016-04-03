@@ -172,6 +172,7 @@ public class IndexFiles {
 	 * Index all text files under a directory.
 	 */
 	public void index(String indexPath,File file) {
+		
 		if (file.exists()) {
 
 			Date start = new Date();
