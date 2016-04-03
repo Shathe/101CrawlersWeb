@@ -10,10 +10,6 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
-import es.unizar.iaaa.crawler.butler.index.IndexFiles;
-import es.unizar.iaaa.crawler.butler.index.SearchFiles;
-import es.unizar.iaaa.crawler.butler.model.SearchResult;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import es.unizar.iaaa.crawler.butler.index.IndexFiles;
+import es.unizar.iaaa.crawler.butler.index.SearchFiles;
+import es.unizar.iaaa.crawler.butler.model.SearchResult;
 
 /**
  * Crawler commands. This class contains every command which deals with the
@@ -256,7 +256,7 @@ public class CrawlerCommands implements CommandMarker {
 
 
 	/**
-	 * search in the index a queryng
+	 * search in the index a query
 	 */
 	@CliCommand(value = "search", help = "search in the index a query")
 	public String search(
@@ -275,8 +275,9 @@ public class CrawlerCommands implements CommandMarker {
 		SearchFiles searcher = new SearchFiles();
 		try {
 			ArrayList<SearchResult> result = searcher.search(id+"_index/",query);
-			return "best match "+result.get(0).getUrl();
+			return result.size() > 0 ? "best match "+result.get(0).getUrl() : "no matches";
 		} catch (Exception e) {
+			LOGGER.warn("Exception : " + e.getMessage(), e);
 			return"Search failed, try indexing first";
 		}
 		
