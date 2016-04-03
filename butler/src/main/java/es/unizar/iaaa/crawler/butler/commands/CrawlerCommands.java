@@ -205,7 +205,7 @@ public class CrawlerCommands implements CommandMarker {
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		String command = "docker exec " + id + " ls crawler/FIN";
+		String command = "docker exec " + id + " ls crawler";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
@@ -234,7 +234,7 @@ public class CrawlerCommands implements CommandMarker {
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
 		String id = idUser + "_" + idCrawl;
-		String command = "docker exec " + id + " ls crawler/STARTED";
+		String command = "docker exec " + id + " ls crawler";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
@@ -274,7 +274,7 @@ public class CrawlerCommands implements CommandMarker {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 		// Check if there is any index locally pending in the container
-		String command = "docker exec " + id + " ls crawler/IndexPending";
+		String command = "docker exec " + id + " ls crawler";
 		String s;
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
@@ -293,7 +293,7 @@ public class CrawlerCommands implements CommandMarker {
 					ops.executeCommand(command, true);
 					// It is not pending now
 					command = "docker exec " + id + " rm crawler/IndexPending";
-					ops.executeCommand(command, true);
+					ops.executeCommand(command, false);
 				}
 
 			}
