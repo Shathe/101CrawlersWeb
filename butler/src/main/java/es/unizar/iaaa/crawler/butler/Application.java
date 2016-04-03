@@ -22,7 +22,7 @@ public class Application {
 			if(args[0].contains("index")){
 				// The docker will be index
 				DockerIndexer dockerI=new DockerIndexer();
-				dockerI.indexDocker("index", "salida");
+				dockerI.indexDocker("index", "salida/salida");
 			}
 		}
 	}
