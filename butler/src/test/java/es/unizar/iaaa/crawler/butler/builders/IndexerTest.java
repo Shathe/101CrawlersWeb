@@ -36,9 +36,9 @@ public class IndexerTest {
 	@Test
 	public void detectEverythingIsOK() throws Exception {
 		IndexFiles nuevo = new IndexFiles();
-		nuevo.index(ctx.getResource(baseDir + "salida.txt").getFile());
+		nuevo.index("index",ctx.getResource(baseDir + "salida.txt").getFile());
 		SearchFiles searcher = new SearchFiles();
-		ArrayList<SearchResult> result = searcher.search("stop start crawler");
+		ArrayList<SearchResult> result = searcher.search("","stop start crawler");
 		assertNotNull("The result shouldn't be null",result);
 		assertTrue("The searcher should does not work propperly ",result.get(0).getUrl().equals("http://www.inigol.es/"));
 	}

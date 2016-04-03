@@ -1,5 +1,6 @@
 package es.unizar.iaaa.crawler.butler.commands;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,17 @@ import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
+import es.unizar.iaaa.crawler.butler.index.IndexFiles;
+import es.unizar.iaaa.crawler.butler.index.SearchFiles;
+import es.unizar.iaaa.crawler.butler.model.SearchResult;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  * Crawler commands. This class contains every command which deals with the
@@ -29,15 +39,19 @@ public class CrawlerCommands implements CommandMarker {
 		// always available
 		return true;
 	}
-
-	@CliAvailabilityIndicator({ "finished" })
-	public boolean finAvailable() {
+	@CliAvailabilityIndicator({ "index" })
+	public boolean indexAvailable() {
+		// always available
+		return true;
+	}
+	@CliAvailabilityIndicator({ "search" })
+	public boolean searchAvailable() {
 		// always available
 		return true;
 	}
 
-	@CliAvailabilityIndicator({ "extract" })
-	public boolean extractAvailable() {
+	@CliAvailabilityIndicator({ "finished" })
+	public boolean finAvailable() {
 		// always available
 		return true;
 	}
@@ -130,17 +144,27 @@ public class CrawlerCommands implements CommandMarker {
 	}
 
 	/**
-	 * Extracts the info crawled in the docker container to an output path
+	 * Extracts the info crawled in the docker container and index it
 	 */
-	@CliCommand(value = "extract", help = "Extracts the info crawled in the docker container to an output path")
-	public String extract(
+	@CliCommand(value = "index", help = "Extracts the info crawled in the docker container and index it")
+	public String index(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "path" }, mandatory = true, help = "output path") final String path,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
 		String id = idUser + "_" + idCrawl;
 		String command1 = "docker exec " + id + " sh crawler/juntarSalidas.sh";
-		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + path;
+		String indexPath=id+"_index";
+		Path outputPath = Paths.get(indexPath);
+
+		// If the folder exists, delete it (rewrite the index)
+		try {
+			FileUtils.deleteDirectory(outputPath.toFile());
+			Files.createDirectory(outputPath);
+
+		} catch (IOException e1) {
+			return "Failing creating the index folder";
+		}
+		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + indexPath+"/output.txt";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
@@ -162,7 +186,10 @@ public class CrawlerCommands implements CommandMarker {
 			return "Docker cp failed";
 		}
 
-		return "Extracted correctly";
+		IndexFiles nuevo = new IndexFiles();
+		nuevo.index(id+"_index/index",new File(id+"_index/output.txt"));
+
+		return "Indexed correctly";
 	}
 
 	/**
@@ -226,5 +253,36 @@ public class CrawlerCommands implements CommandMarker {
 		}
 		return "The crawler is not running";
 	}
+
+
+	/**
+	 * search in the index a queryng
+	 */
+	@CliCommand(value = "search", help = "search in the index a query")
+	public String search(
+
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = { "query" }, mandatory = true, help = "the query is going to be search") final String query,
+			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		if (!ops.dockerIsRunning()) {
+			return "Docker is not running, please start it with sudo service docker start";
+		}
+		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
+			return "Docker container don't exist, please, try executing the start command";
+		}
+
+		SearchFiles searcher = new SearchFiles();
+		try {
+			ArrayList<SearchResult> result = searcher.search(id+"_index/",query);
+			return "best match "+result.get(0).getUrl();
+		} catch (Exception e) {
+			return"Search failed, try indexing first";
+		}
+		
+		
+	}
+
+
 
 }

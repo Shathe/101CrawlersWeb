@@ -46,15 +46,14 @@ import es.unizar.iaaa.crawler.butler.model.SearchResult;
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
-	private String ficheroSalida = "out.txt";
 	private final int NUM_MAXIMO_DOCS = 7052;
 
 	public SearchFiles() {
 	}
 	/** Simple command-line based search demo. */
-	public ArrayList<SearchResult> search(String queryS) throws Exception {
+	public ArrayList<SearchResult> search(String dir,String queryS) throws Exception {
 		
-		String index = "index";
+		String index = dir+"index";
 		
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(
 				index)));
@@ -94,7 +93,7 @@ public class SearchFiles {
 
 			}
 
-			ArrayList<SearchResult> resultado=doPagingSearch(searcher, query);
+			ArrayList<SearchResult> resultado=doPagingSearch(dir, searcher, query);
 		
 		reader.close();
 		return resultado;
@@ -111,7 +110,7 @@ public class SearchFiles {
 	 * collected.
 	 * 
 	 */
-	public ArrayList<SearchResult>  doPagingSearch(IndexSearcher searcher, Query query) throws IOException {
+	public ArrayList<SearchResult>  doPagingSearch(String dir, IndexSearcher searcher, Query query) throws IOException {
 		// searcher.setSimilarity(new BM25Similarity());
 		TopDocs results = searcher.search(query, NUM_MAXIMO_DOCS);
 		ScoreDoc[] hits = results.scoreDocs;
@@ -120,7 +119,7 @@ public class SearchFiles {
 		// hits = searcher.search(query, numTotalHits).scoreDocs;
 		System.out.println(numTotalHits + " total matching documents");
 		RWFicheros filer=new RWFicheros();
-		return filer.escribirFicheroSalida(ficheroSalida, numTotalHits, results,
+		return filer.escribirFicheroSalida(dir+"out.txt", numTotalHits, results,
 				hits, searcher);
 
 	}

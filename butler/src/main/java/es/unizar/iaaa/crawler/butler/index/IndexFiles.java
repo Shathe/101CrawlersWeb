@@ -71,18 +71,12 @@ public class IndexFiles {
 	/**
 	 * Index all text files under a directory.
 	 */
-	public void index(File file) {
-		String indexPath = "index";
+	public void index(String indexPath,File file) {
 		if (file.exists()) {
 
-			try {
-				FileUtils.deleteDirectory(new File(indexPath));
-			} catch (IOException e1) {
-			}
 			Date start = new Date();
 			try {
-				System.out.println("Indexing to directory '" + indexPath + "'...");
-
+				System.out.println("Indexing to directory '" + indexPath );
 				Directory dir = FSDirectory.open(new File(indexPath));
 				Analyzer analyzer = new EnglishAnalyzer();
 				IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, analyzer);
@@ -173,7 +167,8 @@ public class IndexFiles {
 				// you require.
 				// For example the long value 2011021714 would mean
 				// February 17, 2011, 2-3 PM.
-
+				System.out.print("adding ");
+				int i=0;
 				while (scan.hasNextLine()) {
 					String line = scan.nextLine();
 					if (line.contains("Recno::")) {
@@ -187,7 +182,7 @@ public class IndexFiles {
 						Document doc = new Document();
 						insertarenIndice(url, "url", doc, "text");
 						insertarenIndice(content, "content", doc, "text");
-						System.out.println("adding " + url);
+						if(i%100==0)System.out.print(".");
 
 						// ya se ha aacbado el fichero
 						if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
@@ -207,6 +202,7 @@ public class IndexFiles {
 
 							writer.updateDocument(new Term("path", file.getPath()), doc);
 						}
+						i++;
 
 					}
 					// siguiente linea
@@ -223,6 +219,7 @@ public class IndexFiles {
 
 			} finally {
 				fis.close();
+				System.out.println("");
 			}
 
 		}
