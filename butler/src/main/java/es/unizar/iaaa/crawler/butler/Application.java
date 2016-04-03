@@ -35,7 +35,7 @@ public class Application {
     		} catch (IOException e1) {
     			System.out.println("Failing creating the index folder");
     		}
-            dockerI.indexDocker(indexPath, "salida/salia");
+            dockerI.indexDocker(indexPath, "salida/salida");
         }
     }
 
