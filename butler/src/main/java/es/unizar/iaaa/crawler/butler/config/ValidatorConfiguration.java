@@ -33,10 +33,10 @@ public class ValidatorConfiguration {
 
     @Bean
     public ConfigurationValidator configurationValidator(DockerValidator dockerValidator, CrawlValidator crawlValidator) {
-        ArrayList<Validator> validadores = new ArrayList<>();
-        validadores.add(dockerValidator);
-        validadores.add(crawlValidator);
-        return new ConfigurationValidator(validadores);
+        ArrayList<Validator> validators = new ArrayList<>();
+        validators.add(dockerValidator);
+        validators.add(crawlValidator);
+        return new ConfigurationValidator(validators);
     }
 
     @Bean
