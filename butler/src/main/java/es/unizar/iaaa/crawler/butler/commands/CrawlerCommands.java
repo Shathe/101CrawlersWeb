@@ -195,7 +195,16 @@ public class CrawlerCommands implements CommandMarker {
 		// Index
 		IndexFiles nuevo = new IndexFiles();
 		nuevo.index(id + "_index/index", new File(id + "_index/output.txt"));
-
+		
+		//Ahora este índice está más actualizado o igual que el de docker, así que se borra que el indice está pendiente 
+		// en el contendor respecto a el del sistema
+		command1 = "docker exec " + id + " rm crawler/IndexPending";
+		try {
+			ops.executeCommand(command1, false);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "Docker exec failed";
+		}
 		return "Indexed correctly";
 	}
 
