@@ -4,8 +4,8 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.io.Files;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -24,23 +24,23 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 @Component
 public class DockerBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DockerBuilder.class);
+	// private static final Logger LOGGER = LoggerFactory.getLogger(DockerBuilder.class);
 
 	@Autowired
 	private NutchBuilder crawlerBuilder;
 
-	public void crearDockerfile(CrawlConfiguration config, Resource resources, String directoryName)
+	public void createDockerfile(CrawlConfiguration config, Resource resources, String directoryName)
 			throws IOException {
 		// Creates the run.sh file which will be used for executing the crawl
-		createRunSh(config, resources, directoryName);
+		doCreateRunSh(config, resources, directoryName);
 		// Creates the juntarSalidas.sh file which will be used for executing
 		// the crawl
-		createJuntarSalidasSh(resources, directoryName);
+		doCreateJuntarSalidasSh(resources, directoryName);
 		// Create dockerfile
-		createDockerfile(config, resources, directoryName);
+		doCreateDockerfile(config, resources, directoryName);
 	}
 
-	private void createDockerfile(CrawlConfiguration configuracion, Resource resources, String directoryName)
+	private void doCreateDockerfile(CrawlConfiguration configuracion, Resource resources, String directoryName)
 			throws IOException {
 		Resource dockerBase = resources.createRelative("DockerBase");
 		try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "Dockerfile")));
@@ -57,7 +57,7 @@ public class DockerBuilder {
 		}
 	}
 
-	private void createRunSh(CrawlConfiguration configuracion, Resource resources, String directoryName)
+	private void doCreateRunSh(CrawlConfiguration configuracion, Resource resources, String directoryName)
 			throws IOException {
 		Resource runNutch = resources.createRelative("runNutch");
 		try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "run.sh")));
@@ -94,15 +94,9 @@ public class DockerBuilder {
 		}
 	}
 
-	private void createJuntarSalidasSh(Resource resources, String directoryName) throws IOException {
+	private void doCreateJuntarSalidasSh(Resource resources, String directoryName) throws IOException {
 		Resource juntarSalidas = resources.createRelative("juntarSalidas");
-		try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "juntarSalidas.sh")));
-				Scanner scan = new Scanner(juntarSalidas.getInputStream())) {
-			while (scan.hasNextLine()) {
-				String linea = scan.nextLine();
-				pw.println(linea);
-			}
-		}
+		Files.copy(juntarSalidas.getFile(), new File(directoryName, "juntarSalidas.sh"));
 	}
 
 }
