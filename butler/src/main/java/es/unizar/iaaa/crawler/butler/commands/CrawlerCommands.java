@@ -263,11 +263,12 @@ public class CrawlerCommands implements CommandMarker {
 	/**
 	 * search in the index a query
 	 */
-	@CliCommand(value = "search", help = "search in the index a query")
+	@CliCommand(value = "search", help = "search in the index a query, you can specify the maximun number of results with the 'top' argument")
 	public String search(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "max" }, mandatory = false, help = "number of Max results that will be shown") final Integer max,
+			@CliOption(key = {
+					"top" }, mandatory = false, help = "number of Max results that will be shown") final Integer max,
 			@CliOption(key = {
 					"query" }, mandatory = true, help = "the query is going to be search") final String query,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
@@ -314,7 +315,7 @@ public class CrawlerCommands implements CommandMarker {
 			// "no matches";
 			if (result.size() > 0) {
 				// paging results
-				for (int i = 0 ; i<result.size() && (max==null || i<max);i++ ) {
+				for (int i = 0; i < result.size() && (max == null || i < max); i++) {
 					System.out.println(result.get(i).getUrl());
 				}
 			}
