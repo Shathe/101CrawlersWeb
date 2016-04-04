@@ -18,89 +18,89 @@ import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.ValidationResult;
 
 /**
- * Building commands. This class contains every command which deals with the building of the docker
- * and crawlsystem.
+ * Building commands. This class contains every command which deals with the
+ * building of the docker and crawlsystem.
  */
 @Component
 public class BuildingCommands implements CommandMarker {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(BuildingCommands.class);
-    @Autowired
-    private Operations ops;
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingCommands.class);
+	@Autowired
+	private Operations ops;
 
+	@Autowired
+	private AdapterBuilder builder;
 
-    @Autowired
-    private AdapterBuilder builder;
+	@Autowired
+	private ConfigurationValidator configurationValidator;
 
-    @Autowired
-    private ConfigurationValidator configurationValidator;
+	@CliAvailabilityIndicator({ "config" })
+	public boolean configAvailable() {
+		// always available
+		return true;
+	}
 
-    @CliAvailabilityIndicator({"config"})
-    public boolean configAvailable() {
-        // always available
-        return true;
-    }
+	@CliAvailabilityIndicator({ "build" })
+	public boolean buildAvailable() {
+		// always available
+		return true;
+	}
 
-    @CliAvailabilityIndicator({"build"})
-    public boolean buildAvailable() {
-        // always available
-        return true;
-    }
+	/**
+	 * Config command, the one which crates every configuration file
+	 */
+	@CliCommand(value = "config", help = "If the configuration file is ok, creates every file needed for the crawling system")
+	public String config(
 
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl,
+			@CliOption(key = {
+					"file" }, mandatory = true, help = "The name of the configuration file") final String configuration) {
+		String id = idUser + "_" + idCrawl;
 
-    /**
-     * Config command, the one which crates every configuration file
-     */
-    @CliCommand(value = "config", help = "If the configuration file is ok, creates every file needed for the crawling system")
-    public String config(
+		CrawlConfiguration config = ops.readConfiguration(configuration);
+		ValidationResult result = configurationValidator.validate(config);
+		if (!result.isOk()) {
+			return result.getFirstErrorCode().name() + ": " + result.getFirstErrorValue().toString();
+		}
+		try {
+			builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "File not found";
+		}
+		LOGGER.info("Configured successfully " + id);
 
-            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
-            @CliOption(key = {"idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl,
-            @CliOption(key = {
-                    "file"}, mandatory = true, help = "The name of the configuration file") final String configuration) {
-        String id = idUser + "_" + idCrawl;
+		return "Configured successfully";
+	}
 
-        CrawlConfiguration config = ops.readConfiguration(configuration);
-        ValidationResult result = configurationValidator.validate(config);
-        if (!result.isOk()) {
-            return result.getFirstErrorCode().name() + ": " + result.getFirstErrorValue().toString();
-        }
-        try {
-            builder.createConfigurationFiles(ops.readConfiguration(configuration), id);
-        } catch (IOException e) {
-            LOGGER.warn("IOException: "+e.getMessage(), e);
-            return "File not found";
-        }
-        return "Configured successfully";
-    }
+	/**
+	 * Creates the docker image
+	 */
+	@CliCommand(value = "build", help = "the directory with the files must exist")
+	public String build(
 
-    /**
-     * Creates the docker image
-     */
-    @CliCommand(value = "build", help = "the directory with the files must exist")
-    public String build(
+			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+		String id = idUser + "_" + idCrawl;
+		String command = "docker build -t " + id + " " + id;
 
-            @CliOption(key = {"idUser"}, mandatory = true, help = "id of the user") final String idUser,
-            @CliOption(key = {
-                    "idCrawl"}, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-        String id = idUser + "_" + idCrawl;
-        String command = "docker build -t " + id + " " + id;
-
-        File dir = new File(id);
-        if (!dir.isDirectory()) {
-            return "Files don't exist, please, try executing the config command";
-        }
-        if (!ops.dockerIsRunning()) {
-            return "Docker is not running, please start it with sudo service docker start";
-        }
-        try {
-            // docker build -t nameOfImage directory
-            ops.executeCommand(command, true);
-        } catch (IOException e) {
-            LOGGER.warn("IOException: "+e.getMessage(), e);
-            return "File not found";
-        }
-        return "Image built successfully";
-    }
+		File dir = new File(id);
+		if (!dir.isDirectory()) {
+			return "Files don't exist, please, try executing the config command";
+		}
+		if (!ops.dockerIsRunning()) {
+			return "Docker is not running, please start it with sudo service docker start";
+		}
+		try {
+			// docker build -t nameOfImage directory
+			ops.executeCommand(command, true);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "File not found";
+		}
+		LOGGER.info("Image built successfully " + id);
+		return "Image built successfully";
+	}
 
 }

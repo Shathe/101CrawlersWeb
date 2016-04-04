@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import es.unizar.iaaa.crawler.butler.index.IndexFiles;
 import es.unizar.iaaa.crawler.butler.index.SearchFiles;
@@ -110,6 +109,7 @@ public class CrawlerCommands implements CommandMarker {
 			} else {
 				response = "Docker image don't exist, please, try executing the build command";
 			}
+			LOGGER.info(response + " " + id);
 
 		} catch (Exception e) {
 			response = "Files not found";
@@ -138,8 +138,10 @@ public class CrawlerCommands implements CommandMarker {
 				String comando = "docker exec -d " + id + " sh crawler/run.sh";
 				ops.executeCommand(comando, true);
 				response = "Crawler started";
+				LOGGER.info(response + " " + id);
 
 			} catch (Exception e) {
+				LOGGER.warn("IOException: " + e.getMessage(), e);
 				response = "Docker container don't exist, please, try executing the start command";
 			}
 		} else {
@@ -168,6 +170,7 @@ public class CrawlerCommands implements CommandMarker {
 			Files.createDirectory(outputPath);
 
 		} catch (IOException e1) {
+			LOGGER.warn("IOException: " + e1.getMessage(), e1);
 			return "Failing creating the index folder";
 		}
 		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + indexPath + "/output.txt";
@@ -195,8 +198,9 @@ public class CrawlerCommands implements CommandMarker {
 		// Index
 		IndexFiles nuevo = new IndexFiles();
 		nuevo.index(id + "_index/index", new File(id + "_index/output.txt"));
-		
-		//Ahora este índice está más actualizado o igual que el de docker, así que se borra que el indice está pendiente 
+
+		// Ahora este índice está más actualizado o igual que el de docker, así
+		// que se borra que el indice está pendiente
 		// en el contendor respecto a el del sistema
 		command1 = "docker exec " + id + " rm crawler/IndexPending";
 		try {
@@ -205,6 +209,8 @@ public class CrawlerCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker exec failed";
 		}
+		LOGGER.info("Indexed correctly " + id);
+
 		return "Indexed correctly";
 	}
 
@@ -229,6 +235,7 @@ public class CrawlerCommands implements CommandMarker {
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains("FIN"))
+
 					return "Yes, the crawler has finished";
 			}
 		} catch (IOException e) {

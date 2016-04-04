@@ -1,6 +1,8 @@
 package es.unizar.iaaa.crawler.butler;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +16,7 @@ import es.unizar.iaaa.crawler.butler.index.DockerIndexer;
 
 @SpringBootApplication
 public class Application {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
@@ -34,6 +37,7 @@ public class Application {
 
     		} catch (IOException e1) {
     			System.out.println("Failing creating the index folder");
+    			LOGGER.warn(e1.getMessage());
     		}
             dockerI.indexDocker(indexPath, "salida/salida");
         }

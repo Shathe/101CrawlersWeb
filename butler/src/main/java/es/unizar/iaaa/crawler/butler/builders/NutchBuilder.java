@@ -6,6 +6,8 @@ package es.unizar.iaaa.crawler.butler.builders;
 
 import com.google.common.base.Strings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -26,6 +28,7 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 @Component
 public class NutchBuilder implements CrawlerBuilder {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerBuilder.class);
 
     public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) throws IOException {
         /* Download and preapare folder for nutch */
@@ -126,6 +129,7 @@ public class NutchBuilder implements CrawlerBuilder {
 
             pw.println("</configuration>");
         } catch (IOException e) {
+        	LOGGER.warn("IOException: "+e.getMessage());
             e.printStackTrace();
         }
     }

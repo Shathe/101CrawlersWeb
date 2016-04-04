@@ -94,6 +94,8 @@ public class StoppingCommands implements CommandMarker {
 						command = " docker exec  " + id + " kill -9 " + process.split(" ")[1];
 						LOGGER.info(command);
 						ops.executeCommand(command, true);
+						LOGGER.info("Crawl stopped correctly " + id);
+
 						return "Crawl stopped correctly";
 
 					}
@@ -103,6 +105,7 @@ public class StoppingCommands implements CommandMarker {
 				return "Docker container don't exist, please, try executing the start command";
 			}
 		}
+
 		return "Docker container has to be running in order to be able to stop the crawl";
 	}
 
@@ -133,12 +136,15 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
+		LOGGER.info("Container paused correctly " + id);
+
 		return "Container paused correctly";
 	}
 
 	/**
 	 * Exits
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@CliCommand(value = "bye", help = "Exits")
 	public String exit() throws Exception
@@ -180,6 +186,8 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
+		LOGGER.info("Container stopped correctly " + id);
+
 		return "Container stopped correctly";
 	}
 
@@ -209,6 +217,8 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
+		LOGGER.info("Container deleted correctly " + id);
+
 		return "Container deleted correctly";
 	}
 
@@ -239,6 +249,8 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker image don't exist, please, try executing the start command";
 		}
+		LOGGER.info("Image delete correctly " + id);
+
 		return "Image delete correctly";
 	}
 

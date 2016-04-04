@@ -46,7 +46,7 @@ public class Operations implements CommandMarker {
 		if (print) {
 			while ((s = stdInput.readLine()) != null) {
 				if (!(s.contains("WARNING: Error loading config") || s.equals(""))) {
-					System.out.println("[Docker] "+s);
+					System.out.println("[Docker] " + s);
 					LOGGER.info(s);
 				}
 			}
@@ -76,7 +76,7 @@ public class Operations implements CommandMarker {
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
-				s=" "+s+" ";
+				s = " " + s + " ";
 				if (s.contains(" " + id + " "))
 					return true;
 			}
@@ -113,10 +113,11 @@ public class Operations implements CommandMarker {
 			}
 		} catch (IOException a) {
 			System.out.println(a.getStackTrace());
+			LOGGER.warn("IOException: " + a.getMessage(), a);
+
 		}
 		return true;
 	}
-
 
 	/**
 	 * @param idUser
@@ -140,9 +141,12 @@ public class Operations implements CommandMarker {
 		}
 		return false;
 	}
-	/** 
-	 * @param idUser [id of the user]
-	 * @param idCrawl [id of the crawl]
+
+	/**
+	 * @param idUser
+	 *            [id of the user]
+	 * @param idCrawl
+	 *            [id of the crawl]
 	 * @return true when the image asign to the user and crawl exists
 	 */
 	public boolean imageExists(String idUser, String idCrawl) {
@@ -158,9 +162,12 @@ public class Operations implements CommandMarker {
 		}
 		return false;
 	}
-	/** 
-	 * @param idUser [id of the user]
-	 * @param idCrawl [id of the crawl]
+
+	/**
+	 * @param idUser
+	 *            [id of the user]
+	 * @param idCrawl
+	 *            [id of the crawl]
 	 * @return true when the container asign to the user and crawl is stopped
 	 */
 	public boolean containerStopped(String idUser, String idCrawl) {
@@ -179,9 +186,11 @@ public class Operations implements CommandMarker {
 		return false;
 	}
 
-	/** 
-	 * @param idUser [id of the user]
-	 * @param idCrawl [id of the crawl]
+	/**
+	 * @param idUser
+	 *            [id of the user]
+	 * @param idCrawl
+	 *            [id of the crawl]
 	 * @return true when the container asign to the user and crawl is paused
 	 */
 	public boolean containerPaused(String idUser, String idCrawl) {
