@@ -112,9 +112,7 @@ public class Operations implements CommandMarker {
 
 			}
 		} catch (IOException a) {
-			System.out.println(a.getStackTrace());
 			LOGGER.warn("IOException: " + a.getMessage(), a);
-
 		}
 		return true;
 	}

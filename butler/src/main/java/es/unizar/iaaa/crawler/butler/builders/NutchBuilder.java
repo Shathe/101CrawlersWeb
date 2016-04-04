@@ -30,11 +30,11 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 public class NutchBuilder implements CrawlerBuilder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerBuilder.class);
 
-    public void addDockerfile(CrawlConfiguration configuracion, String directoryName, PrintWriter pw) throws IOException {
+    public void addDockerfile(CrawlConfiguration configuration, String directoryName, PrintWriter pw) throws IOException {
         /* Download and preapare folder for nutch */
         /* Descarga y preparación de carpetas para nutch */
         pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
-                + configuracion.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant");
+                + configuration.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant");
         pw.println("RUN ln -s nutch_source/runtime/local $HOME/crawler");
         pw.println("Run mkdir crawler/" + directoryName);
         pw.println("Run mkdir crawler/urls");
@@ -47,8 +47,8 @@ public class NutchBuilder implements CrawlerBuilder {
         // TODO Use // for comments wihtin methods
 		/* Add seeds */
 		/* Añade las seeds */
-        for (int i = 0; i < configuracion.getCrawlSystem().getSeeds().size(); i++) {
-            pw.println("RUN echo " + configuracion.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
+        for (int i = 0; i < configuration.getCrawlSystem().getSeeds().size(); i++) {
+            pw.println("RUN echo " + configuration.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
         }
 
 		/* Add docker files */
@@ -65,7 +65,7 @@ public class NutchBuilder implements CrawlerBuilder {
 		 */
         pw.println("ADD nutch-site.xml crawler/conf/nutch-site.xml");
         pw.println();
-        configurePlugins(configuracion, directoryName, pw);
+        configurePlugins(configuration, directoryName, pw);
     }
 
     private void configurePlugins(CrawlConfiguration configuration, String directoryName, PrintWriter pw)
@@ -107,7 +107,7 @@ public class NutchBuilder implements CrawlerBuilder {
         properties.add(new Property("db.max.inlinks", configuracion.getCrawlSystem().getLinksLimitURL()));
         properties.add(new Property("fetcher.queue.mode", configuracion.getCrawlSystem().getQueueMode()));
         properties.add(new Property("fetcher.max.crawl.delay", configuracion.getCrawlSystem().getMaxCrawlDelay()));
-        if (!campoVacio(configuracion.getCrawlSystem().getTimeouts())) {
+        if (!isNullOrEmpty(configuracion.getCrawlSystem().getTimeouts())) {
             properties
                     .add(new Property("http.max.delays", configuracion.getCrawlSystem().getTimeouts().getFetchTimes()));
             properties.add(new Property("http.timeout", configuracion.getCrawlSystem().getTimeouts().getNetwork()));
@@ -124,7 +124,7 @@ public class NutchBuilder implements CrawlerBuilder {
             pw.println("<configuration>");
 
             for (Property property : properties) {
-                anadirProperty(pw, property);
+                addProperty(pw, property);
             }
 
             pw.println("</configuration>");
@@ -137,7 +137,7 @@ public class NutchBuilder implements CrawlerBuilder {
     /**
      * Add a propperty to a file
      */
-    private void anadirProperty(PrintWriter pw, Property prop) {
+    private void addProperty(PrintWriter pw, Property prop) {
         if (!Strings.isNullOrEmpty(prop.getValue())) {
             pw.println("	<property>");
             pw.println("		<name>");
@@ -153,7 +153,7 @@ public class NutchBuilder implements CrawlerBuilder {
     /**
      * Check whether the configuration field is empty or not
      */
-    private boolean campoVacio(Object campo) {
+    private boolean isNullOrEmpty(Object campo) {
         return campo == null || campo.toString().equals("");
     }
 

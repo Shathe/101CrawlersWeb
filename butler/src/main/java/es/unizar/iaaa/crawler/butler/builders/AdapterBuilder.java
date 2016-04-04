@@ -55,7 +55,7 @@ public class AdapterBuilder {
 
 		// Call the crawler builder and then the docker builder
 		builder.createNutchSite(configuration, outputDir);
-		dockerBuilder.crearDockerfile(configuration, resFile, outputDir);
+		dockerBuilder.createDockerfile(configuration, resFile, outputDir);
 	}
 
 }

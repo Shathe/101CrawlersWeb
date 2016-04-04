@@ -142,20 +142,6 @@ public class StoppingCommands implements CommandMarker {
 	}
 
 	/**
-	 * Exits
-	 * 
-	 * @throws IOException
-	 */
-	@CliCommand(value = "bye", help = "Exits")
-	public String exit() throws Exception
-
-	{
-		System.out.println("Bye bye my friend, may the Crawl be with you");
-		System.exit(1);
-		return "";
-	}
-
-	/**
 	 * Stop the docker container
 	 */
 	@CliCommand(value = "stopContainer", help = "stops the docker Container")
