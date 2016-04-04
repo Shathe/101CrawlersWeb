@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import es.unizar.iaaa.crawler.butler.index.IndexFiles;
 import es.unizar.iaaa.crawler.butler.index.SearchFiles;
@@ -39,11 +40,13 @@ public class CrawlerCommands implements CommandMarker {
 		// always available
 		return true;
 	}
+
 	@CliAvailabilityIndicator({ "index" })
 	public boolean indexAvailable() {
 		// always available
 		return true;
 	}
+
 	@CliAvailabilityIndicator({ "search" })
 	public boolean searchAvailable() {
 		// always available
@@ -156,7 +159,7 @@ public class CrawlerCommands implements CommandMarker {
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
 		String id = idUser + "_" + idCrawl;
 		String command1 = "docker exec " + id + " sh crawler/juntarSalidas.sh";
-		String indexPath=id+"_index";
+		String indexPath = id + "_index";
 		Path outputPath = Paths.get(indexPath);
 
 		// If the folder exists, delete it (rewrite the index)
@@ -167,7 +170,7 @@ public class CrawlerCommands implements CommandMarker {
 		} catch (IOException e1) {
 			return "Failing creating the index folder";
 		}
-		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + indexPath+"/output.txt";
+		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + indexPath + "/output.txt";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
@@ -189,9 +192,9 @@ public class CrawlerCommands implements CommandMarker {
 			return "Docker cp failed";
 		}
 
-		//Index
+		// Index
 		IndexFiles nuevo = new IndexFiles();
-		nuevo.index(id+"_index/index",new File(id+"_index/output.txt"));
+		nuevo.index(id + "_index/index", new File(id + "_index/output.txt"));
 
 		return "Indexed correctly";
 	}
@@ -225,6 +228,7 @@ public class CrawlerCommands implements CommandMarker {
 		}
 		return "The crawler hasn't finished yet";
 	}
+
 	/**
 	 * Gives information about the crawl, if the crawl is actually running
 	 */
@@ -256,7 +260,6 @@ public class CrawlerCommands implements CommandMarker {
 		return "The crawler is not running";
 	}
 
-
 	/**
 	 * search in the index a query
 	 */
@@ -264,7 +267,9 @@ public class CrawlerCommands implements CommandMarker {
 	public String search(
 
 			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "query" }, mandatory = true, help = "the query is going to be search") final String query,
+			@CliOption(key = { "max" }, mandatory = false, help = "number of Max results that will be shown") final Integer max,
+			@CliOption(key = {
+					"query" }, mandatory = true, help = "the query is going to be search") final String query,
 			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
 		String id = idUser + "_" + idCrawl;
 		if (!ops.dockerIsRunning()) {
@@ -278,18 +283,19 @@ public class CrawlerCommands implements CommandMarker {
 		String s;
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
-				if (s.contains("IndexPending")){
-					//copy the index files
-					String indexPath=id+"_index";
+				if (s.contains("IndexPending")) {
+					// copy the index files
+					String indexPath = id + "_index";
 					Path outputPath = Paths.get(indexPath);
 					try {
 						FileUtils.deleteDirectory(outputPath.toFile());
+						Files.createDirectory(outputPath);
 
 					} catch (IOException e1) {
 						return "Failing managing the index folder";
 					}
 					// copy the index to the system
-					command = "docker cp " + id + ":root/crawler/index " + indexPath;
+					command = "docker cp " + id + ":root/crawler/index " + indexPath + "/index";
 					ops.executeCommand(command, true);
 					// It is not pending now
 					command = "docker exec " + id + " rm crawler/IndexPending";
@@ -303,16 +309,21 @@ public class CrawlerCommands implements CommandMarker {
 
 		SearchFiles searcher = new SearchFiles();
 		try {
-			ArrayList<SearchResult> result = searcher.search(id+"_index/",query);
-			return result.size() > 0 ? "best match "+result.get(0).getUrl() : "no matches";
+			ArrayList<SearchResult> result = searcher.search(id + "_index/", query);
+			// return result.size() > 0 ? "best match "+result.get(0).getUrl() :
+			// "no matches";
+			if (result.size() > 0) {
+				// paging results
+				for (int i = 0 ; i<result.size() && (max==null || i<max);i++ ) {
+					System.out.println(result.get(i).getUrl());
+				}
+			}
+			return "Results shown";
 		} catch (Exception e) {
 			LOGGER.warn("Exception : " + e.getMessage(), e);
-			return"Search failed, try indexing first";
+			return "Search failed, try indexing first";
 		}
-		
-		
+
 	}
-
-
 
 }
