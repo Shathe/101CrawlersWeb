@@ -1,17 +1,23 @@
-package dataBase;
+package crawlers;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import models.Project;
 import ops.CommonOps;
 
+@Component
 public class UserDatabase {
+
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+	
+	
 	public int getNumberUsersSameNick(String user) {
 		return this.jdbcTemplate.queryForObject("select count(*) from userCrawlers where nick = ?", Integer.class,
 				user);

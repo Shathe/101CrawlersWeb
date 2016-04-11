@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import dataBase.UserDatabase;
 import models.User;
 import ops.CommonOps;
 
@@ -21,7 +20,8 @@ public class UserController {
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-
+	@Autowired
+	UserDatabase userDB;
 	/*
 	 * Registra a un usuario si no existen usuarios con el mismo email o nombre
 	 * ya en la base de datos Si se inserta correctamente devuelve un objeto
@@ -37,7 +37,6 @@ public class UserController {
 		 */
 		String error = "";
 		log.info("Petición registro");
-		UserDatabase userDB = new UserDatabase();
 		int mismoNick = userDB.getNumberUsersSameNick(user);
 
 		int mismoEmail = userDB.getNumberUsersSameEmail(email);
@@ -92,7 +91,6 @@ public class UserController {
 			 * Obtienes la info de la bd
 			 */
 
-			UserDatabase userDB = new UserDatabase();
 			mismoNick = userDB.getNumberUsersSameNick(user);
 
 			if (mismoNick > 0)

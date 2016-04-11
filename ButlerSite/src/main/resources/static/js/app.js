@@ -8,7 +8,7 @@
 	    this.loged=false;
 	    this.user=getCookie("usuario");
 	    this.email="";
-	    this.projects=[{name: 'nombreProyecto1'}];
+	    this.projects=[];
 	    /* Edita el valor de la pestaña actual */
 	    this.selectedTab = function(tab){
 	      this.tab=tab;
@@ -34,20 +34,16 @@
 
 	    };
 	    this.ProjectsOfUser = function (){
-	        console.log('Pre-project');
-
 	        /* Con AJAX comprobar que se loguea bien */
 	        $.get('/projects',{ idUser: getCookie("idUser")})
 	        .done(function(data, status) {
 	        	/* Usuario registrado con éxito*/
-	        	this.projects=data;
-            console.log(this.projects);
-            console.log(this.projects[0].name);
+	        	//Se da valor al scope para poder iterar en ng-repeat y la variable
+	        	//para poder utilizarla después
+	        this.projects=data;
             $scope.projects=data;
-	         // var obj = jQuery.parseJSON(data.responseText );
-	        //	console.log(obj);
-
-
+	        console.log(data);
+            $scope.$apply();
 	        })
 	        .fail(function(data, status) {
 	          console.log(data);
@@ -137,7 +133,7 @@
       this.user=document.getElementById("usernameLogin").value;
       this.password=document.getElementById("passwordLogin").value;
       loginUser(this.user, this.password);
-
+      $("[data-toggle=tooltipProject]").tooltip();
 
     };
 
@@ -309,3 +305,4 @@ function getCookie(cname) {
 var deleteCookie = function(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
+
