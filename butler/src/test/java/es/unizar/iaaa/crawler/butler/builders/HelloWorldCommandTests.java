@@ -14,7 +14,6 @@ import es.unizar.iaaa.crawler.butler.Application;
 
 import static org.junit.Assert.assertEquals;
 
-// TODO @Iñigo Document me!
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @ActiveProfiles("test")
