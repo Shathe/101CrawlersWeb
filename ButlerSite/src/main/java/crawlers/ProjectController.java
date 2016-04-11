@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dataBase.ProjectDatabase;
 import dataBase.ProjectMapper;
 import models.Project;
 import models.User;
@@ -41,10 +42,8 @@ public class ProjectController {
 		 * devuelve null
 		 */
 		log.info("ListProjects " + idUser);
-
-		List<Project> projects = this.jdbcTemplate.query(
-				"select id, idUser, name, dslPath,date from projectCrawlers where idUser = " + idUser, new ProjectMapper());
-		
+		ProjectDatabase projectDB= new ProjectDatabase();
+		List<Project> projects = projectDB.getProjects(idUser);
 
 		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
 	}

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dataBase.UserDatabase;
 import models.User;
 import ops.CommonOps;
 
@@ -36,20 +37,17 @@ public class UserController {
 		 */
 		String error = "";
 		log.info("Petición registro");
-		int mismoNick = this.jdbcTemplate.queryForObject("select count(*) from userCrawlers where nick = ?",
-				Integer.class, user);
+		UserDatabase userDB = new UserDatabase();
+		int mismoNick = userDB.getNumberUsersSameNick(user);
 
-		int mismoEmail = this.jdbcTemplate.queryForObject("select count(*) from userCrawlers where email = ?",
-				Integer.class, email);
+		int mismoEmail = userDB.getNumberUsersSameEmail(email);
 
 		User usuario = null;
 		if (user != null && psdw != null && email != null && !user.equals("") && !psdw.equals("") && !email.equals("")
 				&& mismoNick <= 0 && mismoEmail <= 0) {
 			// Buen contenido. Haces un hash de la contrasena al guardarla
-			this.jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", user, email,
-					CommonOps.HashFunction(psdw));
-			Long id = this.jdbcTemplate.queryForObject("select id from userCrawlers where email = ?", Long.class,
-					email);
+			userDB.insertarUsuario(user, email, psdw);
+			Long id = userDB.getIdFromEmail(email);
 			usuario = new User(id, user, email, psdw);
 
 		} else {
@@ -93,21 +91,20 @@ public class UserController {
 			/*
 			 * Obtienes la info de la bd
 			 */
-			mismoNick = this.jdbcTemplate.queryForObject("select count(*) from userCrawlers where nick = ?",
-					Integer.class, user);
+
+			UserDatabase userDB = new UserDatabase();
+			mismoNick = userDB.getNumberUsersSameNick(user);
+
 			if (mismoNick > 0)
-				contrasena = this.jdbcTemplate.queryForObject("select contrasena from userCrawlers where nick = ?",
-						String.class, user);
-			
-			if ( contrasena.equals(CommonOps.HashFunction(psdw)) && mismoNick > 0) {
+				contrasena = userDB.getpswdFromUser(user);
+
+			if (contrasena.equals(CommonOps.HashFunction(psdw)) && mismoNick > 0) {
 				mensaje = "Logueado correctamente";
-				//Mandar idUser
-				mensaje = this.jdbcTemplate.queryForObject("select id from userCrawlers where nick = ?",
-						String.class, user);
-				log.info("Logged id: "+mensaje);
+				// Mandar idUser
+				mensaje = String.valueOf(userDB.getIdFromUser(user).longValue());
+				log.info("Logged id: " + mensaje);
 
-
-			}else {
+			} else {
 				// Hay error y se mira cual es.
 
 				if (!contrasena.equals(CommonOps.HashFunction(psdw)))
@@ -118,7 +115,7 @@ public class UserController {
 
 				throw new ErrorResponse(error);
 			}
-			
+
 		} else {
 			// Hay error y se mira cual es.
 
@@ -134,6 +131,5 @@ public class UserController {
 
 		return mensaje;
 	}
-	
 
 }
