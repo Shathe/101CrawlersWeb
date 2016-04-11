@@ -1,7 +1,6 @@
 # 101Crawlers
 
-Aplicación de código abierto en desarrollo.
-Developingpen source application.
+Open source developing application.
 
 ## Organización
 
