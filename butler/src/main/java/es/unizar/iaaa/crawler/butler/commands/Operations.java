@@ -63,21 +63,35 @@ public class Operations implements CommandMarker {
 		return YamlConfigRunner.read(ctx.getResource(baseDir + route));
 	}
 
-	/**
-	 * @param idUser
-	 *            [id of the user]
-	 * @param idCrawl
-	 *            [id of the crawl]
+	/**	
 	 * @return true when the container asign to the user and crawl exists
 	 */
-	public boolean containerExists(String idUser, String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+	public boolean containerExists(String idContainer) {
+		String id = idContainer;
 		String s;
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				s = " " + s + " ";
 				if (s.contains(" " + id + " "))
+					return true;
+			}
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+		}
+		return false;
+	}
+	/**	
+	 * @return true when the container asign to the user and crawl exists
+	 */
+	public boolean containerofaImageExists(String idImage) {
+		String id = idImage;
+		String s;
+		String command = "docker ps -a";
+		try (BufferedReader out = executeCommand(command, false)) {
+			while ((s = out.readLine()) != null) {
+				s = " " + s + " ";
+				if (s.contains(" " + id+"_" + " "))
 					return true;
 			}
 		} catch (IOException e) {
@@ -117,15 +131,11 @@ public class Operations implements CommandMarker {
 		return true;
 	}
 
-	/**
-	 * @param idUser
-	 *            [id of the user]
-	 * @param idCrawl
-	 *            [id of the crawl]
+	/**	
 	 * @return true when the container asign to the user and crawl exists
 	 */
-	public boolean containerRunning(String idUser, String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+	public boolean containerRunning(String idContainer) {
+		String id = idContainer;
 		String s;
 		String command = "docker ps -a --filter \"status=running\" --filter \"name=" + id + "\"";
 		// docker ps -f=[name='1_1']
@@ -141,14 +151,10 @@ public class Operations implements CommandMarker {
 	}
 
 	/**
-	 * @param idUser
-	 *            [id of the user]
-	 * @param idCrawl
-	 *            [id of the crawl]
 	 * @return true when the image asign to the user and crawl exists
 	 */
-	public boolean imageExists(String idUser, String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+	public boolean imageExists(String idImage) {
+		String id = idImage;
 		String s;
 		try (BufferedReader out = executeCommand("docker images " + id, false)) {
 			while ((s = out.readLine()) != null) {
@@ -162,21 +168,17 @@ public class Operations implements CommandMarker {
 	}
 
 	/**
-	 * @param idUser
-	 *            [id of the user]
-	 * @param idCrawl
-	 *            [id of the crawl]
 	 * @return true when the container asign to the user and crawl is stopped
 	 */
-	public boolean containerStopped(String idUser, String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+	public boolean containerStopped(String idContainer) {
+		String id = idContainer;
 		String command = "docker ps -a --filter \"status=exited\" --filter \"name=" + id + "\"";
 		String s;
 		// docker ps --filter "status=exited" --filter "name=1_1"
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains(id) && s.contains("Exited"))
-					return !containerPaused(idUser, idCrawl);
+					return !containerPaused(idContainer);
 			}
 		} catch (IOException e) {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
@@ -185,14 +187,10 @@ public class Operations implements CommandMarker {
 	}
 
 	/**
-	 * @param idUser
-	 *            [id of the user]
-	 * @param idCrawl
-	 *            [id of the crawl]
 	 * @return true when the container asign to the user and crawl is paused
 	 */
-	public boolean containerPaused(String idUser, String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+	public boolean containerPaused(String idContainer) {
+		String id = idContainer;
 		String command = "docker ps -a --filter \"status=paused\" --filter \"name=" + id + "\"";
 		String s;
 		// docker ps -f=[name='1_1']

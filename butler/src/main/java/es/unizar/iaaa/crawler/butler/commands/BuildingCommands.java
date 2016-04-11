@@ -52,11 +52,10 @@ public class BuildingCommands implements CommandMarker {
 	@CliCommand(value = "config", help = "If the configuration file is ok, creates every file needed for the crawling system")
 	public String config(
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl,
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
 			@CliOption(key = {
 					"file" }, mandatory = true, help = "The name of the configuration file") final String configuration) {
-		String id = idUser + "_" + idCrawl;
+		String id = idProject;
 
 		CrawlConfiguration config = ops.readConfiguration(configuration);
 		ValidationResult result = configurationValidator.validate(config);
@@ -80,12 +79,13 @@ public class BuildingCommands implements CommandMarker {
 	@CliCommand(value = "build", help = "the directory with the files must exist")
 	public String build(
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String id = idUser + "_" + idCrawl;
-		String command = "docker build -t " + id + " " + id;
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "id of the idProject") final String imageName) {
+		String idImage = idProject+"_"+imageName;
+		//build -t nombre directorioFicherosDocker
+		String command = "docker build -t " + idImage + " " + idProject;
 
-		File dir = new File(id);
+		File dir = new File(idProject);
 		if (!dir.isDirectory()) {
 			return "Files don't exist, please, try executing the config command";
 		}
@@ -99,7 +99,7 @@ public class BuildingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "File not found";
 		}
-		LOGGER.info("Image built successfully " + id);
+		LOGGER.info("Image built successfully " + idImage);
 		return "Image built successfully";
 	}
 

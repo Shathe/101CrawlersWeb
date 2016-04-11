@@ -76,32 +76,36 @@ public class CrawlerCommands implements CommandMarker {
 	@CliCommand(value = "start", help = "the docker image must be created")
 	public String start(
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
 		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerRunning(idUser, idCrawl)) {
+		if (ops.containerRunning(idcontainer)) {
 			return "The container is already running";
 		}
 		try {
-			String id = idUser + "_" + idCrawl;
 
-			if (ops.imageExists(idUser, idCrawl)) {
+			if (ops.imageExists(idImage)) {
 				// docker run -i -d nameOfImage nameOfContainer
 				String comando = "";
 				// if it was stopped it has to be restarted
-				if (ops.containerStopped(idUser, idCrawl)) {
-					comando = "docker restart " + id;
+				if (ops.containerStopped(idcontainer)) {
+					comando = "docker restart " + idcontainer;
 					response += "Container restarted";
 
-				} else if (ops.containerPaused(idUser, idCrawl)) {
-					comando = "docker unpause " + id;
+				} else if (ops.containerPaused(idcontainer)) {
+					comando = "docker unpause " + idcontainer;
 					response += "Container unpaused";
 				} else {
 
-					comando = "docker run -i -d --name=\"" + id + "\" " + id;
+					comando = "docker run -i -d --name=\"" + idcontainer + "\" " + idImage;
 					response += "Container started";
 
 				}
@@ -109,7 +113,7 @@ public class CrawlerCommands implements CommandMarker {
 			} else {
 				response = "Docker image don't exist, please, try executing the build command";
 			}
-			LOGGER.info(response + " " + id);
+			LOGGER.info(response + " " + idcontainer);
 
 		} catch (Exception e) {
 			response = "Files not found";
@@ -123,22 +127,25 @@ public class CrawlerCommands implements CommandMarker {
 	 */
 	@CliCommand(value = "run", help = "the docker cointainer must be running")
 	public String run(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String response;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (ops.containerExists(idUser, idCrawl) && ops.containerRunning(idUser, idCrawl)) {
+		if (ops.containerExists(idcontainer) && ops.containerRunning(idcontainer)) {
 			try {
-				String id = idUser + "_" + idCrawl;
 
 				// docker exec idContainer sh crawler/run.sh
-				String comando = "docker exec -d " + id + " sh crawler/run.sh";
+				String comando = "docker exec -d " + idcontainer + " sh crawler/run.sh";
 				ops.executeCommand(comando, true);
 				response = "Crawler started";
-				LOGGER.info(response + " " + id);
+				LOGGER.info(response + " " + idcontainer);
 
 			} catch (Exception e) {
 				LOGGER.warn("IOException: " + e.getMessage(), e);
@@ -156,12 +163,16 @@ public class CrawlerCommands implements CommandMarker {
 	 */
 	@CliCommand(value = "index", help = "Extracts the info crawled in the docker container and index it")
 	public String index(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String id = idUser + "_" + idCrawl;
-		String command1 = "docker exec " + id + " sh crawler/juntarSalidas.sh";
-		String indexPath = id + "_index";
+		String command1 = "docker exec " + idcontainer + " sh crawler/juntarSalidas.sh";
+		String indexPath = idcontainer + "_index";
 		Path outputPath = Paths.get(indexPath);
 
 		// If the folder exists, delete it (rewrite the index)
@@ -173,11 +184,11 @@ public class CrawlerCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e1.getMessage(), e1);
 			return "Failing creating the index folder";
 		}
-		String command2 = "docker cp " + id + ":root/crawler/salida/salida " + indexPath + "/output.txt";
+		String command2 = "docker cp " + idcontainer + ":root/crawler/salida/salida " + indexPath + "/output.txt";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
+		if (!ops.containerExists(idcontainer) || !ops.containerRunning(idcontainer)) {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 
@@ -197,19 +208,19 @@ public class CrawlerCommands implements CommandMarker {
 
 		// Index
 		IndexFiles nuevo = new IndexFiles();
-		nuevo.index(id + "_index/index", new File(id + "_index/output.txt"));
+		nuevo.index(idcontainer + "_index/index", new File(idcontainer + "_index/output.txt"));
 
 		// Ahora este índice está más actualizado o igual que el de docker, así
 		// que se borra que el indice está pendiente
 		// en el contendor respecto a el del sistema
-		command1 = "docker exec " + id + " rm crawler/IndexPending";
+		command1 = "docker exec " + idcontainer + " rm crawler/IndexPending";
 		try {
 			ops.executeCommand(command1, false);
 		} catch (IOException e) {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker exec failed";
 		}
-		LOGGER.info("Indexed correctly " + id);
+		LOGGER.info("Indexed correctly " + idcontainer);
 
 		return "Indexed correctly";
 	}
@@ -219,15 +230,19 @@ public class CrawlerCommands implements CommandMarker {
 	 */
 	@CliCommand(value = "finished", help = "Returns true only if the crawler has finished")
 	public String finished(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String id = idUser + "_" + idCrawl;
-		String command = "docker exec " + id + " ls crawler";
+		String command = "docker exec " + idcontainer + " ls crawler";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
+		if (!ops.containerExists(idcontainer) || !ops.containerRunning(idcontainer)) {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 
@@ -250,15 +265,19 @@ public class CrawlerCommands implements CommandMarker {
 	 */
 	@CliCommand(value = "info", help = "information about the crawl")
 	public String info(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
 
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String id = idUser + "_" + idCrawl;
-		String command = "docker exec " + id + " ls crawler";
+		String command = "docker exec " + idcontainer + " ls crawler";
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
+		if (!ops.containerExists(idcontainer) || !ops.containerRunning(idcontainer)) {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 
@@ -281,28 +300,33 @@ public class CrawlerCommands implements CommandMarker {
 	 */
 	@CliCommand(value = "search", help = "search in the index a query, you can specify the maximun number of results with the 'top' argument")
 	public String search(
-
-			@CliOption(key = { "idUser" }, mandatory = true, help = "id of the user") final String idUser,
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
 			@CliOption(key = {
 					"top" }, mandatory = false, help = "number of Max results that will be shown") final Integer max,
 			@CliOption(key = {
 					"query" }, mandatory = true, help = "the query is going to be search") final String query,
-			@CliOption(key = { "idCrawl" }, mandatory = true, help = "id of the new crawler") final String idCrawl) {
-		String id = idUser + "_" + idCrawl;
+
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String response = "";
+		String idImage = idProject + "_" + imageName;
+		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idUser, idCrawl) || !ops.containerRunning(idUser, idCrawl)) {
+		if (!ops.containerExists(idcontainer) || !ops.containerRunning(idcontainer)) {
 			return "Docker container don't exist, please, try executing the start command";
 		}
 		// Check if there is any index locally pending in the container
-		String command = "docker exec " + id + " ls crawler";
+		String command = "docker exec " + idcontainer + " ls crawler";
 		String s;
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains("IndexPending")) {
 					// copy the index files
-					String indexPath = id + "_index";
+					String indexPath = idcontainer + "_index";
 					Path outputPath = Paths.get(indexPath);
 					try {
 						FileUtils.deleteDirectory(outputPath.toFile());
@@ -312,10 +336,10 @@ public class CrawlerCommands implements CommandMarker {
 						return "Failing managing the index folder";
 					}
 					// copy the index to the system
-					command = "docker cp " + id + ":root/crawler/index " + indexPath + "/index";
+					command = "docker cp " + idcontainer + ":root/crawler/index " + indexPath + "/index";
 					ops.executeCommand(command, true);
 					// It is not pending now
-					command = "docker exec " + id + " rm crawler/IndexPending";
+					command = "docker exec " + idcontainer + " rm crawler/IndexPending";
 					ops.executeCommand(command, false);
 				}
 
@@ -326,7 +350,7 @@ public class CrawlerCommands implements CommandMarker {
 
 		SearchFiles searcher = new SearchFiles();
 		try {
-			ArrayList<SearchResult> result = searcher.search(id + "_index/", query);
+			ArrayList<SearchResult> result = searcher.search(idcontainer + "_index/", query);
 			// return result.size() > 0 ? "best match "+result.get(0).getUrl() :
 			// "no matches";
 			if (result.size() > 0) {

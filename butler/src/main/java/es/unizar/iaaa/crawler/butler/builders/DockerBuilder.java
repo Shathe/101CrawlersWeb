@@ -24,7 +24,8 @@ import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
  */
 @Component
 public class DockerBuilder {
-	// private static final Logger LOGGER = LoggerFactory.getLogger(DockerBuilder.class);
+	// private static final Logger LOGGER =
+	// LoggerFactory.getLogger(DockerBuilder.class);
 
 	@Autowired
 	private NutchBuilder crawlerBuilder;
@@ -96,7 +97,14 @@ public class DockerBuilder {
 
 	private void doCreateJuntarSalidasSh(Resource resources, String directoryName) throws IOException {
 		Resource juntarSalidas = resources.createRelative("juntarSalidas");
-		Files.copy(juntarSalidas.getFile(), new File(directoryName, "juntarSalidas.sh"));
+		//Doesn't work with the jar with this command Files.copy(juntarSalidas.getFile(), new File(directoryName, "juntarSalidas.sh"));
+		try (PrintWriter pw = new PrintWriter(new FileWriter(new File(directoryName, "juntarSalidas.sh")));
+				Scanner scan = new Scanner(juntarSalidas.getInputStream())) {
+			while (scan.hasNextLine()) {
+				String linea = scan.nextLine();
+				pw.println(linea);
+			}
+		}
 	}
 
 }
