@@ -1,0 +1,25 @@
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 col-xs-10 col-xs-offset-1
+  col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 ">
+
+    <form  id="contact-form" name="contactForm" ng-submit="formulario.comprobarCamposRegistro(contactForm.$valid)" >
+    <div class="form-group">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1">@</span>
+        <input type="email" name="email"  ng-model="formulario.email" id="email" tabindex="1"
+        class="form-control" placeholder="Type your email so that we can contact you back"  required="true" />
+      </div>
+    </div>
+    <textarea class="form-control" rows="8" id="mensajeContacto"  placeholder="Type here your message"></textarea>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <input type="submit" name="contact-submit" id="register-submit" tabindex="2"
+           class="form-control btn btn-register" value="Send message" required="true" />
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
