@@ -9,7 +9,7 @@
 .metadata
 .gradle
 bin/
-servers/
+Servers/
 tmp/
 *.tmp
 *.bak
