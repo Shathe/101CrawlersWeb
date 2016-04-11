@@ -1,2 +1,1 @@
-[nutch_release](nutch_release) contiene una versión estable y usable del este proyecto. se irá actualizando conforme se avance.
-[nutch_test](nutch_test) contiene el desarrollo del proyecto, es decir, archivos que se están usando para realizar pruebas, no es una versión estable.
+[nutch_release](nutch_release) is the light version of this project. It's where everything began with some bash scripts which made easier to work with docker and nutch.
