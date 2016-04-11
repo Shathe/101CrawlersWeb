@@ -1,9 +1,10 @@
 # 101Crawlers
 
 Aplicación de código abierto en desarrollo.
+Developingpen source application.
 
 ## Organización
 
-* [docs](docs) Documentación general del proyecto
-* [butler](butler) Sistema de gestión de crawlers dockerizados
-* [butlerSite](ButlerSite) Sistema web distribuido que da servicio a varios usuarios 
+* [docs](docs) General project documentation
+* [butler](butler) Dockerized crawlers management system.
+* [butlerSite](ButlerSite) Distributed web system that serves multiple users 
