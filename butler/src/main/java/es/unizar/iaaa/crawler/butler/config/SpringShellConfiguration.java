@@ -5,13 +5,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.CommandLine;
 import org.springframework.shell.core.JLineShellComponent;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by javier on 25/03/16.
  */
 @Configuration
-@Component
 @ComponentScan({"org.springframework.shell.commands", "org.springframework.shell.converters",
         "org.springframework.shell.plugin.support"})
 public class SpringShellConfiguration {

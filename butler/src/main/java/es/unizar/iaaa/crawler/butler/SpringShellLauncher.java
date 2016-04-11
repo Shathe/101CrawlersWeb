@@ -19,7 +19,7 @@ public class SpringShellLauncher implements CommandLineRunner {
     private ApplicationContext ctx;
 
     @Autowired
-    public JLineShellComponent shell;
+    private JLineShellComponent shell;
 
     @Override
     public void run(String... args) throws Exception {

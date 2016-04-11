@@ -3,23 +3,18 @@ package es.unizar.iaaa.crawler.butler;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.shell.core.CommandResult;
 import org.springframework.shell.core.JLineShellComponent;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import es.unizar.iaaa.crawler.butler.config.SpringShellConfiguration;
 import es.unizar.iaaa.crawler.butler.index.DockerIndexer;
 
 @SpringBootApplication
@@ -61,7 +56,7 @@ public class Application {
 			ApplicationContext ctx = new AnnotationConfigApplicationContext(Application.class);
 			JLineShellComponent shell = ctx.getBean(JLineShellComponent.class);
 			CommandResult cr = shell.executeCommand(command);
-			System.out.println(cr.toString());
+			System.out.println(cr.getResult().toString());
 
 		}
 	}
