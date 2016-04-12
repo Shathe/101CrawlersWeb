@@ -5,14 +5,4 @@ Configuración.yml que siga esta [especificación] (https://github.com/Shathe/10
 
 ##Ejecución desde jar/aplicación
 
-Leer/Read [wiki] (https://github.com/Shathe/101CrawlersWeb/wiki/Commands)
-
-##Ejecución desde código
-Crear un objeto Adaptador, indicándoles el nombre del crawler (normalmente será idUsuario+idCrawler), y el Path donde está el fichero yml de configuración.
-
-```java
-AdaptadorBuilder builder = new AdaptadorBuilder(id, ruta);
-builder.crearFicherosConfiguracion();		
-```
-
-Se generarán los ficheros necesarios para configurar en una carpeta cuyo nombre es el nombre pasado al adaptador.
+Leer/Read [wiki] (https://github.com/Shathe/101CrawlersWeb/wiki/Tutorial-%5BEN%5D)
