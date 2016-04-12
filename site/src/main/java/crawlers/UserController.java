@@ -12,29 +12,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import Errors.ErrorInternal;
+import dataBase.UserDatabase;
 import models.User;
 import ops.CommonOps;
 
+/**
+ * Controller for users. Manage every operation which deals with the users.
+ * @author shathe
+ *
+ */
 @RestController
 public class UserController {
-	private static final Logger log = LoggerFactory.getLogger(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	@Autowired
-	UserDatabase userDB;
-	/*
-	 * Registra a un usuario si no existen usuarios con el mismo email o nombre
-	 * ya en la base de datos Si se inserta correctamente devuelve un objeto
-	 * usuario con su información, sino, devuelve un error con un mensaje
-	 * informativo de este.
+
+
+	
+	/**
+	 * Register the user in the data base if there is no user with the same email or username already
+	 * registered.
+	 * In the case the user is not registered, it generates an error response.
+	 * @param user
+	 * @param psdw
+	 * @param email
 	 */
 	@RequestMapping(value = "/registro", method = RequestMethod.POST)
 	User registro(@RequestParam(value = "user") String user, @RequestParam(value = "pass") String psdw,
 			@RequestParam(value = "email") String email) {
-		/*
-		 * Si se puede registrar se crea el ususario y se devuelve, sino, se
-		 * devuelve null
-		 */
+	
+		UserDatabase userDB = new UserDatabase(jdbcTemplate);
 		String error = "";
 		log.info("Petición registro");
 		int mismoNick = userDB.getNumberUsersSameNick(user);
@@ -44,13 +52,13 @@ public class UserController {
 		User usuario = null;
 		if (user != null && psdw != null && email != null && !user.equals("") && !psdw.equals("") && !email.equals("")
 				&& mismoNick <= 0 && mismoEmail <= 0) {
-			// Buen contenido. Haces un hash de la contrasena al guardarla
+			// Everything OK. Hash the password
 			userDB.insertarUsuario(user, email, psdw);
 			Long id = userDB.getIdFromEmail(email);
 			usuario = new User(id, user, email, psdw);
 
 		} else {
-			// Hay error y se mira cual es.
+			// There's an error
 
 			if (email == null || email.equals(""))
 				error = "Fill the email out";
@@ -65,45 +73,43 @@ public class UserController {
 			if (mismoNick > 0 && mismoEmail > 0)
 				error = "Both username and email are already in use";
 
-			throw new ErrorResponse(error);
+			throw new ErrorInternal(error);
 
 		}
 		return usuario;
 	}
 
-	/*
-	 * Registra a un usuario si no existen usuarios con el mismo email o nombre
-	 * ya en la base de datos Si se inserta correctamente devuelve un mensaje de
-	 * acepación, sino, devuelve un error con un mensaje informativo de este.
+	/**
+	 * Check if the user is registered in the database.
+	 * If the user is registered and the password is ok, it returns the UserId,
+	 * if not, it returns an error response
+	 * @param user
+	 * @param psdw
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	String login(@RequestParam(value = "user") String user, @RequestParam(value = "pass") String psdw) {
-		/*
-		 * Si se puede loguear se crea el ususario y se devuelve, sino, se
-		 * devuelve null
-		 */
+
+		UserDatabase userDB = new UserDatabase(jdbcTemplate);
+
 		String mensaje = "";
 		String error = "";
 		String contrasena = "";
 		int mismoNick = 1;
 		if (user != null && psdw != null && !user.equals("") && !psdw.equals("")) {
-			/*
-			 * Obtienes la info de la bd
-			 */
-
+			
 			mismoNick = userDB.getNumberUsersSameNick(user);
 
 			if (mismoNick > 0)
 				contrasena = userDB.getpswdFromUser(user);
 
 			if (contrasena.equals(CommonOps.HashFunction(psdw)) && mismoNick > 0) {
-				mensaje = "Logueado correctamente";
-				// Mandar idUser
+				//Everything OK
+				
 				mensaje = String.valueOf(userDB.getIdFromUser(user).longValue());
 				log.info("Logged id: " + mensaje);
 
 			} else {
-				// Hay error y se mira cual es.
+				// Error (something is wrong)
 
 				if (!contrasena.equals(CommonOps.HashFunction(psdw)))
 					error = "Incorrect password";
@@ -111,11 +117,11 @@ public class UserController {
 					error = "User doesn't exist";
 				log.info(error);
 
-				throw new ErrorResponse(error);
+				throw new ErrorInternal(error);
 			}
 
 		} else {
-			// Hay error y se mira cual es.
+			//Error (something is empty)
 
 			if (psdw == null || psdw.equals(""))
 				error = "Fill the password";
@@ -123,7 +129,7 @@ public class UserController {
 				error = "Fill the user";
 			log.info(error);
 
-			throw new ErrorResponse(error);
+			throw new ErrorInternal(error);
 
 		}
 

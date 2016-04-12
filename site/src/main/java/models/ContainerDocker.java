@@ -1,11 +1,18 @@
-package models;
+/**
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
+ */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Model of the Docker container
+ * @author shathe
+ *
+ */
 @Entity
 public class ContainerDocker {
 	@Id

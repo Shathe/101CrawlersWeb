@@ -10,6 +10,9 @@
 .gradle
 bin/
 Servers/
+site/Servers
+site/target
+site/.springBeans
 tmp/
 *.tmp
 *.bak

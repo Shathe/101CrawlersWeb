@@ -6,4 +6,4 @@ Open source developing application.
 
 * [docs](docs) General project documentation
 * [butler](butler) Dockerized crawlers management system.
-* [butlerSite](ButlerSite) Distributed web system that serves multiple users 
+* [site](site) Distributed web system that serves multiple users 

@@ -1,3 +1,7 @@
+/**
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -6,6 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Model of the Project
+ * @author shathe
+ *
+ */
 @Entity
 public class User {
 	@Id

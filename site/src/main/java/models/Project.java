@@ -1,29 +1,36 @@
+/**
+ * Autor: Iñigo Alonso Ruiz Quality supervised by: F.J. Lopez Pellicer
+ */
+
 package models;
 
-import java.util.ArrayList;
 import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Model of the Project
+ * @author shathe
+ *
+ */
 @Entity
 public class Project {
 	@Id
 	@GeneratedValue
 	private long id;
 
-	private String name, dslPath, idUser;
+	private String name, dslPath, idUser,pluginsPath;
 	Date date;
 	
-	private ArrayList<String> jarsPath;
 
-	public Project(long id, String name, String dslPath, String idUser, ArrayList<String> jarsPath) {
+	public Project(long id, String name, String dslPath, String idUser, String pluginsPath,Date date) {
 		this.id = id;
 		this.name = name;
 		this.idUser = idUser;
 		this.dslPath = dslPath;
-		this.jarsPath = jarsPath;
+		this.pluginsPath = pluginsPath;
+		this.date = date;
 	}
 
 	public Project() {
@@ -70,12 +77,12 @@ public class Project {
 		this.dslPath = dslPath;
 	}
 
-	public ArrayList<String> getJarsPath() {
-		return jarsPath;
+	public String getPluginsPath() {
+		return pluginsPath;
 	}
 
-	public void setJarsPath(ArrayList<String> jarsPath) {
-		this.jarsPath = jarsPath;
+	public void setJarsPath(String pluginsPath) {
+		this.pluginsPath = pluginsPath;
 	}
 
 	@Override

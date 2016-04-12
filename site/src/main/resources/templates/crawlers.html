@@ -5,11 +5,16 @@
 		<div
 			class="col-md-10 col-md-offset-1 col-xs-10 col-xs-offset-1
   col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-			<h4>Projects</h4>
 			<div class="table-responsive">
-
-
-				<table id="projectTable" class="table table-bordred table-striped">
+				<h2>
+					<b> My projects </b> <small>
+						<button data-toggle="modal" data-target="#edit" class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.projectSelected={}; container.vaciarCamposEditModal();" >New
+							project</button>
+					</small>
+				</h2>
+				<table id="projectTable" class="table  table-striped">
 
 					<thead>
 						<th>Name</th>
@@ -18,19 +23,23 @@
 					</thead>
 					<tbody>
 
-						<tr ng-repeat="project in projects">
-							<td>{{project.name}}</td>
-							<td><p data-placement="top" data-toggle="tooltipProject"
+						<tr id="project-{{$index}}" style="background-color: #ffffff;"
+							ng-repeat="project in projects">
+							<td style="padding-top: 12px;"><a  href="#"  ng-click="goToProject(project.id)"><b>{{project.name}}</b></a></td>
+							<td style="padding-top: 12px;"><p data-placement="top" data-toggle="tooltipProject"
 									title="Edit">
 									<button class="btn btn-primary btn-xs" data-title="Edit"
-										data-toggle="modal" data-target="#edit">
+										data-toggle="modal" data-target="#edit"
+										style="background-color: #0288D1;"
+										ng-click="container.projectSelected=project; container.setCamposEditModal(project)">
 										<span class="glyphicon glyphicon-pencil"></span>
 									</button>
 								</p></td>
-							<td><p data-placement="top" data-toggle="tooltipProject"
+							<td style="padding-top: 12px;"><p data-placement="top" data-toggle="tooltipProject"
 									title="Delete">
 									<button class="btn btn-danger btn-xs" data-title="Delete"
-										data-toggle="modal" data-target="#delete">
+										data-toggle="modal" data-target="#delete"
+										ng-click="container.projectSelected=project; ">
 										<span class="glyphicon glyphicon-trash"></span>
 									</button>
 								</p></td>
@@ -39,7 +48,7 @@
 					</tbody>
 
 				</table>
-				<!--  
+				<!--
 				<div class="clearfix"></div>
 				<ul class="pagination pull-right">
 					<li class="disabled"><a href="#"><span
@@ -69,19 +78,29 @@
 					aria-hidden="true">
 					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 				</button>
-				<h4 class="modal-title custom_align" id="Heading">Edit Your
-					Detail</h4>
+				<h4 class="modal-title custom_align" id="Heading">Your
+					Project</h4>
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<input class="form-control " type="text"
+					<input id="projectName" class="form-control " type="text"
 						placeholder="Type the name"></input>
+				</div>
+
+				<div class="form-group">
+					<input id="projectDSLPath" class="form-control " type="text"
+						placeholder="Path of the DSL file"></input>
+				</div>
+
+				<div class="form-group">
+					<input class="form-control " type="text" id="projectPluginsPath"
+						placeholder="Path of directory where the plugins"></input>
 				</div>
 			</div>
 			<div class="modal-footer ">
-				<button type="button" class="btn btn-warning btn-lg"
-					style="width: 100%;">
-					<span class="glyphicon glyphicon-ok-sign"></span> Update
+				<button type="button" class="btn btn-info btn-lg"
+					style="width: 100%;" ng-click="container.editProject(container.projectSelected)">
+					<span class="glyphicon glyphicon-ok-sign"></span> Save
 				</button>
 			</div>
 		</div>
@@ -89,6 +108,7 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
+
 
 
 
@@ -113,7 +133,8 @@
 
 			</div>
 			<div class="modal-footer ">
-				<button type="button" class="btn btn-success">
+				<button type="button" class="btn btn-success"
+					ng-click="container.deleteProject(container.projectSelected)">
 					<span class="glyphicon glyphicon-ok-sign"></span> Yes
 				</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">
@@ -125,6 +146,3 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
-
-
-

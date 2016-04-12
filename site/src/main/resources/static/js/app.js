@@ -1,29 +1,32 @@
 (function(){
   var app = angular.module('crawlers',['crawlers']);
-  var loged=false;
   /* Controlador general */
   app.controller('ContainerController',['$scope', '$http','$log',function($scope, $http,$log){
-	    /* Valores por defecto */
+	    // Variables
 	    this.tab=2;
 	    this.loged=false;
 	    this.user=getCookie("usuario");
 	    this.email="";
-	    this.projects=[];
-	    /* Edita el valor de la pestaña actual */
+	    this.projectSelected={};
+
+	    /*
+	     * GENERAL
+	     */
+	    /** Sets tab value */
 	    this.selectedTab = function(tab){
 	      this.tab=tab;
 	    };
-	    /* Devuelve si y solo si la pestaña coincide */
+	    /**Returns true if the checktab is the same as tab */
 	    this.isSelected = function(checkTab){
 	      return this.tab === checkTab;
 	    };
-
+	    /** Gives value to the user variable */  
 	    this.setUser = function(){
 	      this.user=document.getElementById("usernameLogin").value;
 	      loged=true;
 	    };
 
-	    /* El usuario sale de la sesión y se cambian valores y vista visual */
+	    /** Sets values for the visual status when the users logsouts */
 	    this.salir = function(){
 	      this.loged=false;
 	      this.tab=2;
@@ -33,34 +36,149 @@
 	      deleteCookie("idUser");
 
 	    };
+	    
+	    
+	    
+	    
+	    /*
+	     * PROJECS
+	     */
+	    
+	    /** Gets the projects of a user  */
 	    this.ProjectsOfUser = function (){
 	        /* Con AJAX comprobar que se loguea bien */
 	        $.get('/projects',{ idUser: getCookie("idUser")})
 	        .done(function(data, status) {
-	        	/* Usuario registrado con éxito*/
-	        	//Se da valor al scope para poder iterar en ng-repeat y la variable
-	        	//para poder utilizarla después
+	        //Gets both in the variable and the scope the projects
 	        this.projects=data;
             $scope.projects=data;
-	        console.log(data);
             $scope.$apply();
 	        })
 	        .fail(function(data, status) {
 	          console.log(data);
-
 	        });
 	      };
+	      /** Creates a project and shows the new projects if it has been really created */
+	      $scope.createProject = function() {
+
+	    	  $.post('/createProject',{ idUser: getCookie("idUser"),
+	    			  dslPath: document.getElementById("projectDSLPath").value,
+	    			  name: document.getElementById("projectName").value,
+	    			  pluginsPath: document.getElementById("projectPluginsPath").value})
+	    	    .done(function(data, status) {
+	    	    	console.log(data);
+	    			$scope.projects.push(data);
+		  	        $scope.$apply();
+
+	    	    })
+	    	    .fail(function(data, status) {
+	    	      console.log(data);	  			
+	    	      alert('Not possible to connect to the server');
+	    	      
+	    	    });
+	        	$('#edit').modal('toggle');
+
+	      }
+	      /* La diferencia entre $scope y this. es que con scope
+	         se necesita hacer el scope.apply y es mejor para actaulizar cosas visuales
+	         como por ejemplo despues de hacer una peticion http
+	      	 en cambio si quieres ligar valores para utilizarlos es mejor el this.
+	       	aqui muestro un ejemplo de como se podría hacer con ambas */
+	      
+	      /** Goes to a project (visually) */
+
+	      $scope.goToProject = function(idProject) {
+	    	  alert('project clicked '+idProject);
+	      }
+	      /** Deletes a project and shows visually if it has been really deleted */
+
+	      this.deleteProject = function(project) {
+	        	  $.ajax({
+		    		  type: 'DELETE',
+		    		  dataType: 'json',
+		    		  contentType:'application/json',
+		    		  url: "/deleteProject",
+		    		  data:JSON.stringify(project),
+		    		  success : function(data) {
+		  	    	    index= $scope.projects.indexOf(project);
+		  	        	$scope.projects.splice(index, 1);
+		  	        	$scope.$apply();
+			  			console.log('deleted'+project.name);
+
+		  			},
+		  			error : function(e) {
+		  				alert('Not possible to connect to the server');
+		  			  console.log('not deleted'+project.name);
+
+		  			},
+		  			
+		    		  });
+		    	 
+		        	$('#delete').modal('toggle');
+	      }
+	      /** Edits a project and shows the new projects if it has been really edited */
+
+	      this.editProject = function(project) {
+	    	  if(jQuery.isEmptyObject(project)){
+	    		  //If the edits really means create
+	    		  $scope.createProject();	    	  
+	    		 }
+	    	  else{
+	    		  //Gets former values
+	    	  var nombreAnterior=project.name;
+	    	  var dslAnterior=project.dslPath;
+	    	  project.name=document.getElementById("projectName").value;
+	    	  project.dslPath=document.getElementById("projectDSLPath").value;
+	    	  $.ajax({
+	    		  type: 'POST',
+	    		  dataType: 'json',
+	    		  contentType:'application/json',
+	    		  url: "/editProject",
+	    		  data:JSON.stringify(project),
+	    		  success : function(data) {
+	    			  
+	  			},
+	  			error : function(e) {
+		    		  //If there's an error reset former values
+	  				project.name=nombreAnterior;
+	  				project.dslPath=dslAnterior;
+	  				alert('Not possible to connect to the server');
+	  			},
+	  			
+	    		  });
+	    	 
+	        	$('#edit').modal('toggle');
+	    	  }
+
+	      }
+		  /** Resets Project Modal values */
+	      this.vaciarCamposEditModal = function(){
+	    	  document.getElementById("projectName").value="";
+	    	  document.getElementById("projectDSLPath").value="";
+	    	  document.getElementById("projectPluginsPath").value="";
+	      }
+		  /** Edits Project Modal values */
+	      this.setCamposEditModal= function(project){
+	    	  document.getElementById("projectName").value=project.name;
+	    	  document.getElementById("projectDSLPath").value=project.dslPath;
+	    	  document.getElementById("projectPluginsPath").value=project.pluginsPath;
+	      }
 
 	  }]);
 
-  /* Controlador del registro y login */
+
+
+  
+  /*
+   * REGISTER AND LOGIN
+   */
   app.controller('RegistroLoginCtrl',['$scope', '$http','$log',function($scope, $http,$log){
     this.user=document.getElementById("usernameLogin").value;
     this.email=document.getElementById("emailRegister").value;
     this.password=document.getElementById("passwordLogin").value;
     this.repeatPswd="";
 
-    /* Actualiza el color del input de la repetición de contraseña cada vez que se edita */
+	  /** Gives red color if the passwords are not the same */
     this.colorPswdRepeat = function (){
       /* Se evalua que las contraseñas coincidas */
       var inputRepeat = document.getElementById("confirmPassword");
@@ -72,28 +190,21 @@
       }
     };
 
-    /* Se comprueba si el usuario se puede registrar correctamete */
+    /** Register a user if the fields are ok and if the server dont send an error */
+    
     this.comprobarCamposRegistro = function (valido){
       if (valido){
-        /* El formulario es valido, hay que comprobar que las contraseñas coincidan
-         Y que el usuario no exista ni el email
-         */
+    	  //if fileds are valid
         if (this.repeatPswd==this.password){
-          /* Contraseña bien
-           Intentar registrar al usuario
-           Si hay algun error ponerlo de placeholder en el input correspondiente
-           Además cambiar el color del input a rojo
-          */
+          //if password ok
           $.post('/registro',{ user: this.user, pass: this.password, email: this.email})
           .done(function(data, status) {
-            /* Usuario registrado con éxito*/
-            console.log(data);
+            //Registered
             document.getElementById("usernameLogin").value=document.getElementById("usernameRegister").value;
             document.getElementById("passwordLogin").value=document.getElementById("passwordRegister").value;
             $('#login-form-link').click();
           })
           .fail(function(data, status) {
-            console.log(data);
             var obj = jQuery.parseJSON(data.responseText );
             var mensajeError=obj.message;
             if(mensajeError.indexOf("email") > -1){
@@ -127,7 +238,7 @@
       }
 
     };
-
+    /** Logs a user if daa is OK */
     this.comprobarCamposLogin = function (){
       /* Con AJAX comprobar que se loguea bien */
       this.user=document.getElementById("usernameLogin").value;
@@ -141,18 +252,11 @@
 
   }]);
 
+  /** DIRECTIVES */
   app.directive("contacto", function() {
     return {
       restrict: 'E',
       templateUrl: "contacto.html"
-      /*
-      Si en la directiva quieres poner un controller, luego se le pasa aqui con:
-      (4.2 directivas http://campus.codeschool.com/courses/shaping-up-with-angular-js/contents)
-      controller:function(){
-      definir funcion
-      }
-      controllerAs:'nombre'
-      */
     };
   });
 
@@ -187,36 +291,22 @@
 
 
 /*
-Peticioes angular
+ * AUXILIAR FUNCTIONS
+ */
 
-var controller=this;
-controller.lista=[];
-
-$http.get('urlpeticion').success(function(data){
-controller.lista=Data;
-});
-
-$http.get('urlpeticion',{parametro: 'valor'})
-tambien hay post, delete...
-*/
-
-
-
-/* javascript del modal de Regitro/Loguin */
 $(function() {
-  //Por defecto se recordaran las cookies
+  // Default values
   document.getElementById("rememberMe").checked=true;
   /* Se intentan recuperar las cookies */
     var user=getCookie("usuario");
     var pass=getCookie("password");
-    console.log(user);
-    console.log(pass);
     if(user === "" ){
-
+    	//
     }
     else{
         document.getElementById("usernameLogin").value=user;
         document.getElementById("passwordLogin").value=pass;
+        // If there ar cookies try to automatically log the user
         loginUser(user, pass);
 
     }
@@ -237,19 +327,17 @@ $(function() {
 	});
 
 });
+/** Logs in a user if the data is OK */
 function loginUser(username, pass) {
     $.post('/login',{ user: username, pass:pass})
     .done(function(data, status) {
-    	/* Usuario registrado con éxito*/
-    	console.log(data);
+    	// LOG OK, visual changes and value changes
     	$(".modal-backdrop").remove();
     	$("#myModal").hide();
     	$("#myModal").click();
     	document.getElementById("liLogin").style.display="none";
     	document.getElementById("liUser").style.display="inline";
     	document.getElementById("misCrawMenu").style.display="inline";
-      document.cookie="usuario="+username;
-      document.cookie="password="+pass;
       if(document.getElementById("rememberMe").checked){
         setCookie("usuario", document.getElementById("usernameLogin").value , 30);
         setCookie("password", document.getElementById("passwordLogin").value , 30);
@@ -258,8 +346,8 @@ function loginUser(username, pass) {
         deleteCookie("usuario");
         deleteCookie("password");
       }
-      var idUser=data;
-      setCookie("idUser", idUser, 30);
+      //Sets id user 
+      setCookie("idUser", data, 30);
 
 
     })
@@ -280,7 +368,7 @@ function loginUser(username, pass) {
     });
 
 }
-/* Sets a cookie*/
+// Sets a cookie 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -289,7 +377,7 @@ function setCookie(cname, cvalue, exdays) {
     console.log(cname + "=" + cvalue + "; " + expires);
 }
 
-/* Get a cookie */
+// Get a cookie 
 function getCookie(cname) {
   console.log( document.cookie);
     var name = cname + "=";
@@ -302,6 +390,7 @@ function getCookie(cname) {
     console.log("Cookie not found");
     return "";
 }
+//Delete cookie
 var deleteCookie = function(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
