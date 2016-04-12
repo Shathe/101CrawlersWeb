@@ -68,9 +68,7 @@ public class StoppingCommands implements CommandMarker {
 			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
-		String response = "";
-		String idImage = idProject + "_" + imageName;
-		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
 
 		// docker exec $idContainer kill -9 $(docker exec $idContainer
 		// ps |
@@ -81,24 +79,24 @@ public class StoppingCommands implements CommandMarker {
 		// docker exec $idContainer kill -9 $(docker exec $idContainer
 		// ps |
 		// grep java | awk '{print $1;}')
-		String command = "docker exec  " + idcontainer + " ps";
+		String command = "docker exec  " + idContainer + " ps";
 		String process;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idcontainer)) {
+		if (!ops.containerExists(idContainer)) {
 			return "The container where it is trying to stop the crawl don't exist";
 		}
-		if (ops.containerRunning(idcontainer)) {
+		if (ops.containerRunning(idContainer)) {
 			try (BufferedReader out = ops.executeCommand(command, false)) {
 				while ((process = out.readLine()) != null) {
 					// Para todos los procesos busca los procesos a eliminar
 					if (process.contains("crawl") || process.contains("java") || process.contains("sh")) {
 						LOGGER.info(process);
-						command = " docker exec  " + idcontainer + " kill -9 " + process.split(" ")[1];
+						command = " docker exec  " + idContainer + " kill -9 " + process.split(" ")[1];
 						LOGGER.info(command);
 						ops.executeCommand(command, true);
-						LOGGER.info("Crawl stopped correctly " + idcontainer);
+						LOGGER.info("Crawl stopped correctly " + idContainer);
 
 						return "Crawl stopped correctly";
 
@@ -122,18 +120,16 @@ public class StoppingCommands implements CommandMarker {
 			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
-		String response = "";
-		String idImage = idProject + "_" + imageName;
-		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
 
-		String command = "docker pause " + idcontainer;
+		String command = "docker pause " + idContainer;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idcontainer)) {
+		if (!ops.containerExists(idContainer)) {
 			return "The container trying to pause don't exist";
 		}
-		if (!ops.containerRunning(idcontainer)) {
+		if (!ops.containerRunning(idContainer)) {
 			return "The container trying to pause is not up";
 		}
 		try {
@@ -143,7 +139,7 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
-		LOGGER.info("Container paused correctly " + idcontainer);
+		LOGGER.info("Container paused correctly " + idContainer);
 
 		return "Container paused correctly";
 	}
@@ -154,26 +150,24 @@ public class StoppingCommands implements CommandMarker {
 	@CliCommand(value = "stopContainer", help = "stops the docker Container")
 	public String stopContainer(
 			@CliOption(key = {
-					"time" }, mandatory = false, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") String time,
+					"time" }, specifiedDefaultValue = "1", help = "time in seconds (waiting until shutting down)") String time,
 			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
 			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
-		String response = "";
-		String idImage = idProject + "_" + imageName;
-		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
 
 		if (time == null)
 			time = "1";
 		// docker stop -t $tiempo $idContainer
-		String command = "docker stop -t " + time + " " + idcontainer;
+		String command = "docker stop -t " + time + " " + idContainer;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idcontainer)) {
+		if (!ops.containerExists(idContainer)) {
 			return "The container trying to stop don't exist";
 		}
-		if (!ops.containerRunning(idcontainer)) {
+		if (!ops.containerRunning(idContainer)) {
 			return "The container trying to stop is not up";
 		}
 		try {
@@ -183,7 +177,7 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
-		LOGGER.info("Container stopped correctly " + idcontainer);
+		LOGGER.info("Container stopped correctly " + idContainer);
 
 		return "Container stopped correctly";
 	}
@@ -197,19 +191,17 @@ public class StoppingCommands implements CommandMarker {
 			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
-		String response = "";
-		String idImage = idProject + "_" + imageName;
-		String idcontainer = idProject + "_" + imageName + "_" + containerName;
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
 
 		// docker stop -t $tiempo $idContainer
-		String command = "docker rm " + idcontainer;
+		String command = "docker rm " + idContainer;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idcontainer)) {
+		if (!ops.containerExists(idContainer)) {
 			return "The container trying to delete don't exist";
 		}
-		if (!ops.containerStopped(idcontainer)) {
+		if (!ops.containerStopped(idContainer)) {
 			return "The container has to be stopped in order to deleted it";
 		}
 		try {
@@ -218,7 +210,7 @@ public class StoppingCommands implements CommandMarker {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "Docker container don't exist, please, try executing the start command";
 		}
-		LOGGER.info("Container deleted correctly " + idcontainer);
+		LOGGER.info("Container deleted correctly " + idContainer);
 
 		return "Container deleted correctly";
 	}
@@ -230,7 +222,6 @@ public class StoppingCommands implements CommandMarker {
 	public String deleteImage(
 			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
 			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName) {
-		String response = "";
 		String idImage = idProject + "_" + imageName;
 
 		// docker stop -t $tiempo $idContainer

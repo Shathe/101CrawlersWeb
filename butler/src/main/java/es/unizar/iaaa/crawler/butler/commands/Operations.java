@@ -67,13 +67,12 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerExists(String idContainer) {
-		String id = idContainer;
-		String s;
+        String s;
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				s = " " + s + " ";
-				if (s.contains(" " + id + " "))
+				if (s.contains(" " + idContainer + " "))
 					return true;
 			}
 		} catch (IOException e) {
@@ -85,13 +84,12 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerofaImageExists(String idImage) {
-		String id = idImage;
 		String s;
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				s = " " + s + " ";
-				if (s.contains(" " + id+"_" + " "))
+				if (s.contains(" " + idImage +"_" + " "))
 					return true;
 			}
 		} catch (IOException e) {
@@ -135,13 +133,12 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerRunning(String idContainer) {
-		String id = idContainer;
 		String s;
-		String command = "docker ps -a --filter \"status=running\" --filter \"name=" + id + "\"";
+		String command = "docker ps -a --filter \"status=running\" --filter \"name=" + idContainer + "\"";
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
-				if (s.contains(id))
+				if (s.contains(idContainer))
 					return true;
 			}
 		} catch (IOException e) {
@@ -154,11 +151,10 @@ public class Operations implements CommandMarker {
 	 * @return true when the image asign to the user and crawl exists
 	 */
 	public boolean imageExists(String idImage) {
-		String id = idImage;
 		String s;
-		try (BufferedReader out = executeCommand("docker images " + id, false)) {
+		try (BufferedReader out = executeCommand("docker images " + idImage, false)) {
 			while ((s = out.readLine()) != null) {
-				if (s.contains(id))
+				if (s.contains(idImage))
 					return true;
 			}
 		} catch (IOException e) {
@@ -171,13 +167,12 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is stopped
 	 */
 	public boolean containerStopped(String idContainer) {
-		String id = idContainer;
-		String command = "docker ps -a --filter \"status=exited\" --filter \"name=" + id + "\"";
+		String command = "docker ps -a --filter \"status=exited\" --filter \"name=" + idContainer + "\"";
 		String s;
 		// docker ps --filter "status=exited" --filter "name=1_1"
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
-				if (s.contains(id) && s.contains("Exited"))
+				if (s.contains(idContainer) && s.contains("Exited"))
 					return !containerPaused(idContainer);
 			}
 		} catch (IOException e) {
@@ -190,13 +185,12 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is paused
 	 */
 	public boolean containerPaused(String idContainer) {
-		String id = idContainer;
-		String command = "docker ps -a --filter \"status=paused\" --filter \"name=" + id + "\"";
+        String command = "docker ps -a --filter \"status=paused\" --filter \"name=" + idContainer + "\"";
 		String s;
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
-				if (s.contains(id) && s.contains("Paused"))
+				if (s.contains(idContainer) && s.contains("Paused"))
 					return true;
 			}
 		} catch (IOException e) {
