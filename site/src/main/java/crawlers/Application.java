@@ -57,7 +57,7 @@ public class Application implements CommandLineRunner {
 				"CREATE TABLE containerCrawlers(" + "id SERIAL, idImage long, name VARCHAR(100), status VARCHAR(100))");
 
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
-				"inigol22zgz@gmailcom", CommonOps.HashFunction("contrasena"));
+				"inigol22zgz@gmail.com", CommonOps.HashFunction("contrasena"));
 
 		jdbcTemplate.update("insert into projectCrawlers (idUser,name, dslPath,pluginsPath,date) values (?,?,?,?,?)", "1",
 				"primer proyecto", "C://RutaLarga/lolo/jeje/dsl", "C://RutaLarga/lolo/jeje/plugins",new Date(System.currentTimeMillis()));

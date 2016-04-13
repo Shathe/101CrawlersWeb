@@ -24,7 +24,9 @@ import errors.ErrorInternal;
 import models.Project;
 
 /**
- * Controller for projects. Manage every operation which deals with the projects.
+ * Controller for projects. Manage every operation which deals with the
+ * projects.
+ * 
  * @author shathe
  */
 @RestController
@@ -65,6 +67,7 @@ public class ProjectController {
 		try {
 			projectDB.deleteProject(project);
 			log.info("deleted project " + project.getId());
+			// Delete the project files (Not implemented)
 
 		} catch (Exception a) {
 			throw new ErrorInternal("Error deleting");
@@ -86,6 +89,7 @@ public class ProjectController {
 		try {
 			projectDB.updateProject(project);
 			log.info("updated project " + project.getId());
+			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
 			throw new ErrorInternal("Error updating");
@@ -108,7 +112,8 @@ public class ProjectController {
 		try {
 			projectDB.createProject(project);
 			log.info("created project " + project.getId());
-
+			// Creates the project files (Not implemented)
+			// CCreate docker image?
 		} catch (Exception a) {
 			throw new ErrorInternal("Error creating");
 		}
