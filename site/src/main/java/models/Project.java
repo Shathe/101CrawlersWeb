@@ -20,16 +20,14 @@ public class Project {
 	@GeneratedValue
 	private long id;
 
-	private String name, dslPath, idUser,pluginsPath;
+	private String name, idUser;
 	Date date;
 	
 
-	public Project(long id, String name, String dslPath, String idUser, String pluginsPath,Date date) {
+	public Project(long id, String name, String idUser,Date date) {
 		this.id = id;
 		this.name = name;
 		this.idUser = idUser;
-		this.dslPath = dslPath;
-		this.pluginsPath = pluginsPath;
 		this.date = date;
 	}
 
@@ -67,27 +65,11 @@ public class Project {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-
-	public String getDslPath() {
-		return dslPath;
-	}
-
-	public void setDslPath(String dslPath) {
-		this.dslPath = dslPath;
-	}
-
-	public String getPluginsPath() {
-		return pluginsPath;
-	}
-
-	public void setJarsPath(String pluginsPath) {
-		this.pluginsPath = pluginsPath;
-	}
+	
 
 	@Override
 	public String toString() {
-		return String.format("Project [id=%d, name='%s', idUser='%s', dslPath='%s']", id, name, idUser, dslPath);
+		return String.format("Project [id=%d, name='%s', idUser='%s', Configuration='%s']", id, name, idUser);
 	}
 
 }

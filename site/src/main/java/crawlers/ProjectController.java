@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dataBase.ConfigurationDatabase;
 import dataBase.ProjectDatabase;
-import errors.ErrorInternal;
+import errors.InternalError;
 import models.Project;
 
 /**
@@ -48,7 +49,7 @@ public class ProjectController {
 		try {
 			projects = projectDB.getProjects(idUser);
 		} catch (Exception a) {
-			throw new ErrorInternal("Error listing projects");
+			throw new InternalError("Error listing projects: "+a.getMessage());
 		}
 
 		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
@@ -64,13 +65,16 @@ public class ProjectController {
 		log.info("deleting project " + project.getId());
 
 		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
+		ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
 		try {
 			projectDB.deleteProject(project);
+			// deletes also its configurations
+			confDB.deleteConfigurationsOfProject(String.valueOf(project.getId()));
 			log.info("deleted project " + project.getId());
 			// Delete the project files (Not implemented)
 
 		} catch (Exception a) {
-			throw new ErrorInternal("Error deleting");
+			throw new InternalError("Error deleting: "+a.getMessage());
 		}
 
 		return new ResponseEntity<Project>(project, HttpStatus.OK);
@@ -92,7 +96,7 @@ public class ProjectController {
 			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
-			throw new ErrorInternal("Error updating");
+			throw new InternalError("Error updating: "+a.getMessage());
 		}
 
 		return new ResponseEntity<Project>(project, HttpStatus.OK);
@@ -104,10 +108,9 @@ public class ProjectController {
 	 */
 	@RequestMapping(value = "/createProject", method = RequestMethod.POST)
 	ResponseEntity<Project> createProject(@RequestParam(value = "idUser") String idUser,
-			@RequestParam(value = "pluginsPath") String pluginsPath, @RequestParam(value = "name") String name,
-			@RequestParam(value = "dslPath") String dslPath) {
+			@RequestParam(value = "name") String name) {
 
-		Project project = new Project(0, name, dslPath, idUser, pluginsPath, new Date(System.currentTimeMillis()));
+		Project project = new Project(0, name, idUser, new Date(System.currentTimeMillis()));
 		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
 		try {
 			projectDB.createProject(project);
@@ -115,7 +118,7 @@ public class ProjectController {
 			// Creates the project files (Not implemented)
 			// CCreate docker image?
 		} catch (Exception a) {
-			throw new ErrorInternal("Error creating");
+			throw new InternalError("Error creating: "+a.getMessage());
 		}
 
 		return new ResponseEntity<Project>(project, HttpStatus.OK);

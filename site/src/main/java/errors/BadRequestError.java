@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
  */
 @SuppressWarnings("serial")
 @ResponseStatus(value=HttpStatus.BAD_REQUEST)  // 404
-public class ErrorBadRequest extends RuntimeException {
+public class BadRequestError extends RuntimeException {
 
-	public ErrorBadRequest(String msg) {
+	public BadRequestError(String msg) {
 		super (msg);
 	}
 	

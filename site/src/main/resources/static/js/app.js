@@ -8,7 +8,7 @@
 	    this.user=getCookie("usuario");
 	    this.email="";
 	    this.projectSelected={};
-
+	    this.formerName="";
 	    /*
 	     * GENERAL
 	     */
@@ -46,13 +46,13 @@
 	    
 	    /** Gets the projects of a user  */
 	    this.ProjectsOfUser = function (){
-	        /* Con AJAX comprobar que se loguea bien */
 	        $.get('/projects',{ idUser: getCookie("idUser")})
 	        .done(function(data, status) {
 	        //Gets both in the variable and the scope the projects
-	        this.projects=data;
-            $scope.projects=data;
-            $scope.$apply();
+			    console.log(data);
+		        this.projects=data;
+	            $scope.projects=data;
+	            $scope.$apply();
 	        })
 	        .fail(function(data, status) {
 	          console.log(data);
@@ -62,20 +62,32 @@
 	      $scope.createProject = function() {
 
 	    	  $.post('/createProject',{ idUser: getCookie("idUser"),
-	    			  dslPath: document.getElementById("projectDSLPath").value,
-	    			  name: document.getElementById("projectName").value,
-	    			  pluginsPath: document.getElementById("projectPluginsPath").value})
-	    	    .done(function(data, status) {
-	    	    	console.log(data);
-	    			$scope.projects.push(data);
-		  	        $scope.$apply();
+    			  name: document.getElementById("projectName").value})
+    	    .done(function(data, status) {
+    	    	console.log(data);
+    			$scope.projects.push(data);
+	  	        $scope.$apply();
 
-	    	    })
-	    	    .fail(function(data, status) {
-	    	      console.log(data);	  			
-	    	      alert('Not possible to connect to the server');
-	    	      
-	    	    });
+    	    })
+    	    .fail(function(data, status) {
+    	      console.log(data);	  			
+    	      alert('Not possible to connect to the server');
+    	      
+    	    });
+	    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id,
+	    	  dslPath: document.getElementById("dslPath").value,
+			  pluginsPath: document.getElementById("pluginsPath").value})
+    	    .done(function(data, status) {
+    	    	console.log(data);
+    	    })
+    	    .fail(function(data, status) {
+    	      console.log(data);	  			
+    	      alert('Not possible to connect to the server');
+    	      
+    	    });
+	    	  
+	    	  
+	    	  
 	        	$('#edit').modal('toggle');
 
 	      }
@@ -125,10 +137,9 @@
 	    		 }
 	    	  else{
 	    		  //Gets former values
-	    	  var nombreAnterior=project.name;
-	    	  var dslAnterior=project.dslPath;
+ 
 	    	  project.name=document.getElementById("projectName").value;
-	    	  project.dslPath=document.getElementById("projectDSLPath").value;
+	    	  console.log(project);
 	    	  $.ajax({
 	    		  type: 'POST',
 	    		  dataType: 'json',
@@ -136,12 +147,22 @@
 	    		  url: "/editProject",
 	    		  data:JSON.stringify(project),
 	    		  success : function(data) {
-	    			  
+	    			  //now create the configuration 
+	    			 $.post('/createConfiguration',{ idProject: project.id,
+	    		    	  dslPath: document.getElementById("projectDSLPath").value,
+	    				  pluginsPath: document.getElementById("projectPluginsPath").value})
+	    	    	    .done(function(data, status) {
+	    	    	    	console.log(data);
+	    	    	    })
+	    	    	    .fail(function(data, status) {
+	    	    	      console.log(data);	  			
+	    	    	      alert('Not possible to connect to the server');
+	    	    	      
+	    	    	    });
 	  			},
 	  			error : function(e) {
 		    		  //If there's an error reset former values
-	  				project.name=nombreAnterior;
-	  				project.dslPath=dslAnterior;
+	  				project.name=this.formerName;
 	  				alert('Not possible to connect to the server');
 	  			},
 	  			
@@ -159,9 +180,24 @@
 	      }
 		  /** Edits Project Modal values */
 	      this.setCamposEditModal= function(project){
+	    	  this.formerName=project.name; 
+
 	    	  document.getElementById("projectName").value=project.name;
-	    	  document.getElementById("projectDSLPath").value=project.dslPath;
-	    	  document.getElementById("projectPluginsPath").value=project.pluginsPath;
+	    	  //get configuration
+		        $.get('/configuration',{ idProject: project.id})
+		        .done(function(data, status) {
+		        //Gets both in the variable and the scope the projects
+		          console.log(data);
+		    	  document.getElementById("projectDSLPath").value=data.dslPath;
+		    	  document.getElementById("projectPluginsPath").value=data.pluginsPath;
+		        })
+		        .fail(function(data, status) {
+		        	document.getElementById("projectDSLPath").placeholder="Not possible to connect to the server";
+			    	document.getElementById("projectPluginsPath").placeholder="Not possible to connect to the server";
+
+		          console.log(data);
+		        });
+	    	  /**/
 	      }
 
 	  }]);

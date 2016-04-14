@@ -38,20 +38,25 @@ public class Application implements CommandLineRunner {
 	public void run(String... strings) throws Exception {
 
 		log.info("Creating tables");
-
+		// Tabla de usuarios
 		jdbcTemplate.execute("CREATE TABLE userCrawlers("
 				+ "id SERIAL, nick VARCHAR(100), email VARCHAR(100), contrasena VARCHAR(1024))");
 
-		jdbcTemplate.execute("CREATE TABLE projectCrawlers("
-				+ "id SERIAL, idUser long, name VARCHAR(100), dslPath VARCHAR(200),pluginsPath  VARCHAR(200),date DATETIME)");
+		jdbcTemplate
+				.execute("CREATE TABLE projectCrawlers(" + "id SERIAL, idUser long, name VARCHAR(100), date DATETIME)");
+		// tener una tabla para DSL que un proyecto eude tener varias
+		// configuraciones?
+		// enrealidad son del mismo proyecto, lo que cambia es laconfiguracion
+		// y las imagenes dockers son de un proyecto y de una configuracion
+		jdbcTemplate.execute(
+				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long,  dslPath VARCHAR(200),pluginsPath  VARCHAR(200))");
 
-		jdbcTemplate.execute("CREATE TABLE pluginsCrawlers(id SERIAL, idProject long)");
-		
+		jdbcTemplate.execute("CREATE TABLE pluginsCrawlers(id SERIAL, idProject long, idConfiguration long)");
+
 		jdbcTemplate.execute("CREATE TABLE jarsCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 		jdbcTemplate.execute("CREATE TABLE xmlCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
-		
 
-		jdbcTemplate.execute("CREATE TABLE imageCrawlers(" + "id SERIAL, dslId long, name VARCHAR(100))");
+		jdbcTemplate.execute("CREATE TABLE imageCrawlers(id SERIAL, ProjectId long, name VARCHAR(100))");
 
 		jdbcTemplate.execute(
 				"CREATE TABLE containerCrawlers(" + "id SERIAL, idImage long, name VARCHAR(100), status VARCHAR(100))");
@@ -59,8 +64,13 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
 				"inigol22zgz@gmail.com", CommonOps.HashFunction("contrasena"));
 
-		jdbcTemplate.update("insert into projectCrawlers (idUser,name, dslPath,pluginsPath,date) values (?,?,?,?,?)", "1",
-				"primer proyecto", "C://RutaLarga/lolo/jeje/dsl", "C://RutaLarga/lolo/jeje/plugins",new Date(System.currentTimeMillis()));
+		jdbcTemplate.update("insert into projectCrawlers (idUser,name,date) values (?,?,?)", "1", "First project",
+				new Date(System.currentTimeMillis()));
+
+		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)",
+				"Vieja", "C://RutaLarga/lolo/jeje/plugins", 1);
+		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)",
+				"Nueva", "C://RutaLarga/lolo/jeje/plugins", 1);
 
 	}
 }

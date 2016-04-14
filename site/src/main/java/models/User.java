@@ -21,14 +21,14 @@ public class User {
     @GeneratedValue
     private long id;
 
-	private String user, email;
+	private String username, email;
 	
     @JsonIgnore
     private String contrasena;
 
-    public User (long id, String user, String email, String ps) {
+    public User (long id, String username, String email, String ps) {
         this.id = id;
-        this.user = user;
+        this.username = username;
         this.email = email;        
         this.contrasena = ps;
     }
@@ -41,12 +41,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return user;
+	public String getusername() {
+		return username;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setusername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -68,8 +68,8 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "User [id=%d, user='%s', email='%s']",
-                id, user, email);
+                "username [id=%d, username='%s', email='%s']",
+                id, username, email);
     }
 
 

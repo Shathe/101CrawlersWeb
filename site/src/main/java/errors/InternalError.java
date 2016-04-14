@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
  */
 @SuppressWarnings("serial")
 @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)  
-public class ErrorInternal extends RuntimeException {
+public class InternalError extends RuntimeException {
 
-	public ErrorInternal(String msg) {
+	public InternalError(String msg) {
 		super (msg);
 	}
 	

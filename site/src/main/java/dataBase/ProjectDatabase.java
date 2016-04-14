@@ -47,9 +47,8 @@ public class ProjectDatabase {
 	 * @return
 	 */
 	public int updateProject(Project project) {
-		return this.jdbcTemplate.update(// idUser,name, dslPath,pluginsPath,date
-				"update projectCrawlers set name = ?,  dslPath = ?, pluginsPath = ? where id = ?", project.getName(),
-				project.getDslPath(), project.getPluginsPath(), project.getId());
+		return this.jdbcTemplate.update("update projectCrawlers set name = ?  where id = ?", project.getName(),
+				 project.getId());
 	}
 
 	/**
@@ -59,8 +58,8 @@ public class ProjectDatabase {
 	 */
 	public int createProject(Project project) {
 		return this.jdbcTemplate.update(
-				"insert into projectCrawlers (idUser,name, dslPath,pluginsPath,date) values (?,?,?,?,?)", project.getIdUser(),
-				project.getName(), project.getDslPath(), project.getPluginsPath(),
+				"insert into projectCrawlers (idUser,name,date) values (?,?,?)", project.getIdUser(),
+				project.getName(), 
 				project.getDate());
 
 	}

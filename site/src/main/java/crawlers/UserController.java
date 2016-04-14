@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dataBase.UserDatabase;
-import errors.ErrorInternal;
+import errors.InternalError;
 import models.User;
 import ops.CommonOps;
 
@@ -73,7 +73,7 @@ public class UserController {
 			if (mismoNick > 0 && mismoEmail > 0)
 				error = "Both username and email are already in use";
 
-			throw new ErrorInternal(error);
+			throw new InternalError(error);
 
 		}
 		return usuario;
@@ -117,7 +117,7 @@ public class UserController {
 					error = "User doesn't exist";
 				log.info(error);
 
-				throw new ErrorInternal(error);
+				throw new InternalError(error);
 			}
 
 		} else {
@@ -129,7 +129,7 @@ public class UserController {
 				error = "Fill the user";
 			log.info(error);
 
-			throw new ErrorInternal(error);
+			throw new InternalError(error);
 
 		}
 
