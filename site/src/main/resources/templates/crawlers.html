@@ -25,7 +25,7 @@
 
 						<tr id="project-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="project in projects">
-							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToProject(project) || container.selectedListProjects(2)"><b>{{project.name}}</b></a></td>
+							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToProject(project); container.selectedListProjects(2)"><b>{{project.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipProject"
 									title="Edit">
 									<button class="btn btn-primary btn-xs" data-title="Edit"

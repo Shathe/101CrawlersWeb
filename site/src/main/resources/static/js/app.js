@@ -55,6 +55,8 @@
 	    	return this.ListProjects==3 && this.isSelected(1) ;
 	    }
 	    this.showContainerItem = function (){
+	    	console.log(this.ListProjects==4 && this.isSelected(1));
+
 	    	return this.ListProjects==4 && this.isSelected(1) ;
 	    }
 	    
@@ -586,7 +588,7 @@
 	    };
 	  });
   
-  app.directive("containerItem", function() {
+  app.directive("containeritem", function() {
 	    return {
 	      restrict: 'E',
 	      templateUrl: "containerItem.html"

@@ -25,7 +25,7 @@
 
 						<tr id="image-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="image in images">
-							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToImage(image) || container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
+							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToImage(image); container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipImage"
 									title="#editImage">
 									<button class="btn btn-primary btn-xs" data-title="#editImage"

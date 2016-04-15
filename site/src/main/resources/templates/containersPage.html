@@ -25,13 +25,14 @@
 
 						<tr id="containerDocker-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="containerDocker in containers">
-							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToContainer(containerDocker) || container.selectedListProjects(4)"><b>{{containerDocker.name}}</b></a></td>
+							<td style="padding-top: 14px;"><a  href="#"  
+							ng-click="container.goToContainer(containerDocker); container.selectedListProjects(4); "><b>{{containerDocker.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipContainer"
 									title="#editContainer">
 									<button class="btn btn-primary btn-xs" data-title="#editContainer"
 										data-toggle="modal" data-target="#editContainer"
 										style="background-color: #0288D1;"
-										ng-click="container.containerSelected=containerDocker; container.setCamposEditContainer(containerDocker)">
+										ng-click="container.containerSelected=containerDocker; container.setCamposEditContainer(containerDocker);">
 										<span class="glyphicon glyphicon-pencil"></span>
 									</button>
 								</p></td>
