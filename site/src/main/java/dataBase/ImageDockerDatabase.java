@@ -77,7 +77,7 @@ public class ImageDockerDatabase {
 	 * @param project
 	 * @return
 	 */
-	public int createProject(ImageDocker image) {
+	public int createImage(ImageDocker image) {
 		return this.jdbcTemplate.update(
 				"insert into imageCrawlers (idProject, idConfiguration,name,date) values (?,?,?,?)",
 				image.getIdProject(), image.getIdConfiguration(), image.getName(),

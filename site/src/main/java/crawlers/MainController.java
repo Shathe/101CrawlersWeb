@@ -36,7 +36,14 @@ public class MainController {
     public String images() {
         return "imagesPage";
     }
-    
+    @RequestMapping("/containersPage")
+    public String containers() {
+        return "containersPage";
+    }    
+    @RequestMapping("/containerItem")
+    public String containerItem() {
+        return "containerItem";
+    }    
     
     @RequestMapping("/contacto")
     public String contacto() {

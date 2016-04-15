@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dataBase.ConfigurationDatabase;
+import dataBase.ContainerDockerDatabase;
+import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
 import errors.InternalError;
 import models.Project;
@@ -70,7 +72,13 @@ public class ProjectController {
 			projectDB.deleteProject(project);
 			// deletes also its configurations
 			confDB.deleteConfigurationsOfProject(String.valueOf(project.getId()));
+			ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
+			imageDB.deleteImagesOfAProject(String.valueOf(project.getId()));
+			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
+			containerDB.deleteContainersOfAProject(String.valueOf(project.getId()));
+			
 			log.info("deleted project " + project.getId());
+			
 			// FALTA ESTO
 			// Deletes also the dockerImages, Containers.. (also in Docker stop+delete)
 			// Delete the project files (dsl,plugins..) (Not implemented)

@@ -9,8 +9,10 @@
 	    this.email="";
 	    this.projectSelected={};
 	    this.imageSelected={};
+	    this.containerSelected={};
 	    this.formerName="";
 	    this.ListProjects=1;
+	    
 	    /*
 	     * GENERAL
 	     */
@@ -48,6 +50,12 @@
 	    }
 	    this.showImages = function (){
 	    	return this.ListProjects==2 && this.isSelected(1) ;
+	    }
+	    this.showContainers = function (){
+	    	return this.ListProjects==3 && this.isSelected(1) ;
+	    }
+	    this.showContainerItem = function (){
+	    	return this.ListProjects==4 && this.isSelected(1) ;
 	    }
 	    
 	    
@@ -269,9 +277,9 @@
     
     /** Goes to a image (visually) */
 
-    $scope.goToImage = function(idImage) {
-    	  alert('image clicked '+idImage);
-
+    this.goToImage = function(image) {
+    	 angular.copy(image, this.imageSelected);
+    	this.containersOfAImage();
 	  }
     /** Deletes a image and shows visually if it has been really deleted */
 
@@ -341,6 +349,127 @@
   	  this.formerName=image.name; 
   	  document.getElementById("imageName").value=image.name;
     }
+    
+    
+    
+    
+    
+
+
+    /*
+     * CONTAINERS
+     */
+    
+    /** Gets the containers of a image  */
+    this.containersOfAImage = function (){
+        $.get('/containers',{ idImage: this.imageSelected.id})
+        .done(function(data, status) {
+  		  console.log(data);
+            $scope.containers=data;
+            $scope.$apply();
+        })
+        .fail(function(data, status) {
+          console.log(data);
+        });
+      };
+      
+      /** Creates a Container and shows the new container if it has been really created */
+      this.createContainer = function() {
+
+    	  $.post('/createContainer',{ idProject: this.projectSelected.id,
+    		  idImage: this.imageSelected.id,
+  			  name: document.getElementById("containerName").value})
+  	    .done(function(data, status) {
+  	    	console.log(data);
+  			$scope.containers.push(data);
+  	        $scope.$apply();
+  	      	$('#editContainer').modal('toggle');
+
+  	    })
+  	    .fail(function(data, status) {
+  	      console.log(data);	  			
+  	      alert('Not possible to connect to the server');
+  	      
+  	    }); 	  
+    	  
+
+      }
+      
+      
+      /** Goes to a container (visually) */
+
+      this.goToContainer= function(container) {
+      	 angular.copy(container, this.containerSelected);
+  	  }
+      /** Deletes a Container and shows visually if it has been really deleted */
+
+      this.deleteContainer = function(container) {
+        	  $.ajax({
+  	    		  type: 'DELETE',
+  	    		  dataType: 'json',
+  	    		  contentType:'application/json',
+  	    		  url: "/deleteContainer",
+  	    		  data:JSON.stringify(container),
+  	    		  success : function(data) {
+  	  	    	    index= $scope.containers.indexOf(container);
+  	  	        	$scope.containers.splice(index, 1);
+  	  	        	$scope.$apply();
+  		  			console.log('deleted'+container.name);
+  		        	$('#DeleteContainer').modal('toggle');
+
+  	  			},
+  	  			error : function(e) {
+  	  				alert('Not possible to connect to the server');
+  	  			  console.log('not deleted'+container.name);
+
+  	  			},
+  	  			
+  	    		  });
+  	    	 
+      }
+      /** Edits a Container and shows the new image if it has been really edited */
+
+      this.editContainer = function(container) {
+    	  if(jQuery.isEmptyObject(container)){
+    		  //If the edits really means create
+    		  this.createContainer();	    	  
+    		 }
+    	  else{
+    		  //Gets former values
+
+    	  container.name=document.getElementById("containerName").value;
+    	  console.log(container);
+    	  $.ajax({
+    		  type: 'POST',
+    		  dataType: 'json',
+    		  contentType:'application/json',
+    		  url: "/editContainer",
+    		  data:JSON.stringify(container),
+    		  success : function(data) {
+    	      	$('#editContainer').modal('toggle');
+
+    		  },
+  			error : function(e) {
+  	    		  //If there's an error reset former values
+  				container.name=this.formerName;
+  				alert('Not possible to connect to the server');
+  			},
+  			
+    		  });
+    	 
+    	  }
+
+      }
+  	  /** Resets container Modal values */
+      this.vaciarCamposContainer = function(){
+    	  document.getElementById("containerName").value="";
+      }
+  	  /** Edits container Modal values */
+      this.setCamposEditContainer= function(container){
+    	  this.formerName=container.name; 
+    	  document.getElementById("containerName").value=container.name;
+      }
+
 
 }]);
 
@@ -448,6 +577,19 @@
 	    return {
 	      restrict: 'E',
 	      templateUrl: "imagesPage.html"
+	    };
+	  });
+  app.directive("containers", function() {
+	    return {
+	      restrict: 'E',
+	      templateUrl: "containersPage.html"
+	    };
+	  });
+  
+  app.directive("containerItem", function() {
+	    return {
+	      restrict: 'E',
+	      templateUrl: "containerItem.html"
 	    };
 	  });
   app.directive("home", function() {

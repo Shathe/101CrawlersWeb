@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dataBase.ConfigurationDatabase;
+import dataBase.ContainerDockerDatabase;
 import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
 import errors.InternalError;
@@ -28,7 +29,7 @@ import models.ImageDocker;
 import models.Project;
 
 /**
- * Controller for projects. Manage every operation which deals with the
+ * Controller for images. Manage every operation which deals with the
  * projects.
  * 
  * @author shathe
@@ -52,7 +53,7 @@ public class ImageDockerController {
 		try {
 			images = imageDB.getImages(idProject);
 		} catch (Exception a) {
-			throw new InternalError("Error listing projects: "+a.getMessage());
+			throw new InternalError("Error listing images: "+a.getMessage());
 		}
 
 		return new ResponseEntity<List<ImageDocker>>(images, HttpStatus.OK);
@@ -70,6 +71,8 @@ public class ImageDockerController {
 		try {
 			imageDB.deleteImage(image);
 			log.info("deleted image " + image.getId());
+			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
+			containerDB.deleteContainersOfAImage(String.valueOf(image.getId()));
 			// FALTA ESTO
 			// Deletes also the dockerImages, Containers.. (also in Docker stop+delete)
 			// Delete the project files (dsl,plugins..) (Not implemented)
@@ -93,7 +96,7 @@ public class ImageDockerController {
 		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 		try {
 			imageDB.updateImage(image);
-			log.info("updated project " + image.getId());
+			log.info("updated image " + image.getId());
 			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
@@ -116,11 +119,12 @@ public class ImageDockerController {
 		ImageDocker image = new ImageDocker(0, name,String.valueOf(config.getId()),idProject, new Date(System.currentTimeMillis()));
 		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 		try {
-			imageDB.createProject(image);
+			imageDB.createImage(image);
 			log.info("created image " + image.getName());
 			image=imageDB.getImageJustCreated(idProject);
 			// Creates the project files (Not implemented)
 			// CCreate docker image?
+			//Recuerda que al ejecutar el jar -Imagename seria el ID en este caso
 		} catch (Exception a) {
 			throw new InternalError("Error creating: "+a.getMessage());
 		}

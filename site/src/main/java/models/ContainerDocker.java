@@ -4,32 +4,39 @@
 
 package models;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * Model of the Docker container
+ * 
  * @author shathe
  *
  */
 @Entity
 public class ContainerDocker {
 	@Id
-    @GeneratedValue
-    private long id;
+	@GeneratedValue
+	private long id;
 
-	private String name, idImage, status,date;
-	
+	private String name, idImage, idProject;
+	Date date;
 
-    public ContainerDocker (long id, String name, String idImage, String status) {
-        this.id = id;
-        this.idImage = idImage;
-        this.name = name;        
-        this.status = status;
-    }
+	public ContainerDocker(long id, String idImage, String idProject, String name, Date date) {
+		this.id = id;
+		this.idImage = idImage;
+		this.idProject = idProject;
+		this.name = name;
+		this.date = date;
+	}
 
-    public long getId() {
+	public ContainerDocker() {
+	}
+
+	public long getId() {
 		return id;
 	}
 
@@ -37,7 +44,7 @@ public class ContainerDocker {
 		this.id = id;
 	}
 
-    public String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -53,28 +60,25 @@ public class ContainerDocker {
 		this.idImage = idImage;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	public String getIdProject() {
+		return idProject;
+	}
+
+	public void setIdProject(String idProject) {
+		this.idProject = idProject;
+	}
 
 	@Override
-    public String toString() {
-        return String.format(
-                "User [id=%d, user='%s', status='%s, idImage='%s']",
-                id, name,status, idImage);
-    }
-
+	public String toString() {
+		return String.format("User [id=%d, user='%s',  idImage='%s']", id, name, idImage);
+	}
 
 }

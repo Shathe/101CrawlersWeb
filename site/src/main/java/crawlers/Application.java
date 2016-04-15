@@ -44,41 +44,36 @@ public class Application implements CommandLineRunner {
 
 		jdbcTemplate
 				.execute("CREATE TABLE projectCrawlers(" + "id SERIAL, idUser long, name VARCHAR(100), date DATETIME)");
-		// tener una tabla para DSL que un proyecto eude tener varias
-		// configuraciones?
-		// enrealidad son del mismo proyecto, lo que cambia es laconfiguracion
-		// y las imagenes dockers son de un proyecto y de una configuracion
 		jdbcTemplate.execute(
 				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long,  dslPath VARCHAR(200),pluginsPath  VARCHAR(200))");
 
-		jdbcTemplate.execute("CREATE TABLE imageCrawlers(id SERIAL, idProject long, idConfiguration long, name VARCHAR(100), date DATETIME)");
+		jdbcTemplate.execute(
+				"CREATE TABLE imageCrawlers(id SERIAL, idProject long, idConfiguration long, name VARCHAR(100), date DATETIME)");
 
-		
-		
-		
+		jdbcTemplate.execute(
+				"CREATE TABLE containerCrawlers(" + "id SERIAL, idProject long,idImage long, name VARCHAR(100), date DATETIME)");
+
 		jdbcTemplate.execute("CREATE TABLE pluginsCrawlers(id SERIAL, idProject long, idConfiguration long)");
 
 		jdbcTemplate.execute("CREATE TABLE jarsCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 		jdbcTemplate.execute("CREATE TABLE xmlCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 
-
-		jdbcTemplate.execute(
-				"CREATE TABLE containerCrawlers(" + "id SERIAL, idImage long, name VARCHAR(100), status VARCHAR(100))");
-
-		
-		//Inserts
+		// Inserts
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
 				"inigol22zgz@gmail.com", CommonOps.HashFunction("contrasena"));
 
 		jdbcTemplate.update("insert into projectCrawlers (idUser,name,date) values (?,?,?)", "1", "First project",
 				new Date(System.currentTimeMillis()));
 
-		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)",
-				"Vieja", "C://RutaLarga/lolo/jeje/plugins", 1);
-		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)",
-				"Nueva", "C://RutaLarga/lolo/jeje/plugins", 1);
-		jdbcTemplate.update("insert into imageCrawlers (idProject,idConfiguration,name,date) values (?,?,?,?)",
-				1, 1, "Image :D First",new Date(System.currentTimeMillis()));
+		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)", "Vieja",
+				"C://RutaLarga/lolo/jeje/plugins", 1);
+		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)", "Nueva",
+				"C://RutaLarga/lolo/jeje/plugins", 1);
+		jdbcTemplate.update("insert into imageCrawlers (idProject,idConfiguration,name,date) values (?,?,?,?)", 1, 1,
+				"Image :D First", new Date(System.currentTimeMillis()));
+
+		jdbcTemplate.update("insert into containerCrawlers (idProject, idImage, name,date) values (?,?,?,?)", 1, 1,
+				"Docker container nutch", new Date(System.currentTimeMillis()));
 
 	}
 }
