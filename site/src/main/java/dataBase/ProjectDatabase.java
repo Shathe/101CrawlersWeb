@@ -7,6 +7,8 @@ package dataBase;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import models.ImageDocker;
 import models.Project;
 
 /**
@@ -62,5 +64,11 @@ public class ProjectDatabase {
 				project.getName(), 
 				project.getDate());
 
+	}
+	public Project getImageJustCreated(String idUser) {
+		//
+		return this.jdbcTemplate.queryForObject(
+				"select TOP 1 * from projectCrawlers where idUser = " + idUser + " ORDER BY id DESC",
+				new ProjectMapper());
 	}
 }

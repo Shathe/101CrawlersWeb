@@ -18,39 +18,38 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MainController {
 
     @RequestMapping("/")
-    public String index(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String index() {
         return "index";
     }
 
     @RequestMapping("/nosotros")
-    public String nosotros(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String nosotros() {
         return "nosotros";
     }
     
     @RequestMapping("/home")
-    public String home(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String home() {
         return "home";
+    }
+    
+    @RequestMapping("/imagesPage")
+    public String images() {
+        return "imagesPage";
     }
     
     
     @RequestMapping("/contacto")
-    public String contacto(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String contacto() {
         return "contacto";
     }    
     
     @RequestMapping("/perfil")
-    public String perfil(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String perfil() {
         return "perfil";
     }
     
     @RequestMapping("/crawlers")
-    public String crawlers(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String crawlers(){
         return "crawlers";
     }
 

@@ -50,11 +50,11 @@
 									<li id="misCrawMenu"
 										ng-class="{ active: container.isSelected(1) }"
 										style="display: none;"><a href="#"
-										ng-click="container.ProjectsOfUser() || container.selectedTab(1)"
+										ng-click="container.ProjectsOfUser() || container.selectedTab(1) || container.selectedListProjects(1)"
 										class="">My projects</a></li>
 
 									<li ng-class="{active:container.isSelected(3)}"><a
-										href="#" ng-click="container.selectedTab(3) " role="button"
+										href="#" ng-click="container.selectedTab(3)  " role="button"
 										aria-haspopup="true" aria-expanded="false"> Who we are</a></li>
 									<li ng-class="{active:container.isSelected(4)}"><a
 										href="#" ng-click="container.selectedTab(4)" role="button"
@@ -87,12 +87,12 @@
 				</div>
 
 			</div>
-
-			<crawlers ng-show="container.isSelected(1)"></crawlers>
+			<crawlers ng-show="container.showProjects()"></crawlers>
 			<home ng-show="container.isSelected(2)"></home>
 			<nosotros ng-show="container.isSelected(3)"></nosotros>
 			<contacto ng-show="container.isSelected(4)"></contacto>
 			<perfil ng-show="container.isSelected(5)"></perfil>
+			<images ng-show="container.showImages()"></images>
 
 			<!-- Modal para loguearse, aparece cuando se clica login -->
 

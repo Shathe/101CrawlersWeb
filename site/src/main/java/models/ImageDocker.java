@@ -4,41 +4,47 @@
 
 package models;
 
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-
 /**
  * Model of the Docker image
+ * 
  * @author shathe
  *
  */
 @Entity
 public class ImageDocker {
 	@Id
-    @GeneratedValue
-    private long id;
+	@GeneratedValue
+	private long id;
 
-	private String name, dslId,date;
-	
+	private String name, idConfiguration, idProject;
+	Date date;
 
-    public ImageDocker (long id, String name, String dslId) {
-        this.id = id;
-        this.name = name;
-        this.dslId = dslId;        
-    }
+	public ImageDocker() {
+	}
 
-    public long getId() {
+	public ImageDocker(long id, String name, String idConfiguration, String idProject,Date date) {
+		this.id = id;
+		this.name = name;
+		this.idConfiguration = idConfiguration;
+		this.idProject = idProject;
+		this.date = date;
+	}
+
+	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
-	
-    public String getName() {
+
+	public String getName() {
 		return name;
 	}
 
@@ -46,28 +52,33 @@ public class ImageDocker {
 		this.name = name;
 	}
 
-	public String getDslId() {
-		return dslId;
-	}
-
-	public void setDslId(String dslId) {
-		this.dslId = dslId;
-	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	public String getIdConfiguration() {
+		return idConfiguration;
+	}
+
+	public void setIdConfiguration(String idConfiguration) {
+		this.idConfiguration = idConfiguration;
+	}
+
+	public String getIdProject() {
+		return idProject;
+	}
+
+	public void setIdProject(String idProject) {
+		this.idProject = idProject;
+	}
 
 	@Override
-    public String toString() {
-        return String.format(
-                "User [id=%d, name='%s', dslId='%s']",
-                id, name, dslId);
-    }
-
+	public String toString() {
+		return String.format("User [id=%d, name='%s', IdConfiguration='%s']", id, name, idConfiguration);
+	}
 
 }

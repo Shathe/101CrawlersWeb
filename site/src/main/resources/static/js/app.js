@@ -8,18 +8,25 @@
 	    this.user=getCookie("usuario");
 	    this.email="";
 	    this.projectSelected={};
+	    this.imageSelected={};
 	    this.formerName="";
+	    this.ListProjects=1;
 	    /*
 	     * GENERAL
 	     */
 	    /** Sets tab value */
 	    this.selectedTab = function(tab){
-	      this.tab=tab;
-	    };
-	    /**Returns true if the checktab is the same as tab */
-	    this.isSelected = function(checkTab){
-	      return this.tab === checkTab;
-	    };
+		      this.tab=tab;
+		    };
+		    /**Returns true if the checktab is the same as tab */
+		    this.isSelected = function(checkTab){
+		      return this.tab === checkTab;
+		    };
+	    this.selectedListProjects = function(tab){
+	    	this.ListProjects=tab;
+		    };
+		    /**Returns true if the checktab is the same as tab */
+
 	    /** Gives value to the user variable */  
 	    this.setUser = function(){
 	      this.user=document.getElementById("usernameLogin").value;
@@ -36,10 +43,15 @@
 	      deleteCookie("idUser");
 
 	    };
+	    this.showProjects = function (){
+	    	return this.ListProjects==1  && this.isSelected(1) ;
+	    }
+	    this.showImages = function (){
+	    	return this.ListProjects==2 && this.isSelected(1) ;
+	    }
 	    
 	    
-	    
-	    
+
 	    /*
 	     * PROJECS
 	     */
@@ -59,7 +71,7 @@
 	        });
 	      };
 	      /** Creates a project and shows the new projects if it has been really created */
-	      $scope.createProject = function() {
+	      this.createProject = function() {
 
 	    	  $.post('/createProject',{ idUser: getCookie("idUser"),
     			  name: document.getElementById("projectName").value})
@@ -67,6 +79,20 @@
     	    	console.log(data);
     			$scope.projects.push(data);
 	  	        $scope.$apply();
+    		    this.projectSelected=data;
+	        	$('#edit').modal('toggle');
+	        	//Creates tit configuration
+		    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id,
+			    	  dslPath: document.getElementById("projectDSLPath").value,
+					  pluginsPath: document.getElementById("projectPluginsPath").value})
+	    	    .done(function(data, status) {
+	    	    	console.log(data);
+	    	    })
+	    	    .fail(function(data, status) {
+	    	      console.log(data);	  			
+	    	      alert('Not possible to connect to the server');
+	    	      
+	    	    });
 
     	    })
     	    .fail(function(data, status) {
@@ -74,21 +100,12 @@
     	      alert('Not possible to connect to the server');
     	      
     	    });
-	    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id,
-	    	  dslPath: document.getElementById("dslPath").value,
-			  pluginsPath: document.getElementById("pluginsPath").value})
-    	    .done(function(data, status) {
-    	    	console.log(data);
-    	    })
-    	    .fail(function(data, status) {
-    	      console.log(data);	  			
-    	      alert('Not possible to connect to the server');
-    	      
-    	    });
+	    	  console.log(this.projectSelected);
+	    	  console.log(this.projectSelected.id);
+
 	    	  
 	    	  
 	    	  
-	        	$('#edit').modal('toggle');
 
 	      }
 	      /* La diferencia entre $scope y this. es que con scope
@@ -99,8 +116,10 @@
 	      
 	      /** Goes to a project (visually) */
 
-	      $scope.goToProject = function(idProject) {
-	    	  alert('project clicked '+idProject);
+	      this.goToProject = function(project) {
+	    	  angular.copy(project, this.projectSelected);
+	    	  this.ImagesOfaProject();
+	    	  
 	      }
 	      /** Deletes a project and shows visually if it has been really deleted */
 
@@ -116,6 +135,7 @@
 		  	        	$scope.projects.splice(index, 1);
 		  	        	$scope.$apply();
 			  			console.log('deleted'+project.name);
+			        	$('#delete').modal('toggle');
 
 		  			},
 		  			error : function(e) {
@@ -126,14 +146,13 @@
 		  			
 		    		  });
 		    	 
-		        	$('#delete').modal('toggle');
 	      }
 	      /** Edits a project and shows the new projects if it has been really edited */
 
 	      this.editProject = function(project) {
 	    	  if(jQuery.isEmptyObject(project)){
 	    		  //If the edits really means create
-	    		  $scope.createProject();	    	  
+	    		  this.createProject();	    	  
 	    		 }
 	    	  else{
 	    		  //Gets former values
@@ -153,6 +172,8 @@
 	    				  pluginsPath: document.getElementById("projectPluginsPath").value})
 	    	    	    .done(function(data, status) {
 	    	    	    	console.log(data);
+	    		        	$('#edit').modal('toggle');
+
 	    	    	    })
 	    	    	    .fail(function(data, status) {
 	    	    	      console.log(data);	  			
@@ -168,7 +189,6 @@
 	  			
 	    		  });
 	    	 
-	        	$('#edit').modal('toggle');
 	    	  }
 
 	      }
@@ -200,7 +220,129 @@
 	    	  /**/
 	      }
 
-	  }]);
+  
+  
+
+  /*
+   * IMAGES
+   */
+  
+  /** Gets the images of a project  */
+  this.ImagesOfaProject = function (){
+      $.get('/images',{ idProject: this.projectSelected.id})
+      .done(function(data, status) {
+		  console.log(data);
+          $scope.images=data;
+          $scope.$apply();
+      })
+      .fail(function(data, status) {
+        console.log(data);
+      });
+    };
+    
+    /** Creates a image and shows the new image if it has been really created */
+    this.createImage = function() {
+
+  	  $.post('/createImage',{ idProject: this.projectSelected.id,
+			  name: document.getElementById("imageName").value})
+	    .done(function(data, status) {
+	    	console.log(data);
+			$scope.images.push(data);
+	        $scope.$apply();
+	      	$('#editImage').modal('toggle');
+
+	    })
+	    .fail(function(data, status) {
+	      console.log(data);	  			
+	      alert('Not possible to connect to the server');
+	      
+	    }); 	  
+  	  
+  	  
+
+    }
+    /* La diferencia entre $scope y this. es que con scope
+       se necesita hacer el scope.apply y es mejor para actaulizar cosas visuales
+       como por ejemplo despues de hacer una peticion http
+    	 en cambio si quieres ligar valores para utilizarlos es mejor el this.
+     	aqui muestro un ejemplo de como se podría hacer con ambas */
+    
+    /** Goes to a image (visually) */
+
+    $scope.goToImage = function(idImage) {
+    	  alert('image clicked '+idImage);
+
+	  }
+    /** Deletes a image and shows visually if it has been really deleted */
+
+    this.deleteImage = function(image) {
+      	  $.ajax({
+	    		  type: 'DELETE',
+	    		  dataType: 'json',
+	    		  contentType:'application/json',
+	    		  url: "/deleteImage",
+	    		  data:JSON.stringify(image),
+	    		  success : function(data) {
+	  	    	    index= $scope.images.indexOf(image);
+	  	        	$scope.images.splice(index, 1);
+	  	        	$scope.$apply();
+		  			console.log('deleted'+image.name);
+		        	$('#DeleteImage').modal('toggle');
+
+	  			},
+	  			error : function(e) {
+	  				alert('Not possible to connect to the server');
+	  			  console.log('not deleted'+image.name);
+
+	  			},
+	  			
+	    		  });
+	    	 
+    }
+    /** Edits a image and shows the new image if it has been really edited */
+
+    this.editImage = function(image) {
+  	  if(jQuery.isEmptyObject(image)){
+  		  //If the edits really means create
+  		  this.createImage();	    	  
+  		 }
+  	  else{
+  		  //Gets former values
+
+  	  image.name=document.getElementById("imageName").value;
+  	  console.log(image);
+  	  $.ajax({
+  		  type: 'POST',
+  		  dataType: 'json',
+  		  contentType:'application/json',
+  		  url: "/editImage",
+  		  data:JSON.stringify(image),
+  		  success : function(data) {
+  	      	$('#editImage').modal('toggle');
+
+  		  },
+			error : function(e) {
+	    		  //If there's an error reset former values
+				image.name=this.formerName;
+				alert('Not possible to connect to the server');
+			},
+			
+  		  });
+  	 
+  	  }
+
+    }
+	  /** Resets image Modal values */
+    this.vaciarCamposImages = function(){
+  	  document.getElementById("imageName").value="";
+    }
+	  /** Edits image Modal values */
+    this.setCamposEditImage= function(image){
+  	  this.formerName=image.name; 
+  	  document.getElementById("imageName").value=image.name;
+    }
+
+}]);
 
 
 
@@ -297,11 +439,17 @@
   });
 
   app.directive("crawlers", function() {
-    return {
-      restrict: 'E',
-      templateUrl: "crawlers.html"
-    };
-  });
+	    return {
+	      restrict: 'E',
+	      templateUrl: "crawlers.html"
+	    };
+	  });
+  app.directive("images", function() {
+	    return {
+	      restrict: 'E',
+	      templateUrl: "imagesPage.html"
+	    };
+	  });
   app.directive("home", function() {
     return {
       restrict: 'E',

@@ -51,16 +51,22 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.execute(
 				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long,  dslPath VARCHAR(200),pluginsPath  VARCHAR(200))");
 
+		jdbcTemplate.execute("CREATE TABLE imageCrawlers(id SERIAL, idProject long, idConfiguration long, name VARCHAR(100), date DATETIME)");
+
+		
+		
+		
 		jdbcTemplate.execute("CREATE TABLE pluginsCrawlers(id SERIAL, idProject long, idConfiguration long)");
 
 		jdbcTemplate.execute("CREATE TABLE jarsCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 		jdbcTemplate.execute("CREATE TABLE xmlCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 
-		jdbcTemplate.execute("CREATE TABLE imageCrawlers(id SERIAL, ProjectId long, name VARCHAR(100))");
 
 		jdbcTemplate.execute(
 				"CREATE TABLE containerCrawlers(" + "id SERIAL, idImage long, name VARCHAR(100), status VARCHAR(100))");
 
+		
+		//Inserts
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
 				"inigol22zgz@gmail.com", CommonOps.HashFunction("contrasena"));
 
@@ -71,6 +77,8 @@ public class Application implements CommandLineRunner {
 				"Vieja", "C://RutaLarga/lolo/jeje/plugins", 1);
 		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)",
 				"Nueva", "C://RutaLarga/lolo/jeje/plugins", 1);
+		jdbcTemplate.update("insert into imageCrawlers (idProject,idConfiguration,name,date) values (?,?,?,?)",
+				1, 1, "Image :D First",new Date(System.currentTimeMillis()));
 
 	}
 }

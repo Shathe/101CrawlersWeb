@@ -32,7 +32,7 @@ import models.Project;
  */
 @RestController
 public class ProjectController {
-	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -71,7 +71,9 @@ public class ProjectController {
 			// deletes also its configurations
 			confDB.deleteConfigurationsOfProject(String.valueOf(project.getId()));
 			log.info("deleted project " + project.getId());
-			// Delete the project files (Not implemented)
+			// FALTA ESTO
+			// Deletes also the dockerImages, Containers.. (also in Docker stop+delete)
+			// Delete the project files (dsl,plugins..) (Not implemented)
 
 		} catch (Exception a) {
 			throw new InternalError("Error deleting: "+a.getMessage());
@@ -115,6 +117,7 @@ public class ProjectController {
 		try {
 			projectDB.createProject(project);
 			log.info("created project " + project.getId());
+			project=projectDB.getImageJustCreated(idUser);
 			// Creates the project files (Not implemented)
 			// CCreate docker image?
 		} catch (Exception a) {

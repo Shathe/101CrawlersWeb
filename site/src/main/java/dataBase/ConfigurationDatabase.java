@@ -27,7 +27,7 @@ public class ConfigurationDatabase {
 	/**
 	 * Returns the last configuration of a project
 	 * 
-	 * @param idUser
+	 * @param idProject
 	 * @return
 	 */
 	public Configuration GetConfigurationFromProject(String idProject) {
@@ -39,7 +39,7 @@ public class ConfigurationDatabase {
 	/**
 	 * Deletes a configuration
 	 * 
-	 * @param project
+	 * @param configuration
 	 * @return
 	 */
 	public int deleteConfiguration(Configuration configuration) {
