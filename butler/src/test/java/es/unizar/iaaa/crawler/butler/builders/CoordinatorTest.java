@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.Application;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.model.CrawlSystem;
 import es.unizar.iaaa.crawler.butler.model.Plugin;
 import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlPluginsValidator;
@@ -126,13 +127,19 @@ public class CoordinatorTest {
 	public CrawlConfiguration readConfiguration(String route) {
 		CrawlConfiguration config = YamlConfigRunner.read(ctx.getResource(baseDir + route));
 		//Add plugins
+		//Add plugins
 		try {
-			config.getCrawlSystem().setPlugins(readPlugins("plugins",config));
+			CrawlSystem Cs=config.getCrawlSystem();
+			Cs.setPlugins(readPlugins("plugins",config));
+			config.setCrawlSystem(Cs);
+
 		} catch (IOException e) {
 			// There is no plugins to add
 		}
+		
 		return config;
 	}
+
 
 	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
 		// List of plugins, each plugins is alist of its files
@@ -155,6 +162,7 @@ public class CoordinatorTest {
 			}
 			// Add files
 			PluginNew.setFiles(pluginsFilesNew);
+			pluginsToAdd.add(PluginNew);
 		}
 		return pluginsToAdd;
 	}
