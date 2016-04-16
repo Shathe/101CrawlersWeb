@@ -6,7 +6,7 @@ package es.unizar.iaaa.crawler.butler.model;
 
 import static java.lang.String.format;
 
-public final class CrawlConfiguration {
+public class CrawlConfiguration {
 
     private DockerOS dockerOS;
     private CrawlSystem crawlSystem;

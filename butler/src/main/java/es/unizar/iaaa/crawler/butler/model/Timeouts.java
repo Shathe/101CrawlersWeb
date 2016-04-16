@@ -6,7 +6,7 @@ package es.unizar.iaaa.crawler.butler.model;
 
 import static java.lang.String.format;
 
-public final class Timeouts {
+public class Timeouts {
     private String parser;
     private String fetchTimes;
     private String network;

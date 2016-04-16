@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.model.Plugin;
+import es.unizar.iaaa.crawler.butler.validator.LatestValidationResult;
+import es.unizar.iaaa.crawler.butler.validator.Validator.Status;
 
 /**
  * Builds the nutch system. Creates every file needed and writes in the dockerfile every command
@@ -70,31 +73,32 @@ public class NutchBuilder implements CrawlerBuilder {
 
     private void configurePlugins(CrawlConfiguration configuration, String directoryName, PrintWriter pw)
             throws IOException {
-        final List<List<String>> plugins = configuration.getCrawlSystem().getPlugins();
-        if (plugins == null)
+    	
+    	List<Plugin> plugins = configuration.getCrawlSystem().getPlugins();
+    	if (plugins == null)
             return;
-        for (List<String> all : plugins) {
-            // Structure: nombre file.xml (file.jar)+
-            String pluginName = all.get(0);
-
+        for (Plugin nextPlugin : plugins) {
+        	//For each plugin
+        	String pluginName = nextPlugin.getName();
+        	//creates the plugin folder
             pw.println("Run mkdir crawler/plugins/" + pluginName);
-            // Create plugin.xml
-            Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
-            Path target = directory.resolve("plugin.xml");
-            Path source = FileSystems.getDefault().getPath(all.get(1));
-            Files.createDirectory(directory);
-            Files.copy(source, target);
-            pw.println("ADD " + pluginName + "/plugin.xml crawler/plugins/" + pluginName + "/plugin.xml");
-            // Create (file.jar)+
 
-            for (int siguiente = 2; siguiente < all.size(); siguiente++) {
-                source = FileSystems.getDefault().getPath(all.get(siguiente));
-                target = directory.resolve(source.getFileName());
-                Files.copy(source, target);
-                pw.println("ADD " + pluginName + "/" + target.getFileName() + " crawler/plugins/" + pluginName + "/"
-                        + source.getFileName());
-            }
+        	List<File> files= nextPlugin.getFiles();
+  		  Path directory = FileSystems.getDefault().getPath(directoryName, pluginName);
+            Files.createDirectory(directory);
+        	for (File file : files) {
+        		//Copy files near the docker file (needed)
+                  Path target = directory.resolve(file.getName());
+                  Path source = file.toPath();
+
+                  Files.copy(source, target);
+                  //Add to dockerfile
+                  pw.println("ADD " + pluginName+"/"+file.getName()+ " crawler/plugins/" + pluginName + "/"+file.getName());
+                
+
+        	}
         }
+        
     }
 
     public void createNutchSite(CrawlConfiguration configuracion, String directoryName) {
@@ -160,11 +164,12 @@ public class NutchBuilder implements CrawlerBuilder {
     /**
      * returns the value property of a plugin
      */
-    private String pluginsValue(List<List<String>> list) {
+    private String pluginsValue(List<Plugin> list) {
+    	
         String pluginsOR = "";
         boolean hayPlugin = false;
         for (int i = 0; list != null && i < list.size(); i++) {
-            pluginsOR += list.get(i).get(0) + "|";
+            pluginsOR += list.get(i).getName() + "|";
             hayPlugin = true;
         }
         // Returns the result
@@ -174,5 +179,6 @@ public class NutchBuilder implements CrawlerBuilder {
         } else
             return null;
     }
+  
 
 }

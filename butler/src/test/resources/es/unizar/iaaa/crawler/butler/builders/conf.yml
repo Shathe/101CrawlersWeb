@@ -23,14 +23,9 @@ crawlSystem:
     
     #Optionals
    
-    #plugins are separated by line break and preceded by '- '
-    #First goes the plugin named followed by the jar files.
-    #The plugin.xml must be in the same directory and it has to be named as
-    #the plugin
-    
-    plugins:
-      - [protocol-file, src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.xml, src/test/resources/es/unizar/iaaa/crawler/butler/builders/protocol-file.jar]
-    
+        #Plugins are not specified in the DSL, they have to be in a folder named 'Plugins' in the same level of the
+    #DSL file. This folder must have one folder for every plugin you want to add and that folder must have the
+    #compiled plugin ( plugin.xml and its jar files)
     
     #The length limit for downloaded content (-1 for o limit)
     maxFileLength: 65536 # file.content.limit  and http.content.limit

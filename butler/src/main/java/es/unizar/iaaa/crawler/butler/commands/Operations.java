@@ -5,14 +5,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.model.CrawlSystem;
+import es.unizar.iaaa.crawler.butler.model.Plugin;
 import es.unizar.iaaa.crawler.butler.yalm.YamlConfigRunner;
 
 /**
@@ -60,8 +65,49 @@ public class Operations implements CommandMarker {
 	}
 
 	public CrawlConfiguration readConfiguration(String route) {
-		return YamlConfigRunner.read(ctx.getResource(baseDir + route));
+		CrawlConfiguration config = YamlConfigRunner.read(ctx.getResource(baseDir + route));
+		//Add plugins
+		try {
+			CrawlSystem Cs=config.getCrawlSystem();
+			Cs.setPlugins(readPlugins("plugins",config));
+			config.setCrawlSystem(Cs);
+
+		} catch (IOException e) {
+			// There is no plugins to add
+		}
+		
+		return config;
 	}
+
+	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
+		// List of plugins, each plugins is alist of its files
+
+		ArrayList<Plugin> pluginsToAdd= new ArrayList<Plugin>();
+		File a= new File("plugins");
+		/*
+		Resource directory = ctx.getResource("classpath:./" + route);
+	 	File directoryFile = directory.getFile();
+	 	This does not work, what it is implementes, yes
+	 	*/
+		File[] plugins = a.listFiles();
+
+		for (File plugin : plugins) {
+			// New Plugin to add
+			Plugin  PluginNew= new Plugin();
+			PluginNew.setName(plugin.getName());
+			// Its files
+			ArrayList<File> pluginsFilesNew = new ArrayList<File>();
+			File[] pluginsFiles = plugin.listFiles();
+			for (File file : pluginsFiles) {
+				pluginsFilesNew.add(file);
+			}
+			// Add files
+			PluginNew.setFiles(pluginsFilesNew);
+			pluginsToAdd.add(PluginNew);
+		}
+		return pluginsToAdd;
+	}
+
 
 	/**	
 	 * @return true when the container asign to the user and crawl exists
@@ -134,7 +180,7 @@ public class Operations implements CommandMarker {
 	 */
 	public boolean containerRunning(String idContainer) {
 		String s;
-		String command = "docker ps -a --filter \"status=running\" --filter \"name=" + idContainer + "\"";
+		String command = "docker ps -a --filter status=running --filter name=" + idContainer ;
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
@@ -167,7 +213,7 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is stopped
 	 */
 	public boolean containerStopped(String idContainer) {
-		String command = "docker ps -a --filter \"status=exited\" --filter \"name=" + idContainer + "\"";
+		String command = "docker ps -a --filter status=exited --filter name=" + idContainer ;
 		String s;
 		// docker ps --filter "status=exited" --filter "name=1_1"
 		try (BufferedReader out = executeCommand(command, false)) {
@@ -185,7 +231,7 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is paused
 	 */
 	public boolean containerPaused(String idContainer) {
-        String command = "docker ps -a --filter \"status=paused\" --filter \"name=" + idContainer + "\"";
+        String command = "docker ps -a --filter status=paused --filter name=" + idContainer;
 		String s;
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {

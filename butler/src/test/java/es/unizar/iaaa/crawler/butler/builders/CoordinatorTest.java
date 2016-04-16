@@ -6,15 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.Application;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.model.Plugin;
 import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlPluginsValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlSeedsValidator;
@@ -36,113 +39,127 @@ import static org.junit.Assert.assertTrue;
 @ActiveProfiles("test")
 public class CoordinatorTest {
 
-    @Autowired
-    private ApplicationContext ctx;
+	@Autowired
+	private ApplicationContext ctx;
 
 	@Autowired
-    private ConfigurationValidator configurationValidator;
+	private ConfigurationValidator configurationValidator;
 
-    @Autowired
-    private CrawlValidator crawlValidator;
+	@Autowired
+	private CrawlValidator crawlValidator;
 
-    @Value("${butler.base}/")
-    private String baseDir;
+	@Value("${butler.base}/")
+	private String baseDir;
 
-    /** Detects if a well formed configuration file, pass the validation */
-    @Test
-    public void detectEverythingIsOK() throws URISyntaxException {
-        CrawlConfiguration config;
-        config = readConfiguration("conf.yml");
-        assertNotNull("YamlConfigRunner debe devolver una configuración y no null", config);
-        System.out.println(config.toString());
+	/** Detects if a well formed configuration file, pass the validation */
+	@Test
+	public void detectEverythingIsOK() throws URISyntaxException {
+		CrawlConfiguration config;
+		config = readConfiguration("conf.yml");
+		assertNotNull("YamlConfigRunner debe devolver una configuración y no null", config);
+		System.out.println(config.toString());
 
-        ValidationResult result = configurationValidator.validate(config);
-        assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
-        assertEquals("DefaultValidator dbe dar OK", Validator.Status.OK, result.getFirstErrorCode());
-    }
+		ValidationResult result = configurationValidator.validate(config);
+		assertTrue("DefaultValidator debe devolver que está bien", result.isOk());
+		assertEquals("DefaultValidator dbe dar OK", Validator.Status.OK, result.getFirstErrorCode());
+	}
 
 	/**
-	 * Detects if a well formed plugin is detected as such 
+	 * Detects if a well formed plugin is detected as such
 	 */
-    @Test
-    public void detectSuportedPlugin() throws URISyntaxException {
-        CrawlConfiguration config;
-        config = readConfiguration("conf-Well-Plugin.yml");
-        Validator validator = new CrawlPluginsValidator();
-        ValidationResult result = validator.validate(config);
-        assertTrue("DefaultValidator no informa que es una buena configuración", result.isOk());
-   
-    }
+	@Test
+	public void detectSuportedPlugin() throws URISyntaxException {
+		CrawlConfiguration config;
+		config = readConfiguration("conf-Well-Plugin.yml");
+		Validator validator = new CrawlPluginsValidator();
+		ValidationResult result = validator.validate(config);
+		assertTrue("DefaultValidator no informa que es una buena configuración", result.isOk());
+
+	}
 
 	/**
 	 * Detects if a bad formed configuration file, dont pass the validation the
 	 * error is a crawl system not supported
 	 */
-    @Test
-    public void detectUnsupportedCrawl() throws URISyntaxException {
-        CrawlConfiguration config;
-        config = readConfiguration("conf-erroresNutch.yml");
-        ValidationResult result = crawlValidator.validate(config);
-        assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
-        assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.Status.ERROR_UNSUPPORTED_CRAWL_VERSION, result.getFirstErrorCode());
-        assertEquals("DefaultValidator no informa del que el error es el valor 1.4", "1.4",
-                result.getFirstErrorValue());
-    }
+	@Test
+	public void detectUnsupportedCrawl() throws URISyntaxException {
+		CrawlConfiguration config;
+		config = readConfiguration("conf-erroresNutch.yml");
+		ValidationResult result = crawlValidator.validate(config);
+		assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
+		assertEquals("DefaultValidator no informa del tipo de error", Validator.Status.ERROR_UNSUPPORTED_CRAWL_VERSION,
+				result.getFirstErrorCode());
+		assertEquals("DefaultValidator no informa del que el error es el valor 1.4", "1.4",
+				result.getFirstErrorValue());
+	}
 
 	/**
 	 * Detects if a bad formed configuration file, dont pass the validation the
-	 * error is a bad seed 
+	 * error is a bad seed
 	 */
-    @Test
-    public void detectUnsupportedSeedsCrawl() throws URISyntaxException {
-        CrawlConfiguration config;
-        config = readConfiguration("conf-erroresNutchSeeds.yml");
-        Validator validator = new CrawlSeedsValidator();
-        ValidationResult result = validator.validate(config);
-        assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
-        assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.Status.ERROR_UNSUPPORTED_CRAWL_SEEDS, result.getFirstErrorCode());
-    }
+	@Test
+	public void detectUnsupportedSeedsCrawl() throws URISyntaxException {
+		CrawlConfiguration config;
+		config = readConfiguration("conf-erroresNutchSeeds.yml");
+		Validator validator = new CrawlSeedsValidator();
+		ValidationResult result = validator.validate(config);
+		assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
+		assertEquals("DefaultValidator no informa del tipo de error", Validator.Status.ERROR_UNSUPPORTED_CRAWL_SEEDS,
+				result.getFirstErrorCode());
+	}
 
-	/**
-	 * Detects if a bad formed configuration file, dont pass the validation
-	 * The plugin has no xml file
-	 */
-    @Test
-    public void detectUnsupportedplugCrawl() throws URISyntaxException {
-        CrawlConfiguration config;
-        config = readConfiguration("conf-erroresNutchPlugins.yml");
-        Validator validator = new CrawlPluginsValidator();
-        ValidationResult result = validator.validate(config);
-        assertFalse("DefaultValidator no informa que es una mala configuración", result.isOk());
-        assertEquals("DefaultValidator no informa del tipo de error",
-                Validator.Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, result.getFirstErrorCode());
-    }
 
 	/**
 	 * Detects if a well form configuration file, creates the building files
 	 */
-    @Test
+	@Test
 	public void builder() throws URISyntaxException, IOException {
-		String id="usuarioId_CrawlId";
-		AdapterBuilder builder= ctx.getBean(AdapterBuilder.class);
+		String id = "usuarioId_CrawlId";
+		AdapterBuilder builder = ctx.getBean(AdapterBuilder.class);
 		builder.createConfigurationFiles(readConfiguration("conf.yml"), id);
-		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id, "Dockerfile"));
-		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id, "nutch-site.xml"));
-		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id, "juntarSalidas.sh"));
-		assertEquals("DefaultValidator no informa del tipo de error",
-				true, checkFileExists(id, "run.sh"));
+		assertEquals("DefaultValidator no informa del tipo de error", true, checkFileExists(id, "Dockerfile"));
+		assertEquals("DefaultValidator no informa del tipo de error", true, checkFileExists(id, "nutch-site.xml"));
+		assertEquals("DefaultValidator no informa del tipo de error", true, checkFileExists(id, "juntarSalidas.sh"));
+		assertEquals("DefaultValidator no informa del tipo de error", true, checkFileExists(id, "run.sh"));
 	}
 
-    public CrawlConfiguration readConfiguration(String route)  {
-        return YamlConfigRunner.read(ctx.getResource(baseDir + route));
-    }
+	public CrawlConfiguration readConfiguration(String route) {
+		CrawlConfiguration config = YamlConfigRunner.read(ctx.getResource(baseDir + route));
+		//Add plugins
+		try {
+			config.getCrawlSystem().setPlugins(readPlugins("plugins",config));
+		} catch (IOException e) {
+			// There is no plugins to add
+		}
+		return config;
+	}
 
-    private boolean checkFileExists(String parent, String child) {
-        return new File(parent, child).exists();
-    }
+	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
+		// List of plugins, each plugins is alist of its files
+
+		ArrayList<Plugin> pluginsToAdd= new ArrayList<Plugin>();
+		
+		Resource directory = ctx.getResource(baseDir + route);
+		File directoryFile = directory.getFile();
+		File[] plugins = directoryFile.listFiles();
+
+		for (File plugin : plugins) {
+			// New Plugin to add
+			Plugin  PluginNew= new Plugin();
+			PluginNew.setName(plugin.getName());
+			// Its files
+			ArrayList<File> pluginsFilesNew = new ArrayList<File>();
+			File[] pluginsFiles = plugin.listFiles();
+			for (File file : pluginsFiles) {
+				pluginsFilesNew.add(file);
+			}
+			// Add files
+			PluginNew.setFiles(pluginsFilesNew);
+		}
+		return pluginsToAdd;
+	}
+
+	private boolean checkFileExists(String parent, String child) {
+		return new File(parent, child).exists();
+	}
 }

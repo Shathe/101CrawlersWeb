@@ -6,7 +6,7 @@ package es.unizar.iaaa.crawler.butler.model;
 
 import static java.lang.String.format;
 
-public final class DockerOS {
+public class DockerOS {
     private String name;
     private String version;
 

@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
+import es.unizar.iaaa.crawler.butler.model.Plugin;
 
 /**
  * Validates if the plugins part is well formed in this case it's well formed if
@@ -17,25 +18,31 @@ public class CrawlPluginsValidator implements Validator {
 
     @Override
     public ValidationResult validate(CrawlConfiguration config) {
+    	List<Plugin> plugins = config.getCrawlSystem().getPlugins();
 
-        // For each plugin
-        for (int i = 0; config.getCrawlSystem().getPlugins() != null && !config.getCrawlSystem().getPlugins().isEmpty()
-                && i < config.getCrawlSystem().getPlugins().size(); i++) {
-            // Structure: nombre file.xml (file.jar)+
-            List<String> all = config.getCrawlSystem().getPlugins().get(i);
-            String plugin = all.get(0);
-            // Check whether the files exists
-
-            if (!new File(all.get(1)).exists()) {
-                return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all.get(1));
-            }
-            for (int siguiente = 2; siguiente < all.size(); siguiente++) {
-                if (!new File(all.get(siguiente)).exists()) {
-                    return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, all.get(siguiente));
-                }
-            }
-
+        for (int i = 0; plugins != null && !plugins.isEmpty()
+                && i < plugins.size(); i++) {
+        	//For each plugin
+        	Plugin nextPlugin=plugins.get(i);
+        	String plugin = nextPlugin.getName();
+        	List<File> files= nextPlugin.getFiles();
+        	boolean xml=false;
+        	boolean jar=false;
+            // Check whether the files plugins are jar files and there's a plugin.xml
+        	for (int j = 0; files != null && !files.isEmpty()
+                    && j < files.size(); j++) {
+        		if(files.get(j).getName().contains(".xml"))xml=true;
+        		if(files.get(j).getName().contains(".jar"))jar=true;
+        	}
+        	if(!(xml && jar)){
+        		//bad plugin
+                return new LatestValidationResult(Status.ERROR_UNSUPPORTED_CRAWL_PLUGINS, plugin);
+        	}
         }
+    	
         return new LatestValidationResult();
     }
+    
+
+    
 }

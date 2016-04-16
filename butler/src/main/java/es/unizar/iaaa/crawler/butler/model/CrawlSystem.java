@@ -8,13 +8,13 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-public final class CrawlSystem {
+public  class CrawlSystem {
     private String name;
     private String version;
     private List<String> seeds;
+    private List<Plugin> plugins;
     private String rounds;
     private String extraction;
-    private List<List<String>> plugins;
     private String infoCrawled;
     private String maxFileLength;
     private String maxCrawlDelay;
@@ -64,14 +64,6 @@ public final class CrawlSystem {
         this.rounds = rounds;
     }
 
-    public List<List<String>> getPlugins() {
-        return plugins;
-    }
-
-    public void setPlugins(List<List<String>> plugins) {
-        this.plugins = plugins;
-    }
-
     public String getInfoCrawled() {
         return infoCrawled;
     }
@@ -119,12 +111,20 @@ public final class CrawlSystem {
     public void setTimeouts(Timeouts timeouts) {
         this.timeouts = timeouts;
     }
+    
 
-    @Override
+    public List<Plugin> getPlugins() {
+		return plugins;
+	}
+
+	public void setPlugins(List<Plugin> plugins) {
+		this.plugins = plugins;
+	}
+
+	@Override
     public String toString() {
         return format("Crawler system: %s version %s\n", getName(), getVersion()) +
                 format("	Seeds: %s\n", seeds) +
-                format("	Plugins: %s\n", plugins) +
                 format("	Links limit for URL: %s\n", linksLimitURL) +
                 format("	format of the info Crawled: %s\n", infoCrawled) +
                 format("	Number of rounds: %s\n", rounds) +
