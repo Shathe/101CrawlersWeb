@@ -4,15 +4,13 @@
 
 package dataBase;
 
-import java.util.Date;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import models.Configuration;
+import java.util.Date;
+import java.util.List;
+
 import models.ContainerDocker;
-import models.ImageDocker;
-import models.Project;
 
 /**
  * Docker database operations
@@ -60,7 +58,7 @@ public class ContainerDockerDatabase {
 	/**
 	 * Deletes a containers
 	 * 
-	 * @param project
+	 * @param container
 	 * @return
 	 */
 	public int deleteContainer(ContainerDocker container) {
@@ -70,7 +68,7 @@ public class ContainerDockerDatabase {
 	/**
 	 * Updates a containers
 	 * 
-	 * @param project
+	 * @param container
 	 * @return
 	 */
 	public int updateContainer(ContainerDocker container) {
@@ -81,7 +79,7 @@ public class ContainerDockerDatabase {
 	/**
 	 * Creates a new containers
 	 * 
-	 * @param project
+	 * @param container
 	 * @return
 	 */
 	public int createContainer(ContainerDocker container) {

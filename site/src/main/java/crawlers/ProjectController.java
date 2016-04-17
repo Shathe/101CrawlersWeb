@@ -54,7 +54,7 @@ public class ProjectController {
 			throw new InternalError("Error listing projects: "+a.getMessage());
 		}
 
-		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
+		return new ResponseEntity<>(projects, HttpStatus.OK);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ProjectController {
 			throw new InternalError("Error deleting: "+a.getMessage());
 		}
 
-		return new ResponseEntity<Project>(project, HttpStatus.OK);
+		return new ResponseEntity<>(project, HttpStatus.OK);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class ProjectController {
 			throw new InternalError("Error updating: "+a.getMessage());
 		}
 
-		return new ResponseEntity<Project>(project, HttpStatus.OK);
+		return new ResponseEntity<>(project, HttpStatus.OK);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class ProjectController {
 			throw new InternalError("Error creating: "+a.getMessage());
 		}
 
-		return new ResponseEntity<Project>(project, HttpStatus.OK);
+		return new ResponseEntity<>(project, HttpStatus.OK);
 	}
 
 }

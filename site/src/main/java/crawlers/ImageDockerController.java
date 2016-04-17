@@ -56,7 +56,7 @@ public class ImageDockerController {
 			throw new InternalError("Error listing images: "+a.getMessage());
 		}
 
-		return new ResponseEntity<List<ImageDocker>>(images, HttpStatus.OK);
+		return new ResponseEntity<>(images, HttpStatus.OK);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ImageDockerController {
 			throw new InternalError("Error deleting: "+a.getMessage());
 		}
 
-		return new ResponseEntity<ImageDocker>(image, HttpStatus.OK);
+		return new ResponseEntity<>(image, HttpStatus.OK);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ImageDockerController {
 			throw new InternalError("Error updating: "+a.getMessage());
 		}
 
-		return new ResponseEntity<ImageDocker>(image, HttpStatus.OK);
+		return new ResponseEntity<>(image, HttpStatus.OK);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class ImageDockerController {
 			throw new InternalError("Error creating: "+a.getMessage());
 		}
 
-		return new ResponseEntity<ImageDocker>(image, HttpStatus.OK);
+		return new ResponseEntity<>(image, HttpStatus.OK);
 	}
 
 }

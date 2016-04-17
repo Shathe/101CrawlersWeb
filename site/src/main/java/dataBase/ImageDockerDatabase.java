@@ -4,14 +4,13 @@
 
 package dataBase;
 
-import java.util.Date;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import models.Configuration;
+import java.util.Date;
+import java.util.List;
+
 import models.ImageDocker;
-import models.Project;
 
 /**
  * Image database operations
@@ -43,7 +42,7 @@ public class ImageDockerDatabase {
 	/**
 	 * Deletes all the images of a project
 	 * 
-	 * @param project
+	 * @param idProject
 	 * @return
 	 */
 	public int deleteImagesOfAProject(String idProject) {
@@ -53,7 +52,7 @@ public class ImageDockerDatabase {
 	/**
 	 * Deletes a image
 	 * 
-	 * @param project
+	 * @param image
 	 * @return
 	 */
 	public int deleteImage(ImageDocker image) {
@@ -63,7 +62,7 @@ public class ImageDockerDatabase {
 	/**
 	 * Updates a image
 	 * 
-	 * @param project
+	 * @param image
 	 * @return
 	 */
 	public int updateImage(ImageDocker image) {
@@ -74,7 +73,7 @@ public class ImageDockerDatabase {
 	/**
 	 * Creates a new project
 	 * 
-	 * @param project
+	 * @param image
 	 * @return
 	 */
 	public int createImage(ImageDocker image) {

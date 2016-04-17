@@ -55,7 +55,7 @@ public class ContainerDockerController {
 			throw new InternalError("Error listing containers: " + a.getMessage());
 		}
 
-		return new ResponseEntity<List<ContainerDocker>>(containers, HttpStatus.OK);
+		return new ResponseEntity<>(containers, HttpStatus.OK);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ContainerDockerController {
 			throw new InternalError("Error deleting: " + a.getMessage());
 		}
 
-		return new ResponseEntity<ContainerDocker>(container, HttpStatus.OK);
+		return new ResponseEntity<>(container, HttpStatus.OK);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ContainerDockerController {
 			throw new InternalError("Error updating: " + a.getMessage());
 		}
 
-		return new ResponseEntity<ContainerDocker>(container, HttpStatus.OK);
+		return new ResponseEntity<>(container, HttpStatus.OK);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class ContainerDockerController {
 			throw new InternalError("Error creating: " + a.getMessage());
 		}
 
-		return new ResponseEntity<ContainerDocker>(container, HttpStatus.OK);
+		return new ResponseEntity<>(container, HttpStatus.OK);
 	}
 
 }

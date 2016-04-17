@@ -22,8 +22,6 @@ import java.util.List;
 
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import es.unizar.iaaa.crawler.butler.model.Plugin;
-import es.unizar.iaaa.crawler.butler.validator.LatestValidationResult;
-import es.unizar.iaaa.crawler.butler.validator.Validator.Status;
 
 /**
  * Builds the nutch system. Creates every file needed and writes in the dockerfile every command
@@ -34,8 +32,7 @@ public class NutchBuilder implements CrawlerBuilder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerBuilder.class);
 
     public void addDockerfile(CrawlConfiguration configuration, String directoryName, PrintWriter pw) throws IOException {
-        /* Download and preapare folder for nutch */
-        /* Descarga y preparación de carpetas para nutch */
+        /* Download and prepare folder for nutch */
         pw.println("RUN svn checkout http://svn.apache.org/repos/asf/nutch/branches/branch-"
                 + configuration.getCrawlSystem().getVersion() + "/ nutch_source && cd nutch_source && ant");
         pw.println("RUN ln -s nutch_source/runtime/local $HOME/crawler");
@@ -47,25 +44,17 @@ public class NutchBuilder implements CrawlerBuilder {
         pw.println("Run mkdir crawler/micrawl/linkbd");
         pw.println("Run mkdir crawler/micrawl/crawlbd");
 
-        // TODO Use // for comments wihtin methods
-		/* Add seeds */
-		/* Añade las seeds */
+        // Add seeds
         for (int i = 0; i < configuration.getCrawlSystem().getSeeds().size(); i++) {
             pw.println("RUN echo " + configuration.getCrawlSystem().getSeeds().get(i) + " >> crawler/urls/seeds.txt");
         }
 
-		/* Add docker files */
-		/* Añade los ficheros a docker creados */
+        // Add docker files
         pw.println("ADD juntarSalidas.sh crawler/juntarSalidas.sh");
         pw.println("ADD run.sh crawler/run.sh");
 
-		/*
-		 * Put nutch-site file to its folder and then for each plugin, create
-		 * its folder with its name and put there its jars and xml file Pasar el
-		 * fichero nutch-site a su carpeta correspondiente y después por cada
-		 * plugin, crear su carpeta con su nombre, pasar allí sus jar y su
-		 * plugin.xml con ese nombre
-		 */
+        // Put nutch-site file to its folder and then for each plugin, create
+        // its folder with its name and put there its jars and xml file,
         pw.println("ADD nutch-site.xml crawler/conf/nutch-site.xml");
         pw.println();
         configurePlugins(configuration, directoryName, pw);

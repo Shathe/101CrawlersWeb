@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.stereotype.Component;
 
@@ -73,22 +72,25 @@ public class Operations implements CommandMarker {
 			config.setCrawlSystem(Cs);
 
 		} catch (IOException e) {
-			// There is no plugins to add
+			LOGGER.error("There is no plugins to add", e);
 		}
 		
 		return config;
 	}
 
+	// FIXME: route and config are not used.
 	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
 		// List of plugins, each plugins is alist of its files
 
-		ArrayList<Plugin> pluginsToAdd= new ArrayList<Plugin>();
+		ArrayList<Plugin> pluginsToAdd= new ArrayList<>();
 		File a= new File("plugins");
 		/*
 		Resource directory = ctx.getResource("classpath:./" + route);
 	 	File directoryFile = directory.getFile();
 	 	This does not work, what it is implementes, yes
 	 	*/
+
+        // FIXME Files.listFiles may return null if File is not a directory
 		File[] plugins = a.listFiles();
 
 		for (File plugin : plugins) {
@@ -96,7 +98,8 @@ public class Operations implements CommandMarker {
 			Plugin  PluginNew= new Plugin();
 			PluginNew.setName(plugin.getName());
 			// Its files
-			ArrayList<File> pluginsFilesNew = new ArrayList<File>();
+			ArrayList<File> pluginsFilesNew = new ArrayList<>();
+            // FIXME Files.listFiles may return null if File is not a directory
 			File[] pluginsFiles = plugin.listFiles();
 			for (File file : pluginsFiles) {
 				pluginsFilesNew.add(file);
