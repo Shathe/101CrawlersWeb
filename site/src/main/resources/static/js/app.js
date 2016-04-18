@@ -11,21 +11,23 @@
 	    this.imageSelected={};
 	    this.containerSelected={};
 	    this.formerName="";
+	    $scope.pluginEdited=false;
+	    $scope.dslEdited=false;
 	    /*
-	     * GENERAL
-	     */
+		 * GENERAL
+		 */
 	    /** Sets tab value */
 	    this.selectedTab = function(tab){
 		      this.tab=tab;
 		    };
-		    /**Returns true if the checktab is the same as tab */
+		    /** Returns true if the checktab is the same as tab */
 		    this.isSelected = function(checkTab){
 		      return this.tab === checkTab;
 		    };
 	    this.selectedListProjects = function(tab){
 	    	this.ListProjects=tab;
 		    };
-		    /**Returns true if the checktab is the same as tab */
+		    /** Returns true if the checktab is the same as tab */
 
 	    /** Gives value to the user variable */  
 	    this.setUser = function(){
@@ -57,18 +59,97 @@
 
 	    	return this.ListProjects==4 && this.isSelected(1) ;
 	    }
+	    /**
+	     * Deletes the  configurations files from the server
+	     */
+	    this.resetUpload= function (){
+	    	 $.post('/resetUploadConfig',{idUser: getCookie("idUser")})
+	    	    .done(function(data, status) {
+		    	      uploadMessage("Reseted",0);
+		    		    $scope.pluginEdited=false;
+		    		    $scope.dslEdited=false;
+
+	    	    })
+	    	    .fail(function(data, status) {
+	    	      console.log(data);	    	        	
+  	        	uploadMessage("Could not reset",1);
+
+	  				    	      
+	    	    });
+	    }
+
+	    /**
+	     * uploads the files of a plugin 
+	     */
+	    this.uploadPlugin= function (){
+	    	// The plugin must have a name
+	    	if( document.getElementById("pluginName").value==""){
+	    		 uploadMessage ("Please, set the plugin name",1);
+	    	}else{
+	    	 var formData = new FormData($("#pluginForm")[0]);
+	    	    $.ajax({
+	    	        url: '/pluginForm',
+	    	        type: 'POST',
+	    	        data: formData,
+	    	        async: true,
+	    	        success: function (data) {
+	    	        	uploadMessage(document.getElementById("pluginName").value+" uploaded, you can add more",0);
+	    	        	$scope.pluginEdited=true;
+	    	        	document.getElementById("pluginName").value="";
+	    	        	document.getElementById("plugin").value="";
+	    	        },
+	    	        error: function (data) {
+	    	        	uploadMessage("Plugin not uploaded, try again",1);
+	    	        },
+	    	        cache: false,
+	    	        contentType: false,
+	    	        processData: false
+	    	    });
+
+	    	    return false;
+	    	}
+			 
+	    }
 	    
-	    
+	    /**
+	     * Uploads the DSL file to the server
+	     */
+	    this.uploadDSL= function (){
+	    	console.log('entr');
+
+	    	 var formData = new FormData($("#dslForm")[0]);
+
+	    	    $.ajax({
+	    	        url: '/uploadDSL',
+	    	        type: 'POST',
+	    	        data: formData,
+	    	        async: true,
+	    	        success: function (data) {
+	    	        	uploadMessage("DSL uploaded",0);
+	    	        	document.getElementById("plugin").value="";
+	    	        	$scope.dslEdited=true;
+	    	        }, 
+	    	        error: function (data) {
+	    	        	uploadMessage("DSL not uploaded, try again",1);
+	    	        },
+	    	        cache: false,
+	    	        contentType: false,
+	    	        processData: false
+	    	    });
+
+	    	    return false;
+			 
+	    }
 
 	    /*
-	     * PROJECS
-	     */
+		 * PROJECS
+		 */
 	    
-	    /** Gets the projects of a user  */
+	    /** Gets the projects of a user */
 	    this.ProjectsOfUser = function (){
 	        $.get('/projects',{ idUser: getCookie("idUser")})
 	        .done(function(data, status) {
-	        //Gets both in the variable and the scope the projects
+	        // Gets both in the variable and the scope the projects
 			    console.log(data);
 		        this.projects=data;
 	            $scope.projects=data;
@@ -78,29 +159,46 @@
 	          console.log(data);
 	        });
 	      };
-	      /** Creates a project and shows the new projects if it has been really created */
+	      /**
+			 * Creates a project and shows the new projects if it has been
+			 * really created
+			 */
 	      this.createProject = function() {
-
-	    	  $.post('/createProject',{ idUser: getCookie("idUser"),
-    			  name: document.getElementById("projectName").value})
-    	    .done(function(data, status) {
-    	    	console.log(data);
-    			$scope.projects.push(data);
-	  	        $scope.$apply();
-    		    this.projectSelected=data;
-	        	$('#edit').modal('toggle');
-	        	//Creates tit configuration
-		    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id,
-			    	  dslPath: document.getElementById("projectDSLPath").value,
-					  pluginsPath: document.getElementById("projectPluginsPath").value})
+	    	  // The project must have a dsl file
+	    	  if($scope.dslEdited==true){
+		    	  $.post('/createProject',{ idUser: getCookie("idUser"),
+	    			  name: document.getElementById("projectName").value})
 	    	    .done(function(data, status) {
 	    	    	console.log(data);
+	    			$scope.projects.push(data);
+		  	        $scope.$apply();
+	    		    this.projectSelected=data;
+		        	// Creates it configuration
+			    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id})
+		    	    .done(function(data, status) {
+		    	    	console.log(data);
+		    	    	// Once you upload the files, you must save them
+		    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
+		    	    		idProject:data.idProject,idConfig:data.id })
+			    	    .done(function(data, status) {
+			    	    	console.log(data);
+				        	$('#edit').modal('toggle');
+
+		    	    })
+		    	    .fail(function(data, status) {
+		    	      console.log(data);	  			
+		    	      alert('Not possible to connect to the server');
+		    	      
+		    	    });
 	    	    })
 	    	    .fail(function(data, status) {
 	    	      console.log(data);	  			
 	    	      alert('Not possible to connect to the server');
 	    	      
 	    	    });
+    	    }else{
+  			  uploadMessage ("upload the dsl, please",1);
+    	    }
 
     	    })
     	    .fail(function(data, status) {
@@ -111,16 +209,14 @@
 	    	  console.log(this.projectSelected);
 	    	  console.log(this.projectSelected.id);
 
-	    	  
-	    	  
-	    	  
-
 	      }
-	      /* La diferencia entre $scope y this. es que con scope
-	         se necesita hacer el scope.apply y es mejor para actaulizar cosas visuales
-	         como por ejemplo despues de hacer una peticion http
-	      	 en cambio si quieres ligar valores para utilizarlos es mejor el this.
-	       	aqui muestro un ejemplo de como se podría hacer con ambas */
+	      /*
+			 * La diferencia entre $scope y this. es que con scope se necesita
+			 * hacer el scope.apply y es mejor para actaulizar cosas visuales
+			 * como por ejemplo despues de hacer una peticion http en cambio si
+			 * quieres ligar valores para utilizarlos es mejor el this. aqui
+			 * muestro un ejemplo de como se podría hacer con ambas
+			 */
 	      
 	      /** Goes to a project (visually) */
 
@@ -129,7 +225,10 @@
 	    	  this.ImagesOfaProject();
 	    	  
 	      }
-	      /** Deletes a project and shows visually if it has been really deleted */
+	      /**
+			 * Deletes a project and shows visually if it has been really
+			 * deleted
+			 */
 
 	      this.deleteProject = function(project) {
 	        	  $.ajax({
@@ -155,15 +254,19 @@
 		    		  });
 		    	 
 	      }
-	      /** Edits a project and shows the new projects if it has been really edited */
+	      /**
+			 * Edits a project and shows the new projects if it has been really
+			 * edited
+			 */
 
 	      this.editProject = function(project) {
+	    	 
 	    	  if(jQuery.isEmptyObject(project)){
-	    		  //If the edits really means create
+	    		  // If the edits really means create
 	    		  this.createProject();	    	  
 	    		 }
 	    	  else{
-	    		  //Gets former values
+	    		  // Gets former values
  
 	    	  project.name=document.getElementById("projectName").value;
 	    	  console.log(project);
@@ -174,26 +277,44 @@
 	    		  url: "/editProject",
 	    		  data:JSON.stringify(project),
 	    		  success : function(data) {
-	    			  if( $scope.formerDSL.localeCompare(document.getElementById("projectDSLPath").value)!=0
-	    					  ||  $scope.formerPlugin.localeCompare(document.getElementById("projectPluginsPath").value)!=0){
-	    				  	    			  //now create the configuration 
-	    			 $.post('/createConfiguration',{ idProject: project.id,
-	    		    	  dslPath: document.getElementById("projectDSLPath").value,
-	    				  pluginsPath: document.getElementById("projectPluginsPath").value})
+	    			  
+	    			  if( $scope.dslEdited==true){
+	    			// If there's something to edit in the configuration, you create a new one
+	    			 $.post('/createConfiguration',{ idProject: project.id})
 	    	    	    .done(function(data, status) {
 	    	    	    	console.log(data);
-	    		        	$('#edit').modal('toggle');
+	    		    	  
+			    	    	// Once you upload the files, you must save them
+	    	    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
+	    	    	    		idProject:data.idProject,idConfig:data.id })
+	    		    	    .done(function(data, status) {
+	    		    	    	console.log(data);
+	    		    	    	$scope.pluginEdited=false;
+	  	    		    	    $scope.dslEdited=false;
+	    			        	$('#edit').modal('toggle');
 
+	    		    	    })
+	    		    	    .fail(function(data, status) {
+	    		    	      console.log(data);	  			
+	    		    	      alert('Not possible to connect to the server');
+	    		    	      
+	    		    	    });
 	    	    	    })
 	    	    	    .fail(function(data, status) {
 	    	    	      console.log(data);	  			
 	    	    	      alert('Not possible to connect to the server');
 	    	    	      
 	    	    	    });
+	    			 // If there are plugins uploaded but there is not dsl upload
+	    		  }else if($scope.pluginEdited==true  && $scope.dslEdited==false){
+	    			  uploadMessage ("upload the dsl, please or reset it",1);
 	    		  }
+	    		else{
+  			        	$('#edit').modal('toggle');
+	    			  }
 	  			},
 	  			error : function(e) {
-		    		  //If there's an error reset former values
+		    		  // If there's an error reset former values
 	  				project.name=this.formerName;
 	  				alert('Not possible to connect to the server');
 	  			},
@@ -206,41 +327,30 @@
 		  /** Resets Project Modal values */
 	      this.vaciarCamposEditModal = function(){
 	    	  document.getElementById("projectName").value="";
-	    	  document.getElementById("projectDSLPath").value="";
-	    	  document.getElementById("projectPluginsPath").value="";
-	      }
+	    	  document.getElementById("idUserDSL").value=getCookie("idUser");
+	    	  document.getElementById("idUserPlugin").value=getCookie("idUser");
+	    	  document.getElementById("pluginName").value="";
+	    	  emptyUploadMessage();
+	    	}
 		  /** Edits Project Modal values */
 	      this.setCamposEditModal= function(project){
 	    	  this.formerName=project.name; 
-
+	    	  document.getElementById("idUserDSL").value=getCookie("idUser");
+	    	  document.getElementById("idUserPlugin").value=getCookie("idUser");
 	    	  document.getElementById("projectName").value=project.name;
-	    	  //get configuration
-		        $.get('/configuration',{ idProject: project.id})
-		        .done(function(data, status) {
-		        //Gets both in the variable and the scope the projects
-		          console.log(data);
-		    	  document.getElementById("projectDSLPath").value=data.dslPath;
-		    	  document.getElementById("projectPluginsPath").value=data.pluginsPath;
-		    	  $scope.formerDSL=data.dslPath; 
-		    	  $scope.formerPlugin=data.pluginsPath;
-		        })
-		        .fail(function(data, status) {
-		        	document.getElementById("projectDSLPath").placeholder="Not possible to connect to the server";
-			    	document.getElementById("projectPluginsPath").placeholder="Not possible to connect to the server";
-
-		          console.log(data);
-		        });
-	    	  /**/
+	    	  document.getElementById("pluginName").value="";
+	    	  emptyUploadMessage();
+	    	  
 	      }
 
   
   
 
-  /*
-   * IMAGES
-   */
+	 /*
+	 * IMAGES
+	 */
   
-  /** Gets the images of a project  */
+  /** Gets the images of a project */
   this.ImagesOfaProject = function (){
       $.get('/images',{ idProject: this.projectSelected.id})
       .done(function(data, status) {
@@ -274,11 +384,13 @@
   	  
 
     }
-    /* La diferencia entre $scope y this. es que con scope
-       se necesita hacer el scope.apply y es mejor para actaulizar cosas visuales
-       como por ejemplo despues de hacer una peticion http
-    	 en cambio si quieres ligar valores para utilizarlos es mejor el this.
-     	aqui muestro un ejemplo de como se podría hacer con ambas */
+    /*
+	 * La diferencia entre $scope y this. es que con scope se necesita hacer el
+	 * scope.apply y es mejor para actaulizar cosas visuales como por ejemplo
+	 * despues de hacer una peticion http en cambio si quieres ligar valores
+	 * para utilizarlos es mejor el this. aqui muestro un ejemplo de como se
+	 * podría hacer con ambas
+	 */
     
     /** Goes to a image (visually) */
 
@@ -316,11 +428,11 @@
 
     this.editImage = function(image) {
   	  if(jQuery.isEmptyObject(image)){
-  		  //If the edits really means create
+  		  // If the edits really means create
   		  this.createImage();	    	  
   		 }
   	  else{
-  		  //Gets former values
+  		  // Gets former values
 
   	  image.name=document.getElementById("imageName").value;
   	  console.log(image);
@@ -335,7 +447,7 @@
 
   		  },
 			error : function(e) {
-	    		  //If there's an error reset former values
+	    		  // If there's an error reset former values
 				image.name=this.formerName;
 				alert('Not possible to connect to the server');
 			},
@@ -362,10 +474,10 @@
 
 
     /*
-     * CONTAINERS
-     */
+	 * CONTAINERS
+	 */
     
-    /** Gets the containers of a image  */
+    /** Gets the containers of a image */
     this.containersOfAImage = function (){
         $.get('/containers',{ idImage: this.imageSelected.id})
         .done(function(data, status) {
@@ -378,7 +490,10 @@
         });
       };
       
-      /** Creates a Container and shows the new container if it has been really created */
+      /**
+		 * Creates a Container and shows the new container if it has been really
+		 * created
+		 */
       this.createContainer = function() {
 
     	  $.post('/createContainer',{ idProject: this.projectSelected.id,
@@ -432,15 +547,18 @@
   	    		  });
   	    	 
       }
-      /** Edits a Container and shows the new image if it has been really edited */
+      /**
+		 * Edits a Container and shows the new image if it has been really
+		 * edited
+		 */
 
       this.editContainer = function(container) {
     	  if(jQuery.isEmptyObject(container)){
-    		  //If the edits really means create
+    		  // If the edits really means create
     		  this.createContainer();	    	  
     		 }
     	  else{
-    		  //Gets former values
+    		  // Gets former values
 
     	  container.name=document.getElementById("containerName").value;
     	  console.log(container);
@@ -455,7 +573,7 @@
 
     		  },
   			error : function(e) {
-  	    		  //If there's an error reset former values
+  	    		  // If there's an error reset former values
   				container.name=this.formerName;
   				alert('Not possible to connect to the server');
   			},
@@ -482,8 +600,8 @@
 
   
   /*
-   * REGISTER AND LOGIN
-   */
+	 * REGISTER AND LOGIN
+	 */
   app.controller('RegistroLoginCtrl',['$scope', '$http','$log',function($scope, $http,$log){
     this.user=document.getElementById("usernameLogin").value;
     this.email=document.getElementById("emailRegister").value;
@@ -506,12 +624,12 @@
     
     this.comprobarCamposRegistro = function (valido){
       if (valido){
-    	  //if fileds are valid
+    	  // if fileds are valid
         if (this.repeatPswd==this.password){
-          //if password ok
+          // if password ok
           $.post('/registro',{ user: this.user, pass: this.password, email: this.email})
           .done(function(data, status) {
-            //Registered
+            // Registered
             document.getElementById("usernameLogin").value=document.getElementById("usernameRegister").value;
             document.getElementById("passwordLogin").value=document.getElementById("passwordRegister").value;
             $('#login-form-link').click();
@@ -626,6 +744,7 @@
  */
 
 $(function() {
+	
   // Default values
   document.getElementById("rememberMe").checked=true;
   /* Se intentan recuperar las cookies */
@@ -657,6 +776,10 @@ $(function() {
 
 	});
 
+
+
+
+
 });
 /** Logs in a user if the data is OK */
 function loginUser(username, pass) {
@@ -677,7 +800,7 @@ function loginUser(username, pass) {
         deleteCookie("usuario");
         deleteCookie("password");
       }
-      //Sets id user 
+      // Sets id user
       setCookie("idUser", data, 30);
 
 
@@ -699,7 +822,8 @@ function loginUser(username, pass) {
     });
 
 }
-// Sets a cookie 
+
+// Sets a cookie
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -708,7 +832,7 @@ function setCookie(cname, cvalue, exdays) {
     console.log(cname + "=" + cvalue + "; " + expires);
 }
 
-// Get a cookie 
+// Get a cookie
 function getCookie(cname) {
   console.log( document.cookie);
     var name = cname + "=";
@@ -721,8 +845,23 @@ function getCookie(cname) {
     console.log("Cookie not found");
     return "";
 }
-//Delete cookie
+function uploadMessage (message,error){
+	if(error){
+		   document.getElementById('messageUpload').innerHTML="<h4   style=\"text-align:center;\" class=\"bg-warning\"><br/><p>"+message+"<p/><br/></h4>";
+	}else{
+		   document.getElementById('messageUpload').innerHTML="<h4 style=\"text-align:center;\" class=\"bg-success\"> <br/><p>"+message+"<p/><br/></h4>";
+	}
+	   
+}
+function emptyUploadMessage (){
+	   document.getElementById('messageUpload').innerHTML="";
+		   
+	   
+}
+
+// Delete cookie
 var deleteCookie = function(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
+
 

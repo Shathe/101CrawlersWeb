@@ -45,7 +45,7 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate
 				.execute("CREATE TABLE projectCrawlers(" + "id SERIAL, idUser long, name VARCHAR(100), date DATETIME)");
 		jdbcTemplate.execute(
-				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long,  dslPath VARCHAR(200),pluginsPath  VARCHAR(200))");
+				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long)");
 
 		jdbcTemplate.execute(
 				"CREATE TABLE imageCrawlers(id SERIAL, idProject long, idConfiguration long, name VARCHAR(100), date DATETIME)");
@@ -53,10 +53,7 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.execute(
 				"CREATE TABLE containerCrawlers(" + "id SERIAL, idProject long,idImage long, name VARCHAR(100), date DATETIME)");
 
-		jdbcTemplate.execute("CREATE TABLE pluginsCrawlers(id SERIAL, idProject long, idConfiguration long)");
 
-		jdbcTemplate.execute("CREATE TABLE jarsCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
-		jdbcTemplate.execute("CREATE TABLE xmlCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 
 		CommonOps ops= new CommonOps();
 		// Inserts
@@ -66,10 +63,7 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.update("insert into projectCrawlers (idUser,name,date) values (?,?,?)", "1", "First project",
 				new Date(System.currentTimeMillis()));
 
-		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)", "Vieja",
-				"C://RutaLarga/lolo/jeje/plugins", 1);
-		jdbcTemplate.update("insert into configurationCrawlers (dslPath,pluginsPath,idProject) values (?,?,?)", "Nueva",
-				"C://RutaLarga/lolo/jeje/plugins", 1);
+		jdbcTemplate.update("insert into configurationCrawlers (idProject) values (?)", 1);
 		jdbcTemplate.update("insert into imageCrawlers (idProject,idConfiguration,name,date) values (?,?,?,?)", 1, 1,
 				"Image :D First", new Date(System.currentTimeMillis()));
 

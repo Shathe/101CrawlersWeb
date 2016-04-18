@@ -24,9 +24,7 @@ public final class ConfigurationMapper implements RowMapper<Configuration> {
 	public Configuration mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Configuration configuration = new Configuration();
 		configuration.setId(rs.getLong("id"));
-		configuration.setDslPath(rs.getString("dslPath"));
 		configuration.setIdProject(rs.getString("idProject"));
-		configuration.setPluginsPath(rs.getString("PluginsPath"));
 		return configuration;
 	}
 }        

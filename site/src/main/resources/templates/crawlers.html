@@ -1,65 +1,63 @@
 <div class="Projectcontainer">
-    <div class="row">
+	<div class="row">
 
 
-        <div
-                class="col-md-10 col-md-offset-1 col-xs-10 col-xs-offset-1
+		<div
+			class="col-md-10 col-md-offset-1 col-xs-10 col-xs-offset-1
   col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-            <div class="table-responsive">
-                <h2>
-                    <b> My projects </b>
-                    <small>
-                        <button data-toggle="modal" data-target="#edit" class="btn btn-info"
-                                style="background-color: #0288D1; float: right;"
-                                ng-click="container.projectSelected={}; container.vaciarCamposEditModal();">
-                            New
-                            project
-                        </button>
-                    </small>
-                </h2>
-                <table id="projectTable" class="table  table-striped">
+			<div class="table-responsive">
+				<h2>
+					<b> My projects </b> <small>
+						<button data-toggle="modal" data-target="#edit"
+							class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.projectSelected={}; container.vaciarCamposEditModal();">
+							New project</button>
+					</small>
+				</h2>
+				<table id="projectTable" class="table  table-striped">
 
-                    <thead>
-                    <tr>
-                    <th>Name</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
 
-                    <tr id="project-{{$index}}" style="background-color: #ffffff;"
-                        ng-repeat="project in projects">
-                        <td style="padding-top: 14px;"><a href="#"
-                                                          ng-click="container.goToProject(project); container.selectedListProjects(2)"><b>{{project.name}}</b></a>
-                        </td>
-                        <td style="padding-top: 14px;">
-                            <p data-placement="top" data-toggle="tooltipProject"
-                               title="Edit">
-                                <button class="btn btn-primary btn-xs" data-title="Edit"
-                                        data-toggle="modal" data-target="#edit"
-                                        style="background-color: #0288D1;"
-                                        ng-click="container.projectSelected=project; container.setCamposEditModal(project)">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </button>
-                            </p>
-                        </td>
-                        <td style="padding-top: 14px;">
-                            <p data-placement="top" data-toggle="tooltipProject"
-                               title="Delete">
-                                <button class="btn btn-danger btn-xs" data-title="Delete"
-                                        data-toggle="modal" data-target="#delete"
-                                        ng-click="container.projectSelected=project; ">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </p>
-                        </td>
-                    </tr>
+						<tr id="project-{{$index}}" style="background-color: #ffffff;"
+							ng-repeat="project in projects">
+							<td style="padding-top: 14px;"><a href="#"
+								ng-click="container.goToProject(project); container.selectedListProjects(2)"><b>{{project.name}}</b></a>
+							</td>
+							<td style="padding-top: 14px;">
+								<p data-placement="top" data-toggle="tooltipProject"
+									title="Edit">
+									<button class="btn btn-primary btn-xs" data-title="Edit"
+										data-toggle="modal" data-target="#edit"
+										style="background-color: #0288D1;"
+										ng-click="container.projectSelected=project; container.setCamposEditModal(project)">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</button>
+								</p>
+							</td>
+							<td style="padding-top: 14px;">
+								<p data-placement="top" data-toggle="tooltipProject"
+									title="Delete">
+									<button class="btn btn-danger btn-xs" data-title="Delete"
+										data-toggle="modal" data-target="#delete"
+										ng-click="container.projectSelected=project; ">
+										<span class="glyphicon glyphicon-trash"></span>
+									</button>
+								</p>
+							</td>
+						</tr>
 
-                    </tbody>
+					</tbody>
 
-                </table>
-                <!--
+				</table>
+				<!--
                 <div class="clearfix"></div>
                 <ul class="pagination pull-right">
                     <li class="disabled"><a href="#"><span
@@ -73,88 +71,108 @@
                             class="glyphicon glyphicon-chevron-right"></span></a></li>
                 </ul>
 -->
-            </div>
-        </div>
+			</div>
+		</div>
 
-    </div>
+	</div>
 </div>
 
 
 <div class="modal fade" id="edit" tabindex="-1" role="dialog"
-     aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-hidden="true">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
-                <!-- FIXME: id Heading duplicado -->
-                <h4 class="modal-title custom_align" id="Heading">Your
-                    Project</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <input id="projectName" class="form-control " type="text"
-                           placeholder="Type the name"/>
-                </div>
+	aria-labelledby="edit" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</button>
+				<!-- FIXME: id Heading duplicado -->
+				<h4 class="modal-title custom_align" id="Heading">Your Project</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<input id="projectName" class="form-control " type="text"
+						placeholder="Type the name"> </input>
+				</div>
+				<form id="dslForm" name="dslForm" ng-submit="container.uploadDSL()"
+					role="form" enctype="multipart/form-data">
+					<button class="btn btn-info" style="float: right;" type="submit">Upload
+						DSL file</button>
+					<input id="idUserDSL" name="idUser" type="hidden"></input> <input
+						name="dsl" type="file"></input>
+				</form>
+				<br />
 
-                <div class="form-group">
-                    <input id="projectDSLPath" class="form-control " type="text"
-                           placeholder="Path of the DSL file"/>
-                </div>
+				<form id="pluginForm" name="pluginForm"
+					ng-submit="container.uploadPlugin()" role="form"
+					enctype="multipart/form-data">
+					<input required="required" name="name" id="pluginName" type="text"
+						class="form-control " placeholder="Plugin name"></input> <br />
+					<button class="btn btn-info" style="float: right;" type="submit">Upload
+						Plugin</button>
+					<input name="plugin" id="plugin" type="file" multiple="true"></input>
+					<input id="idUserPlugin" name="idUser" type="hidden"></input>
+				</form>
 
-                <div class="form-group">
-                    <input class="form-control " type="text" id="projectPluginsPath"
-                           placeholder="Path of directory where the plugins"/>
-                </div>
-            </div>
-            <div class="modal-footer ">
-                <button type="button" class="btn btn-info btn-lg"
-                        style="width: 100%;"
-                        ng-click="container.editProject(container.projectSelected)">
-                    <span class="glyphicon glyphicon-ok-sign"></span> Save
-                </button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
+
+				<br />
+				<div id="messageUpload"></div>
+				<br />
+
+				<div class="form-group">
+					<button style="float: right;" class="btn btn-danger"
+						ng-click="container.resetUpload()">Reset upload</button>
+				</div>
+				<br />
+
+			</div>
+			<div class="modal-footer ">
+				<button type="button" class="btn btn-info btn-lg"
+					style="width: 100%;"
+					ng-click="container.editProject(container.projectSelected)">
+					<span class="glyphicon glyphicon-ok-sign"></span> Save
+				</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>
 
 
 <div class="modal fade" id="delete" tabindex="-1" role="dialog"
-     aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-hidden="true">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
-                <h4 class="modal-title custom_align" id="Heading">Delete this
-                    entry</h4>
-            </div>
-            <div class="modal-body">
+	aria-labelledby="edit" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</button>
+				<h4 class="modal-title custom_align" id="Heading">Delete this
+					entry</h4>
+			</div>
+			<div class="modal-body">
 
-                <div class="alert alert-danger">
-                    <span class="glyphicon glyphicon-warning-sign"></span> Are you sure
-                    you want to delete this Record?
-                </div>
+				<div class="alert alert-danger">
+					<span class="glyphicon glyphicon-warning-sign"></span> Are you sure
+					you want to delete this Record?
+				</div>
 
-            </div>
-            <div class="modal-footer ">
-                <!-- FIXME: comprobar si la propiedad ng-click está permitida en button -->
-                <button type="button" class="btn btn-success"
-                        ng-click="container.deleteProject(container.projectSelected)">
-                    <span class="glyphicon glyphicon-ok-sign"></span> Yes
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <span class="glyphicon glyphicon-remove"></span> No
-                </button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
+			</div>
+			<div class="modal-footer ">
+				<!-- FIXME: comprobar si la propiedad ng-click está permitida en button -->
+				<button type="button" class="btn btn-success"
+					ng-click="container.deleteProject(container.projectSelected)">
+					<span class="glyphicon glyphicon-ok-sign"></span> Yes
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove"></span> No
+				</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>

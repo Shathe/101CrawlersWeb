@@ -20,12 +20,10 @@ public class Configuration {
 	@GeneratedValue
 	private long id;
 
-	private String idProject, dslPath, pluginsPath;
+	private String idProject;
 
-	public Configuration(long id, String pluginsPath, String dslPath, String idProject) {
+	public Configuration(long id,  String idProject) {
 		this.id = id;
-		this.dslPath = dslPath;
-		this.pluginsPath = pluginsPath;
 		this.idProject = idProject;
 	}
 
@@ -41,22 +39,6 @@ public class Configuration {
 		this.id = id;
 	}
 
-	public String getDslPath() {
-		return dslPath;
-	}
-
-	public void setDslPath(String dslPath) {
-		this.dslPath = dslPath;
-	}
-
-	public String getPluginsPath() {
-		return pluginsPath;
-	}
-
-	public void setPluginsPath(String pluginsPath) {
-		this.pluginsPath = pluginsPath;
-	}
-
 	public String getIdProject() {
 		return idProject;
 	}
@@ -67,7 +49,7 @@ public class Configuration {
 
 	@Override
 	public String toString() {
-		return String.format("Project [id=%d, pluginsPath='%s', dslPath='%s']", id, pluginsPath, dslPath);
+		return String.format("Project [id=%d]", id);
 	}
 
 }

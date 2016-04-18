@@ -7,6 +7,7 @@ package crawlers;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,28 @@ import dataBase.ConfigurationDatabase;
 import dataBase.ContainerDockerDatabase;
 import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
+import errors.BadRequestError;
 import errors.InternalError;
 import models.Project;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for projects. Manage every operation which deals with the
@@ -37,6 +58,8 @@ public class ProjectController {
 	private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	// ops.executeCommand("java -jar ../butler.jar do config --file
+	// ../conf_tutorial.yml --idProject nuevo", true);
 
 	/**
 	 * Returns the projects of a specified user
@@ -51,7 +74,7 @@ public class ProjectController {
 		try {
 			projects = projectDB.getProjects(idUser);
 		} catch (Exception a) {
-			throw new InternalError("Error listing projects: "+a.getMessage());
+			throw new InternalError("Error listing projects: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(projects, HttpStatus.OK);
@@ -76,15 +99,16 @@ public class ProjectController {
 			imageDB.deleteImagesOfAProject(String.valueOf(project.getId()));
 			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 			containerDB.deleteContainersOfAProject(String.valueOf(project.getId()));
-			
+
 			log.info("deleted project " + project.getId());
-			
+
 			// FALTA ESTO
-			// Deletes also the dockerImages, Containers.. (also in Docker stop+delete)
+			// Deletes also the dockerImages, Containers.. (also in Docker
+			// stop+delete)
 			// Delete the project files (dsl,plugins..) (Not implemented)
 
 		} catch (Exception a) {
-			throw new InternalError("Error deleting: "+a.getMessage());
+			throw new InternalError("Error deleting: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(project, HttpStatus.OK);
@@ -106,7 +130,7 @@ public class ProjectController {
 			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
-			throw new InternalError("Error updating: "+a.getMessage());
+			throw new InternalError("Error updating: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(project, HttpStatus.OK);
@@ -125,11 +149,11 @@ public class ProjectController {
 		try {
 			projectDB.createProject(project);
 			log.info("created project " + project.getId());
-			project=projectDB.getImageJustCreated(idUser);
+			project = projectDB.getImageJustCreated(idUser);
 			// Creates the project files (Not implemented)
 			// CCreate docker image?
 		} catch (Exception a) {
-			throw new InternalError("Error creating: "+a.getMessage());
+			throw new InternalError("Error creating: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(project, HttpStatus.OK);

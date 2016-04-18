@@ -32,7 +32,8 @@ public class ConfigurationDatabase {
 	 */
 	public Configuration GetConfigurationFromProject(String idProject) {
 		//
-		return this.jdbcTemplate.queryForObject("select TOP 1 * from configurationCrawlers where idProject = " + idProject+ " ORDER BY id DESC",
+		return this.jdbcTemplate.queryForObject(
+				"select TOP 1 * from configurationCrawlers where idProject = " + idProject + " ORDER BY id DESC",
 				new ConfigurationMapper());
 	}
 
@@ -45,6 +46,7 @@ public class ConfigurationDatabase {
 	public int deleteConfiguration(Configuration configuration) {
 		return this.jdbcTemplate.update("delete from  configurationCrawlers where id = ?", configuration.getId());
 	}
+
 	/**
 	 * Deletes every configuration of a project
 	 * 
@@ -56,25 +58,14 @@ public class ConfigurationDatabase {
 	}
 
 	/**
-	 * Updates a configuration
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public int updateConfiguration(Configuration configuration) {
-		return this.jdbcTemplate.update("update configurationCrawlers set dslPath = ?,  pluginsPath = ? where id = ?",
-				configuration.getDslPath(), configuration.getPluginsPath(), configuration.getId());
-	}
-
-	/**
 	 * Creates a new configuration
 	 * 
 	 * @param project
 	 * @return
 	 */
 	public int createConfiguration(Configuration configuration) {
-		return this.jdbcTemplate.update("insert into configurationCrawlers (pluginsPath, dslPath,idProject) values (?,?,?)",
-				configuration.getPluginsPath(), configuration.getDslPath(), configuration.getIdProject());
+		return this.jdbcTemplate.update("insert into configurationCrawlers (idProject) values (?)",
+				configuration.getIdProject());
 
 	}
 }
