@@ -28,6 +28,7 @@ public class UserController {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+	CommonOps ops= new CommonOps();
 
 	
 	/**
@@ -102,7 +103,7 @@ public class UserController {
 			if (mismoNick > 0)
 				contrasena = userDB.getpswdFromUser(user);
 
-			if (contrasena.equals(CommonOps.HashFunction(psdw)) && mismoNick > 0) {
+			if (contrasena.equals(ops.HashFunction(psdw)) && mismoNick > 0) {
 				//Everything OK
 				
 				mensaje = String.valueOf(userDB.getIdFromUser(user).longValue());
@@ -111,7 +112,7 @@ public class UserController {
 			} else {
 				// Error (something is wrong)
 
-				if (!contrasena.equals(CommonOps.HashFunction(psdw)))
+				if (!contrasena.equals(ops.HashFunction(psdw)))
 					error = "Incorrect password";
 				if (mismoNick <= 0)
 					error = "User doesn't exist";

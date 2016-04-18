@@ -57,8 +57,9 @@ public class UserDatabase {
 	 * @param pswd
 	 */
 	public void insertarUsuario(String user, String email,String pswd) {
+		CommonOps ops= new CommonOps();
 		this.jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", user, email,
-				CommonOps.HashFunction(pswd));
+				ops.HashFunction(pswd));
 	}
 	/**
 	 * Gets the id from a email

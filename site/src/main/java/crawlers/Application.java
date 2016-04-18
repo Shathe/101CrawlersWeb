@@ -58,9 +58,10 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.execute("CREATE TABLE jarsCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 		jdbcTemplate.execute("CREATE TABLE xmlCrawlers(id SERIAL, idPlugin long,path VARCHAR(200))");
 
+		CommonOps ops= new CommonOps();
 		// Inserts
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
-				"inigol22zgz@gmail.com", CommonOps.HashFunction("contrasena"));
+				"inigol22zgz@gmail.com", ops.HashFunction("contrasena"));
 
 		jdbcTemplate.update("insert into projectCrawlers (idUser,name,date) values (?,?,?)", "1", "First project",
 				new Date(System.currentTimeMillis()));
@@ -75,5 +76,7 @@ public class Application implements CommandLineRunner {
 		jdbcTemplate.update("insert into containerCrawlers (idProject, idImage, name,date) values (?,?,?,?)", 1, 1,
 				"Docker container nutch", new Date(System.currentTimeMillis()));
 
+		//ejemplo de como ejecutar el jar de butler 
+		//ops.executeCommand("java -jar ../butler.jar do config --file ../conf_tutorial.yml --idProject nuevo", true);
 	}
 }
