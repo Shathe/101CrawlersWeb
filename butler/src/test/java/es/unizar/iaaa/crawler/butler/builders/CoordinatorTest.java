@@ -109,7 +109,6 @@ public class CoordinatorTest {
 				result.getFirstErrorCode());
 	}
 
-
 	/**
 	 * Detects if a well form configuration file, creates the building files
 	 */
@@ -126,43 +125,44 @@ public class CoordinatorTest {
 
 	public CrawlConfiguration readConfiguration(String route) {
 		CrawlConfiguration config = YamlConfigRunner.read(ctx.getResource(baseDir + route));
-		//Add plugins
-		//Add plugins
+		// Add plugins
+		// Add plugins
 		try {
-			CrawlSystem Cs=config.getCrawlSystem();
-			Cs.setPlugins(readPlugins("plugins",config));
+			CrawlSystem Cs = config.getCrawlSystem();
+			Cs.setPlugins(readPlugins("plugins"));
 			config.setCrawlSystem(Cs);
 
 		} catch (IOException e) {
 			// There is no plugins to add
 		}
-		
+
 		return config;
 	}
 
-
-	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
+	public ArrayList<Plugin> readPlugins(String route) throws IOException {
 		// List of plugins, each plugins is alist of its files
 
-		ArrayList<Plugin> pluginsToAdd= new ArrayList<Plugin>();
-		
+		ArrayList<Plugin> pluginsToAdd = new ArrayList<Plugin>();
+
 		Resource directory = ctx.getResource(baseDir + route);
 		File directoryFile = directory.getFile();
 		File[] plugins = directoryFile.listFiles();
+		if (plugins != null) {
 
-		for (File plugin : plugins) {
-			// New Plugin to add
-			Plugin  PluginNew= new Plugin();
-			PluginNew.setName(plugin.getName());
-			// Its files
-			ArrayList<File> pluginsFilesNew = new ArrayList<File>();
-			File[] pluginsFiles = plugin.listFiles();
-			for (File file : pluginsFiles) {
-				pluginsFilesNew.add(file);
+			for (File plugin : plugins) {
+				// New Plugin to add
+				Plugin PluginNew = new Plugin();
+				PluginNew.setName(plugin.getName());
+				// Its files
+				ArrayList<File> pluginsFilesNew = new ArrayList<File>();
+				File[] pluginsFiles = plugin.listFiles();
+				for (File file : pluginsFiles) {
+					pluginsFilesNew.add(file);
+				}
+				// Add files
+				PluginNew.setFiles(pluginsFilesNew);
+				pluginsToAdd.add(PluginNew);
 			}
-			// Add files
-			PluginNew.setFiles(pluginsFilesNew);
-			pluginsToAdd.add(PluginNew);
 		}
 		return pluginsToAdd;
 	}

@@ -65,58 +65,60 @@ public class Operations implements CommandMarker {
 
 	public CrawlConfiguration readConfiguration(String route) {
 		CrawlConfiguration config = YamlConfigRunner.read(ctx.getResource(baseDir + route));
-		//Add plugins
+		// Add plugins
 		try {
-			CrawlSystem Cs=config.getCrawlSystem();
-			Cs.setPlugins(readPlugins("plugins",config));
+			CrawlSystem Cs = config.getCrawlSystem();
+			Cs.setPlugins(readPlugins("plugins"));
 			config.setCrawlSystem(Cs);
 
 		} catch (IOException e) {
 			LOGGER.error("There is no plugins to add", e);
 		}
-		
+
 		return config;
 	}
 
 	// FIXME: route and config are not used.
-	public ArrayList<Plugin> readPlugins(String route, CrawlConfiguration config) throws IOException {
+	public ArrayList<Plugin> readPlugins(String route) throws IOException {
 		// List of plugins, each plugins is alist of its files
 
-		ArrayList<Plugin> pluginsToAdd= new ArrayList<>();
-		File a= new File("plugins");
+		ArrayList<Plugin> pluginsToAdd = new ArrayList<>();
+		File a = new File(route);
 		/*
-		Resource directory = ctx.getResource("classpath:./" + route);
-	 	File directoryFile = directory.getFile();
-	 	This does not work, what it is implementes, yes
-	 	*/
+		 * Resource directory = ctx.getResource("classpath:./" + route); File
+		 * directoryFile = directory.getFile(); This does not work, what it is
+		 * implementes, yes
+		 */
 
-        // FIXME Files.listFiles may return null if File is not a directory
+		// FIXME Files.listFiles may return null if File is not a directory
 		File[] plugins = a.listFiles();
-
-		for (File plugin : plugins) {
-			// New Plugin to add
-			Plugin  PluginNew= new Plugin();
-			PluginNew.setName(plugin.getName());
-			// Its files
-			ArrayList<File> pluginsFilesNew = new ArrayList<>();
-            // FIXME Files.listFiles may return null if File is not a directory
-			File[] pluginsFiles = plugin.listFiles();
-			for (File file : pluginsFiles) {
-				pluginsFilesNew.add(file);
+		if (plugins != null) {
+			for (File plugin : plugins) {
+				// New Plugin to add
+				Plugin PluginNew = new Plugin();
+				PluginNew.setName(plugin.getName());
+				// Its files
+				ArrayList<File> pluginsFilesNew = new ArrayList<>();
+				// FIXME Files.listFiles may return null if File is not a
+				// directory
+				File[] pluginsFiles = plugin.listFiles();
+				for (File file : pluginsFiles) {
+					pluginsFilesNew.add(file);
+				}
+				// Add files
+				PluginNew.setFiles(pluginsFilesNew);
+				pluginsToAdd.add(PluginNew);
 			}
-			// Add files
-			PluginNew.setFiles(pluginsFilesNew);
-			pluginsToAdd.add(PluginNew);
 		}
 		return pluginsToAdd;
+
 	}
 
-
-	/**	
+	/**
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerExists(String idContainer) {
-        String s;
+		String s;
 		String command = "docker ps -a";
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
@@ -129,7 +131,8 @@ public class Operations implements CommandMarker {
 		}
 		return false;
 	}
-	/**	
+
+	/**
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerofaImageExists(String idImage) {
@@ -138,7 +141,7 @@ public class Operations implements CommandMarker {
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				s = " " + s + " ";
-				if (s.contains(" " + idImage +"_" + " "))
+				if (s.contains(" " + idImage + "_" + " "))
 					return true;
 			}
 		} catch (IOException e) {
@@ -178,12 +181,12 @@ public class Operations implements CommandMarker {
 		return true;
 	}
 
-	/**	
+	/**
 	 * @return true when the container asign to the user and crawl exists
 	 */
 	public boolean containerRunning(String idContainer) {
 		String s;
-		String command = "docker ps -a --filter status=running --filter name=" + idContainer ;
+		String command = "docker ps -a --filter status=running --filter name=" + idContainer;
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
@@ -216,7 +219,7 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is stopped
 	 */
 	public boolean containerStopped(String idContainer) {
-		String command = "docker ps -a --filter status=exited --filter name=" + idContainer ;
+		String command = "docker ps -a --filter status=exited --filter name=" + idContainer;
 		String s;
 		// docker ps --filter "status=exited" --filter "name=1_1"
 		try (BufferedReader out = executeCommand(command, false)) {
@@ -234,7 +237,7 @@ public class Operations implements CommandMarker {
 	 * @return true when the container asign to the user and crawl is paused
 	 */
 	public boolean containerPaused(String idContainer) {
-        String command = "docker ps -a --filter status=paused --filter name=" + idContainer;
+		String command = "docker ps -a --filter status=paused --filter name=" + idContainer;
 		String s;
 		// docker ps -f=[name='1_1']
 		try (BufferedReader out = executeCommand(command, false)) {

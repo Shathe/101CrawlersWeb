@@ -38,7 +38,7 @@ public class AdapterBuilder {
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Value("${butler.templates:.}/")
+	@Value("${butler.templates:classpath:/templates}/")
 	private String templatesDir;
 
 	/**

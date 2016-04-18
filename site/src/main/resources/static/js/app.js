@@ -11,8 +11,6 @@
 	    this.imageSelected={};
 	    this.containerSelected={};
 	    this.formerName="";
-	    this.ListProjects=1;
-	    
 	    /*
 	     * GENERAL
 	     */
@@ -176,7 +174,9 @@
 	    		  url: "/editProject",
 	    		  data:JSON.stringify(project),
 	    		  success : function(data) {
-	    			  //now create the configuration 
+	    			  if( $scope.formerDSL.localeCompare(document.getElementById("projectDSLPath").value)!=0
+	    					  ||  $scope.formerPlugin.localeCompare(document.getElementById("projectPluginsPath").value)!=0){
+	    				  	    			  //now create the configuration 
 	    			 $.post('/createConfiguration',{ idProject: project.id,
 	    		    	  dslPath: document.getElementById("projectDSLPath").value,
 	    				  pluginsPath: document.getElementById("projectPluginsPath").value})
@@ -190,6 +190,7 @@
 	    	    	      alert('Not possible to connect to the server');
 	    	    	      
 	    	    	    });
+	    		  }
 	  			},
 	  			error : function(e) {
 		    		  //If there's an error reset former values
@@ -220,6 +221,8 @@
 		          console.log(data);
 		    	  document.getElementById("projectDSLPath").value=data.dslPath;
 		    	  document.getElementById("projectPluginsPath").value=data.pluginsPath;
+		    	  $scope.formerDSL=data.dslPath; 
+		    	  $scope.formerPlugin=data.pluginsPath;
 		        })
 		        .fail(function(data, status) {
 		        	document.getElementById("projectDSLPath").placeholder="Not possible to connect to the server";
