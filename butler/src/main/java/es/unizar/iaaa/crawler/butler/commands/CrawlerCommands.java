@@ -282,13 +282,15 @@ public class CrawlerCommands implements CommandMarker {
 		try (BufferedReader out = ops.executeCommand(command, false)) {
 			while ((s = out.readLine()) != null) {
 				if (s.contains("STARTED"))
-					return "The crawler is running";
+					return "Running";
+				if (s.contains("FIN"))
+					return "Finished";
 			}
 		} catch (IOException e) {
 			LOGGER.warn("IOException: " + e.getMessage(), e);
 			return "I don't known";
 		}
-		return "The crawler is not running";
+		return "Not started";
 	}
 
 	/**
