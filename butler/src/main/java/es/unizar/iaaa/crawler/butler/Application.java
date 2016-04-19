@@ -57,7 +57,7 @@ public class Application {
 			JLineShellComponent shell = ctx.getBean(JLineShellComponent.class);
 			CommandResult cr = shell.executeCommand(command);
 			System.out.println(cr.getResult().toString());
-			System.exit(1);
+			((AnnotationConfigApplicationContext) ctx).close();
 		}
 	}
 
