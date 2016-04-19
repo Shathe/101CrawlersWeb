@@ -27,13 +27,13 @@
 
 						<tr id="image-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="image in images">
-							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.imageSelected=image;container.goToImage(); container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
+							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.imageSelected=image;imageSelected=image;container.goToImage(image); container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipImage"
 									title="#editImage">
 									<button class="btn btn-primary btn-xs" data-title="#editImage"
 										data-toggle="modal" data-target="#editImage"
 										style="background-color: #0288D1;"
-										ng-click="container.imageSelected=image; container.setCamposEditImage(image); emptyimageMessage(); ">
+										ng-click="container.imageSelected=image;imageSelected=image; container.setCamposEditImage(image); emptyimageMessage(); ">
 										<span class="glyphicon glyphicon-pencil"></span>
 									</button>
 								</p></td>
@@ -41,7 +41,7 @@
 									title="DeleteImage">
 									<button class="btn btn-danger btn-xs" data-title="DeleteImage"
 										data-toggle="modal" data-target="#DeleteImage"
-										ng-click="container.imageSelected=image; ">
+										ng-click="container.imageSelected=image;imageSelected=image; ">
 										<span class="glyphicon glyphicon-trash"></span>
 									</button>
 								</p></td>

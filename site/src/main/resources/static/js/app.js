@@ -115,7 +115,6 @@
 	     * Uploads the DSL file to the server
 	     */
 	    this.uploadDSL= function (){
-	    	console.log('entr');
 
 	    	 var formData = new FormData($("#dslForm")[0]);
 
@@ -190,9 +189,9 @@
 						        	$('#edit').modal('toggle');
 						        	$scope.projects.push(projectSelected);
 						  	        $scope.$apply();
-						        	
 						        	})
 						        	.fail(function(data, status) {
+						        		//failing loading files, delete the unvalid project
 							    	      console.log(data);	  			
 				    		    	      uploadMessage(data.responseJSON.message,1);
 				    		    	      $.ajax({
@@ -209,6 +208,7 @@
 		
 				    	    })
 				    	    .fail(function(data, status) {
+				        		//failing loading files, delete the unvalid project
 				    	      console.log(data);
 	    		    	      uploadMessage(data.responseJSON.message,1);
 	    		    	      $.ajax({
@@ -234,13 +234,6 @@
     	    }
 
 	      }
-	      /*
-			 * La diferencia entre $scope y this. es que con scope se necesita
-			 * hacer el scope.apply y es mejor para actaulizar cosas visuales
-			 * como por ejemplo despues de hacer una peticion http en cambio si
-			 * quieres ligar valores para utilizarlos es mejor el this. aqui
-			 * muestro un ejemplo de como se podría hacer con ambas
-			 */
 	      
 	      /** Goes to a project (visually) */
 
@@ -255,14 +248,16 @@
 			 */
 
 	      this.deleteProject = function() {
+	    	  var project=this.projectSelected;
 	        	  $.ajax({
 		    		  type: 'DELETE',
 		    		  dataType: 'json',
 		    		  contentType:'application/json',
 		    		  url: "/deleteProject",
-		    		  data:JSON.stringify(this.projectSelected),
+		    		  data:JSON.stringify(project),
 		    		  success : function(data) {
-		  	    	    index= $scope.projects.indexOf(this.projectSelected);
+		    			console.log(this.projectSelected);
+		  	    	    index= $scope.projects.indexOf(project);
 		  	        	$scope.projects.splice(index, 1);
 		  	        	$scope.$apply();
 			        	$('#delete').modal('toggle');
@@ -270,8 +265,7 @@
 		  			},
 		  			error : function(e) {
 		  				alert('Not possible to connect to the server');
-		  			  console.log('not deleted'+this.projectSelected.name);
-
+		  				console.log('not deleted'+project.name);
 		  			}
 		  			
 		    		  });
@@ -342,7 +336,7 @@
 		  			},
 		  			error : function(e) {
 			    		  // If there's an error reset former values
-		  				projectSelected.name=this.formerName;
+		  				this.projectSelected.name=this.formerName;
 		  				alert('Not possible to connect to the server');
 		  			},
 		  			
@@ -432,23 +426,26 @@
     /** Deletes a image and shows visually if it has been really deleted */
 
     this.deleteImage = function() {
+    	var image=this.imageSelected;
+    	var project=this.projectSelected;
+
       	  $.ajax({
 	    		  type: 'DELETE',
 	    		  dataType: 'json',
 	    		  contentType:'application/json',
 	    		  url: "/deleteImage",
-	    		  data:JSON.stringify(this.projectSelected),
+	    		  data:JSON.stringify(image),
 	    		  success : function(data) {
-	  	    	    index= $scope.images.indexOf(this.projectSelected);
+	  	    	    index= $scope.images.indexOf(image);
 	  	        	$scope.images.splice(index, 1);
 	  	        	$scope.$apply();
-		  			console.log('deleted'+this.projectSelected.name);
+		  			console.log('deleted'+image.name);
 		        	$('#DeleteImage').modal('toggle');
 
 	  			},
 	  			error : function(e) {
 	  				alert('Not possible to connect to the server');
-	  			  console.log('not deleted'+this.projectSelected.name);
+	  				console.log('not deleted'+image.name);
 
 	  			},
 	  			
@@ -458,24 +455,23 @@
     /** Edits a image and shows the new image if it has been really edited */
 
     this.editImage = function() {
-    	
+    	var image=this.imageSelected;
     	if(document.getElementById("imageName").value!=""){	     
-	    	imageMessage("The image is been building, it can take a while",0);
-	  	  if(jQuery.isEmptyObject(this.imageSelected)){
+	  	  if(jQuery.isEmptyObject(image)){
 	  		  // If the edits really means create
+	  		  imageMessage("The image is been building, it can take a while...",0);
 	  		  this.createImage();	    	  
 	  		 }
 	  	  else{
 	  		  // Gets former values
 	
-	  	this.imageSelected.name=document.getElementById("imageName").value;
-	  	  console.log(image);
+	  		  this.imageSelected.name=document.getElementById("imageName").value;
 	  	  $.ajax({
 	  		  type: 'POST',
 	  		  dataType: 'json',
 	  		  contentType:'application/json',
 	  		  url: "/editImage",
-	  		  data:JSON.stringify(this.imageSelected),
+	  		  data:JSON.stringify(image),
 	  		  success : function(data) {
 	  	      	$('#editImage').modal('toggle');
 	    	      emptyimageMessage();
@@ -514,7 +510,7 @@
     
     /** Gets the containers of a image */
     this.containersOfAImage = function (){
-        $.get('/containers',{ idImage: this.this.imageSelected.id})
+        $.get('/containers',{ idImage: this.imageSelected.id})
         .done(function(data, status) {
   		  console.log(data);
             $scope.containers=data;
@@ -530,7 +526,7 @@
 		 * created
 		 */
       this.createContainer = function() {
-
+    	  containerMessage("Creating container...",0);
     	  $.post('/createContainer',{ idProject: this.projectSelected.id,
     		  idImage: this.imageSelected.id,
   			  name: document.getElementById("containerName").value})
@@ -539,11 +535,13 @@
   			$scope.containers.push(data);
   	        $scope.$apply();
   	      	$('#editContainer').modal('toggle');
+  	      emptyContainerMessage();
 
   	    })
   	    .fail(function(data, status) {
   	      console.log(data);	  			
-  	      containerMessage (data.responseJSON.message,1) 	;      
+  	      containerMessage (data.responseJSON.message,1) 	;  
+  	      
   	    }); 	  
     	  
 
@@ -558,23 +556,24 @@
       /** Deletes a Container and shows visually if it has been really deleted */
 
       this.deleteContainer = function() {
+    	  var container=this.containerSelected
         	  $.ajax({
   	    		  type: 'DELETE',
   	    		  dataType: 'json',
   	    		  contentType:'application/json',
   	    		  url: "/deleteContainer",
-  	    		  data:JSON.stringify(this.containerSelected),
+  	    		  data:JSON.stringify(container),
   	    		  success : function(data) {
-  	  	    	    index= $scope.containers.indexOf(this.containerSelected);
+  	  	    	    index= $scope.containers.indexOf(container);
   	  	        	$scope.containers.splice(index, 1);
   	  	        	$scope.$apply();
-  		  			console.log('deleted'+this.containerSelected.name);
+  		  			console.log('deleted'+container.name);
   		        	$('#DeleteContainer').modal('toggle');
 
   	  			},
   	  			error : function(e) {
   	  				alert('Not possible to connect to the server');
-  	  			  console.log('not deleted'+this.containerSelected.name);
+  	  			  console.log('not deleted'+container.name);
 
   	  			},
   	  			
@@ -587,9 +586,10 @@
 		 */
 
 	      this.editContainer = function() {
+	    	  var container=this.containerSelected
 	      	if(document.getElementById("containerName").value!=""){	     
 
-	    	  if(jQuery.isEmptyObject(this.containerSelected)){
+	    	  if(jQuery.isEmptyObject(container)){
 	    		  // If the edits really means create
 	    		  this.createContainer();	    	  
 	    		 }
@@ -597,23 +597,23 @@
 	    		  // Gets former values
 	
 	    		  this.containerSelected.name=document.getElementById("containerName").value;
-	    	  console.log(this.containerSelected);
-	    	  $.ajax({
-	    		  type: 'POST',
-	    		  dataType: 'json',
-	    		  contentType:'application/json',
-	    		  url: "/editContainer",
-	    		  data:JSON.stringify(this.containerSelected),
-	    		  success : function(data) {
-	    	      	$('#editContainer').modal('toggle');
-	
-	    		  },
-	  			error : function(e) {
-	  	    		  // If there's an error reset former values
-	  				this.containerSelected.name=this.formerName;
-	  				alert('Not possible to connect to the server');
-	  			},
-	  			
+		    	  console.log(container);
+		    	  $.ajax({
+		    		  type: 'POST',
+		    		  dataType: 'json',
+		    		  contentType:'application/json',
+		    		  url: "/editContainer",
+		    		  data:JSON.stringify(container),
+		    		  success : function(data) {
+		    	      	$('#editContainer').modal('toggle');
+		
+		    		  },
+		  			error : function(e) {
+		  	    		  // If there's an error reset former values
+		  				this.containerSelected.name=this.formerName;
+		  				alert('Not possible to connect to the server');
+		  			},
+		  			
 	    		  });
 	    	 
 	    	  }

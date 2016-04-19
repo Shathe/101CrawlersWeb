@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+	<property>
+		<name>
+		http.agent.name
+		</name>
+		<value>
+		2_3
+		</value>
+	</property>
+	<property>
+		<name>
+		fetcher.queue.mode
+		</name>
+		<value>
+		byHost
+		</value>
+	</property>
+</configuration>
