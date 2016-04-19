@@ -1,16 +1,14 @@
 package ops;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import crawlers.Application;
 
 public class CommonOps {
 	private static final Logger log = LoggerFactory.getLogger(CommonOps.class);

@@ -6,19 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import es.unizar.iaaa.crawler.butler.Application;
+import es.unizar.iaaa.crawler.butler.commands.Operations;
 import es.unizar.iaaa.crawler.butler.model.CrawlConfiguration;
 import es.unizar.iaaa.crawler.butler.model.CrawlSystem;
-import es.unizar.iaaa.crawler.butler.model.Plugin;
 import es.unizar.iaaa.crawler.butler.validator.ConfigurationValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlPluginsValidator;
 import es.unizar.iaaa.crawler.butler.validator.CrawlSeedsValidator;
@@ -51,6 +49,9 @@ public class CoordinatorTest {
 
 	@Value("${butler.base}/")
 	private String baseDir;
+
+	@Autowired
+	public Operations operations;
 
 	/** Detects if a well formed configuration file, pass the validation */
 	@Test
@@ -129,7 +130,7 @@ public class CoordinatorTest {
 		// Add plugins
 		try {
 			CrawlSystem Cs = config.getCrawlSystem();
-			Cs.setPlugins(readPlugins("plugins"));
+			Cs.setPlugins(operations.readPlugins("plugins"));
 			config.setCrawlSystem(Cs);
 
 		} catch (IOException e) {
@@ -139,33 +140,6 @@ public class CoordinatorTest {
 		return config;
 	}
 
-	public ArrayList<Plugin> readPlugins(String route) throws IOException {
-		// List of plugins, each plugins is alist of its files
-
-		ArrayList<Plugin> pluginsToAdd = new ArrayList<Plugin>();
-
-		Resource directory = ctx.getResource(baseDir + route);
-		File directoryFile = directory.getFile();
-		File[] plugins = directoryFile.listFiles();
-		if (plugins != null) {
-
-			for (File plugin : plugins) {
-				// New Plugin to add
-				Plugin PluginNew = new Plugin();
-				PluginNew.setName(plugin.getName());
-				// Its files
-				ArrayList<File> pluginsFilesNew = new ArrayList<File>();
-				File[] pluginsFiles = plugin.listFiles();
-				for (File file : pluginsFiles) {
-					pluginsFilesNew.add(file);
-				}
-				// Add files
-				PluginNew.setFiles(pluginsFilesNew);
-				pluginsToAdd.add(PluginNew);
-			}
-		}
-		return pluginsToAdd;
-	}
 
 	private boolean checkFileExists(String parent, String child) {
 		return new File(parent, child).exists();
