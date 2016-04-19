@@ -164,25 +164,64 @@
 			 * really created
 			 */
 	      this.createProject = function() {
+	    	  $scope.projectnotcreated=false;
+	    	  project=this.projectSelected;
 	    	  // The project must have a dsl file
 	    	  if($scope.dslEdited==true){
-		    	  $.post('/createProject',{ idUser: getCookie("idUser"),
-	    			  name: document.getElementById("projectName").value})
-	    	    .done(function(data, status) {
-	    	    	console.log(data);
-	    			$scope.projects.push(data);
-		  	        $scope.$apply();
-	    		    this.projectSelected=data;
-		        	// Creates it configuration
-			    	 $.post('/createConfiguration',{ idProject: this.projectSelected.id})
+			    	  $.post('/createProject',{ idUser: getCookie("idUser"),
+		    			  name: document.getElementById("projectName").value})
 		    	    .done(function(data, status) {
 		    	    	console.log(data);
-		    	    	// Once you upload the files, you must save them
-		    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
-		    	    		idProject:data.idProject,idConfig:data.id })
-			    	    .done(function(data, status) {
-			    	    	console.log(data);
-				        	$('#edit').modal('toggle');
+		    		    projectSelected=data;
+
+			        	// Creates it configuration
+					    	 $.post('/createConfiguration',{ idProject: projectSelected.id})
+				    	    .done(function(data, status) {
+				    	    	console.log(data);
+				    	    	// Once you upload the files, you must save them
+		    		    	      uploadMessage("Validating configuration...",0);
+
+				    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
+				    	    		idProject:data.idProject,idConfig:data.id })
+					    	    .done(function(data, status) {
+					    	    	console.log(data);
+					    	    	$scope.pluginEdited=false;
+		  	    		    	    $scope.dslEdited=false;
+						        	$('#edit').modal('toggle');
+						        	$scope.projects.push(projectSelected);
+						  	        $scope.$apply();
+						        	
+						        	})
+						        	.fail(function(data, status) {
+							    	      console.log(data);	  			
+				    		    	      uploadMessage(data.responseJSON.message,1);
+				    		    	      $.ajax({
+								    		  type: 'DELETE',
+								    		  dataType: 'json',
+								    		  contentType:'application/json',
+								    		  url: "/deleteProject",
+								    		  data:JSON.stringify(projectSelected),
+								    		  success : function(data) {
+								  				}  			
+								    		  });
+							        	  	
+						        	  });
+		
+				    	    })
+				    	    .fail(function(data, status) {
+				    	      console.log(data);
+	    		    	      uploadMessage(data.responseJSON.message,1);
+	    		    	      $.ajax({
+					    		  type: 'DELETE',
+					    		  dataType: 'json',
+					    		  contentType:'application/json',
+					    		  url: "/deleteProject",
+					    		  data:JSON.stringify(projectSelected),
+					    		  success : function(data) {
+					  				}  			
+					    		  });
+				        	  
+				    	    });
 
 		    	    })
 		    	    .fail(function(data, status) {
@@ -190,24 +229,9 @@
 		    	      alert('Not possible to connect to the server');
 		    	      
 		    	    });
-	    	    })
-	    	    .fail(function(data, status) {
-	    	      console.log(data);	  			
-	    	      alert('Not possible to connect to the server');
-	    	      
-	    	    });
     	    }else{
   			  uploadMessage ("upload the dsl, please",1);
     	    }
-
-    	    })
-    	    .fail(function(data, status) {
-    	      console.log(data);	  			
-    	      alert('Not possible to connect to the server');
-    	      
-    	    });
-	    	  console.log(this.projectSelected);
-	    	  console.log(this.projectSelected.id);
 
 	      }
 	      /*
@@ -221,35 +245,34 @@
 	      /** Goes to a project (visually) */
 
 	      this.goToProject = function(project) {
-	    	  angular.copy(project, this.projectSelected);
+	    	  this.projectSelected=project;
+	    	  console.log(this.projectSelected);
 	    	  this.ImagesOfaProject();
-	    	  
 	      }
 	      /**
 			 * Deletes a project and shows visually if it has been really
 			 * deleted
 			 */
 
-	      this.deleteProject = function(project) {
+	      this.deleteProject = function() {
 	        	  $.ajax({
 		    		  type: 'DELETE',
 		    		  dataType: 'json',
 		    		  contentType:'application/json',
 		    		  url: "/deleteProject",
-		    		  data:JSON.stringify(project),
+		    		  data:JSON.stringify(this.projectSelected),
 		    		  success : function(data) {
-		  	    	    index= $scope.projects.indexOf(project);
+		  	    	    index= $scope.projects.indexOf(this.projectSelected);
 		  	        	$scope.projects.splice(index, 1);
 		  	        	$scope.$apply();
-			  			console.log('deleted'+project.name);
 			        	$('#delete').modal('toggle');
 
 		  			},
 		  			error : function(e) {
 		  				alert('Not possible to connect to the server');
-		  			  console.log('not deleted'+project.name);
+		  			  console.log('not deleted'+this.projectSelected.name);
 
-		  			},
+		  			}
 		  			
 		    		  });
 		    	 
@@ -259,70 +282,77 @@
 			 * edited
 			 */
 
-	      this.editProject = function(project) {
-	    	 
-	    	  if(jQuery.isEmptyObject(project)){
-	    		  // If the edits really means create
-	    		  this.createProject();	    	  
-	    		 }
-	    	  else{
-	    		  // Gets former values
- 
-	    	  project.name=document.getElementById("projectName").value;
-	    	  console.log(project);
-	    	  $.ajax({
-	    		  type: 'POST',
-	    		  dataType: 'json',
-	    		  contentType:'application/json',
-	    		  url: "/editProject",
-	    		  data:JSON.stringify(project),
-	    		  success : function(data) {
-	    			  
-	    			  if( $scope.dslEdited==true){
-	    			// If there's something to edit in the configuration, you create a new one
-	    			 $.post('/createConfiguration',{ idProject: project.id})
-	    	    	    .done(function(data, status) {
-	    	    	    	console.log(data);
-	    		    	  
-			    	    	// Once you upload the files, you must save them
-	    	    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
-	    	    	    		idProject:data.idProject,idConfig:data.id })
-	    		    	    .done(function(data, status) {
-	    		    	    	console.log(data);
-	    		    	    	$scope.pluginEdited=false;
-	  	    		    	    $scope.dslEdited=false;
-	    			        	$('#edit').modal('toggle');
+	      this.editProject = function() {
+	    	 var project=this.projectSelected;
+	    	if(document.getElementById("projectName").value!=""){
+		    	  if(jQuery.isEmptyObject(project)){
+		    		  // If the edits really means create
+		    		  this.createProject();	    	  
+		    		 }
+		    	  else{
+		    		  // Gets former values
+	 
+		    	  this.projectSelected.name=document.getElementById("projectName").value;
+		    	  $scope.projectSelected=project.name;
+		    	  console.log(project);
+		    	  $.ajax({
+		    		  type: 'POST',
+		    		  dataType: 'json',
+		    		  contentType:'application/json',
+		    		  url: "/editProject",
+		    		  data:JSON.stringify(project),
+		    		  success : function(data) {
+		    			  console.log($scope.dslEdited);
+		    			  if( $scope.dslEdited==true){
+		    				  
+		    			// If there's something to edit in the configuration, you create a new one
+		    			 $.post('/createConfiguration',{ idProject: project.id})
+		    	    	    .done(function(data, status) {
+		    	    	    	console.log(data);
+		    		    	      uploadMessage("Validating configuration...",0);
 
-	    		    	    })
-	    		    	    .fail(function(data, status) {
-	    		    	      console.log(data);	  			
-	    		    	      alert('Not possible to connect to the server');
-	    		    	      
-	    		    	    });
-	    	    	    })
-	    	    	    .fail(function(data, status) {
-	    	    	      console.log(data);	  			
-	    	    	      alert('Not possible to connect to the server');
-	    	    	      
-	    	    	    });
-	    			 // If there are plugins uploaded but there is not dsl upload
-	    		  }else if($scope.pluginEdited==true  && $scope.dslEdited==false){
-	    			  uploadMessage ("upload the dsl, please or reset it",1);
-	    		  }
-	    		else{
-  			        	$('#edit').modal('toggle');
-	    			  }
-	  			},
-	  			error : function(e) {
-		    		  // If there's an error reset former values
-	  				project.name=this.formerName;
-	  				alert('Not possible to connect to the server');
-	  			},
-	  			
-	    		  });
-	    	 
-	    	  }
-
+				    	    	// Once you upload the files, you must save them
+		    	    	    	$.post('/saveConfigurationFiles',{ idUser: getCookie("idUser"),
+		    	    	    		idProject:data.idProject,idConfig:data.id })
+		    		    	    .done(function(data, status) {
+		    		    	    	console.log(data);
+		    		    	    	$scope.pluginEdited=false;
+		  	    		    	    $scope.dslEdited=false;
+		    			        	$('#edit').modal('toggle');
+	
+		    		    	    })
+		    		    	    .fail(function(data, status) {
+		    		    	      console.log(data);	  			
+		    		    	      uploadMessage(data.responseJSON.message,1);
+		    		    	      
+		    		    	    });
+		    	    	    })
+		    	    	    .fail(function(data, status) {
+		    	    	      console.log(data);	  			
+		    	    	      alert('Not possible to connect to the server');
+		    	    	      
+		    	    	    });
+		    			 // If there are plugins uploaded but there is not dsl upload
+		    		  }else if($scope.pluginEdited==true  && $scope.dslEdited==false){
+		    			  uploadMessage ("upload the dsl, please or reset it",1);
+		    		  }
+		    		else{
+	  			        	$('#edit').modal('toggle');
+		    			  }
+		  			},
+		  			error : function(e) {
+			    		  // If there's an error reset former values
+		  				projectSelected.name=this.formerName;
+		  				alert('Not possible to connect to the server');
+		  			},
+		  			
+		    		  });
+		    	 
+		    	  }
+		    	  console.log($scope.dslEdited);
+		      }else{
+		    	  document.getElementById("projectName").placeholder="Plase, give me a name";
+		      }
 	      }
 		  /** Resets Project Modal values */
 	      this.vaciarCamposEditModal = function(){
@@ -334,7 +364,7 @@
 	    	}
 		  /** Edits Project Modal values */
 	      this.setCamposEditModal= function(project){
-	    	  this.formerName=project.name; 
+	    	  formerName=project.name; 
 	    	  document.getElementById("idUserDSL").value=getCookie("idUser");
 	    	  document.getElementById("idUserPlugin").value=getCookie("idUser");
 	    	  document.getElementById("projectName").value=project.name;
@@ -352,6 +382,7 @@
   
   /** Gets the images of a project */
   this.ImagesOfaProject = function (){
+	  console.log(this.projectSelected);
       $.get('/images',{ idProject: this.projectSelected.id})
       .done(function(data, status) {
 		  console.log(data);
@@ -365,7 +396,6 @@
     
     /** Creates a image and shows the new image if it has been really created */
     this.createImage = function() {
-
   	  $.post('/createImage',{ idProject: this.projectSelected.id,
 			  name: document.getElementById("imageName").value})
 	    .done(function(data, status) {
@@ -373,12 +403,13 @@
 			$scope.images.push(data);
 	        $scope.$apply();
 	      	$('#editImage').modal('toggle');
+	  	    emptyimageMessage();
+
 
 	    })
 	    .fail(function(data, status) {
-	      console.log(data);	  			
-	      alert('Not possible to connect to the server');
-	      
+	      console.log(data);	  
+	      imageMessage(data.responseJSON.message,1);	      
 	    }); 	  
   	  
   	  
@@ -395,29 +426,29 @@
     /** Goes to a image (visually) */
 
     this.goToImage = function(image) {
-    	 angular.copy(image, this.imageSelected);
+    	this.imageSelected=image;
     	this.containersOfAImage();
 	  }
     /** Deletes a image and shows visually if it has been really deleted */
 
-    this.deleteImage = function(image) {
+    this.deleteImage = function() {
       	  $.ajax({
 	    		  type: 'DELETE',
 	    		  dataType: 'json',
 	    		  contentType:'application/json',
 	    		  url: "/deleteImage",
-	    		  data:JSON.stringify(image),
+	    		  data:JSON.stringify(this.projectSelected),
 	    		  success : function(data) {
-	  	    	    index= $scope.images.indexOf(image);
+	  	    	    index= $scope.images.indexOf(this.projectSelected);
 	  	        	$scope.images.splice(index, 1);
 	  	        	$scope.$apply();
-		  			console.log('deleted'+image.name);
+		  			console.log('deleted'+this.projectSelected.name);
 		        	$('#DeleteImage').modal('toggle');
 
 	  			},
 	  			error : function(e) {
 	  				alert('Not possible to connect to the server');
-	  			  console.log('not deleted'+image.name);
+	  			  console.log('not deleted'+this.projectSelected.name);
 
 	  			},
 	  			
@@ -426,36 +457,40 @@
     }
     /** Edits a image and shows the new image if it has been really edited */
 
-    this.editImage = function(image) {
-  	  if(jQuery.isEmptyObject(image)){
-  		  // If the edits really means create
-  		  this.createImage();	    	  
-  		 }
-  	  else{
-  		  // Gets former values
-
-  	  image.name=document.getElementById("imageName").value;
-  	  console.log(image);
-  	  $.ajax({
-  		  type: 'POST',
-  		  dataType: 'json',
-  		  contentType:'application/json',
-  		  url: "/editImage",
-  		  data:JSON.stringify(image),
-  		  success : function(data) {
-  	      	$('#editImage').modal('toggle');
-
-  		  },
-			error : function(e) {
-	    		  // If there's an error reset former values
-				image.name=this.formerName;
-				alert('Not possible to connect to the server');
-			},
-			
-  		  });
-  	 
-  	  }
-
+    this.editImage = function() {
+    	
+    	if(document.getElementById("imageName").value!=""){	     
+	    	imageMessage("The image is been building, it can take a while",0);
+	  	  if(jQuery.isEmptyObject(this.imageSelected)){
+	  		  // If the edits really means create
+	  		  this.createImage();	    	  
+	  		 }
+	  	  else{
+	  		  // Gets former values
+	
+	  	this.imageSelected.name=document.getElementById("imageName").value;
+	  	  console.log(image);
+	  	  $.ajax({
+	  		  type: 'POST',
+	  		  dataType: 'json',
+	  		  contentType:'application/json',
+	  		  url: "/editImage",
+	  		  data:JSON.stringify(this.imageSelected),
+	  		  success : function(data) {
+	  	      	$('#editImage').modal('toggle');
+	    	      emptyimageMessage();
+	  		  },
+				error : function(e) {
+		    		  // If there's an error reset former values
+					this.imageSelected.name=this.formerName;
+					imageMessage(data.responseJSON.message,1);				},
+				
+	  		  });
+	  	 
+	  	  }
+    	}else{
+	    	  document.getElementById("imageName").placeholder="Plase, give me a name";
+    	}
     }
 	  /** Resets image Modal values */
     this.vaciarCamposImages = function(){
@@ -463,7 +498,7 @@
     }
 	  /** Edits image Modal values */
     this.setCamposEditImage= function(image){
-  	  this.formerName=image.name; 
+  	  formerName=image.name; 
   	  document.getElementById("imageName").value=image.name;
     }
     
@@ -479,7 +514,7 @@
     
     /** Gets the containers of a image */
     this.containersOfAImage = function (){
-        $.get('/containers',{ idImage: this.imageSelected.id})
+        $.get('/containers',{ idImage: this.this.imageSelected.id})
         .done(function(data, status) {
   		  console.log(data);
             $scope.containers=data;
@@ -508,8 +543,7 @@
   	    })
   	    .fail(function(data, status) {
   	      console.log(data);	  			
-  	      alert('Not possible to connect to the server');
-  	      
+  	      containerMessage (data.responseJSON.message,1) 	;      
   	    }); 	  
     	  
 
@@ -519,28 +553,28 @@
       /** Goes to a container (visually) */
 
       this.goToContainer= function(container) {
-      	 angular.copy(container, this.containerSelected);
-  	  }
+  	  this.containerSelected=container;
+      }
       /** Deletes a Container and shows visually if it has been really deleted */
 
-      this.deleteContainer = function(container) {
+      this.deleteContainer = function() {
         	  $.ajax({
   	    		  type: 'DELETE',
   	    		  dataType: 'json',
   	    		  contentType:'application/json',
   	    		  url: "/deleteContainer",
-  	    		  data:JSON.stringify(container),
+  	    		  data:JSON.stringify(this.containerSelected),
   	    		  success : function(data) {
-  	  	    	    index= $scope.containers.indexOf(container);
+  	  	    	    index= $scope.containers.indexOf(this.containerSelected);
   	  	        	$scope.containers.splice(index, 1);
   	  	        	$scope.$apply();
-  		  			console.log('deleted'+container.name);
+  		  			console.log('deleted'+this.containerSelected.name);
   		        	$('#DeleteContainer').modal('toggle');
 
   	  			},
   	  			error : function(e) {
   	  				alert('Not possible to connect to the server');
-  	  			  console.log('not deleted'+container.name);
+  	  			  console.log('not deleted'+this.containerSelected.name);
 
   	  			},
   	  			
@@ -552,36 +586,40 @@
 		 * edited
 		 */
 
-      this.editContainer = function(container) {
-    	  if(jQuery.isEmptyObject(container)){
-    		  // If the edits really means create
-    		  this.createContainer();	    	  
-    		 }
-    	  else{
-    		  // Gets former values
+	      this.editContainer = function() {
+	      	if(document.getElementById("containerName").value!=""){	     
 
-    	  container.name=document.getElementById("containerName").value;
-    	  console.log(container);
-    	  $.ajax({
-    		  type: 'POST',
-    		  dataType: 'json',
-    		  contentType:'application/json',
-    		  url: "/editContainer",
-    		  data:JSON.stringify(container),
-    		  success : function(data) {
-    	      	$('#editContainer').modal('toggle');
-
-    		  },
-  			error : function(e) {
-  	    		  // If there's an error reset former values
-  				container.name=this.formerName;
-  				alert('Not possible to connect to the server');
-  			},
-  			
-    		  });
-    	 
-    	  }
-
+	    	  if(jQuery.isEmptyObject(this.containerSelected)){
+	    		  // If the edits really means create
+	    		  this.createContainer();	    	  
+	    		 }
+	    	  else{
+	    		  // Gets former values
+	
+	    		  this.containerSelected.name=document.getElementById("containerName").value;
+	    	  console.log(this.containerSelected);
+	    	  $.ajax({
+	    		  type: 'POST',
+	    		  dataType: 'json',
+	    		  contentType:'application/json',
+	    		  url: "/editContainer",
+	    		  data:JSON.stringify(this.containerSelected),
+	    		  success : function(data) {
+	    	      	$('#editContainer').modal('toggle');
+	
+	    		  },
+	  			error : function(e) {
+	  	    		  // If there's an error reset former values
+	  				this.containerSelected.name=this.formerName;
+	  				alert('Not possible to connect to the server');
+	  			},
+	  			
+	    		  });
+	    	 
+	    	  }
+	      }else{
+	      	document.getElementById("containerName").value!="Please, give me a name";
+	      }
       }
   	  /** Resets container Modal values */
       this.vaciarCamposContainer = function(){
@@ -589,7 +627,7 @@
       }
   	  /** Edits container Modal values */
       this.setCamposEditContainer= function(container){
-    	  this.formerName=container.name; 
+    	  formerName=container.name; 
     	  document.getElementById("containerName").value=container.name;
       }
 
@@ -853,10 +891,32 @@ function uploadMessage (message,error){
 	}
 	   
 }
-function emptyUploadMessage (){
-	   document.getElementById('messageUpload').innerHTML="";
-		   
+function imageMessage (message,error){
+	if(error){
+		   document.getElementById('messageImage').innerHTML="<h4   style=\"text-align:center;\" class=\"bg-warning\"><br/><p>"+message+"<p/><br/></h4>";
+	}else{
+		   document.getElementById('messageImage').innerHTML="<h4 style=\"text-align:center;\" class=\"bg-success\"> <br/><p>"+message+"<p/><br/></h4>";
+	}
 	   
+}
+
+function containerMessage (message,error){
+	if(error){
+		   document.getElementById('messageContainer').innerHTML="<h4   style=\"text-align:center;\" class=\"bg-warning\"><br/><p>"+message+"<p/><br/></h4>";
+	}else{
+		   document.getElementById('messageContainer').innerHTML="<h4 style=\"text-align:center;\" class=\"bg-success\"> <br/><p>"+message+"<p/><br/></h4>";
+	}	   
+}
+
+function emptyimageMessage (){
+	   document.getElementById('messageImage').innerHTML="";   
+}
+function emptyUploadMessage (){
+	   document.getElementById('messageUpload').innerHTML="";   
+}
+
+function emptyContainerMessage (){
+	   document.getElementById('messageContainer').innerHTML="";   
 }
 
 // Delete cookie

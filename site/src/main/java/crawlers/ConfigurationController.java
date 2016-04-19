@@ -5,6 +5,7 @@
 package crawlers;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ import dataBase.ConfigurationDatabase;
 import errors.BadRequestError;
 import errors.InternalError;
 import models.Configuration;
+import ops.CommonOps;
 
 /**
  * Controller for projects. Manage every operation which deals with the
@@ -40,6 +42,7 @@ public class ConfigurationController {
 	private static final Logger log = LoggerFactory.getLogger(ConfigurationController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	CommonOps ops = new CommonOps();
 
 	/**
 	 * Returns the projects of a specified user
@@ -210,13 +213,44 @@ public class ConfigurationController {
 			@RequestParam("idProject") String idProject, @RequestParam("idConfig") String idConfig) {
 
 		try {
-			// Rename auxiliar folder to IdProject_idConfiguration_configFiles (1_2_configFiles)
+			// Rename auxiliar folder to IdProject/idConfiguration (1/2)
 			// This files will be used by Butler builder
 			String folderAux = idUser + "/aux";
 			File folder = new File(folderAux);
-			File folderNew = new File(idUser + "/" + idProject + "_" + idConfig + "_configFiles");
-			folder.renameTo(folderNew);
+			File folderProject = new File(idUser + "/" + idProject);
+			if (!folderProject.exists())
+				Files.createDirectory(folderProject.toPath());
+			File folderConfig = new File(idUser + "/" + idProject + "/" + idConfig);
+			// if exist delete it (old bad config)
+			try {
+				FileUtils.deleteDirectory(folderConfig);
+			} catch (Exception e) {
+				log.warn("Old config folder not deleted:" + e.getMessage());
+			}
+
+			folder.renameTo(folderConfig);
 			log.info("Configuration saved: " + idUser);
+			// Now you have to validate the project
+			String command = "java -jar ../butler.jar do config --file " + folderConfig.getPath()
+					+ "/dsl.yml --idProject " + idProject + "_" + idConfig;
+
+			log.info("Command: " + command);
+			BufferedReader out = ops.executeCommand(command, false);
+			String lineOut = "";
+			String errorMessage = "";
+			boolean error = true;
+			while ((lineOut = out.readLine()) != null) {
+				errorMessage = lineOut;
+				if ((lineOut.contains("successfully"))) {
+					error = false;
+				}
+			}
+			// if its not valid, throw an error
+			if (error) {
+				log.warn("Not valid DSL: " + errorMessage);
+				throw new InternalError("Not valid DSL: " + errorMessage);
+			}
+
 		} catch (Exception e) {
 			log.warn("Configuration not saved:" + e.getMessage());
 			throw new InternalError("Error saving: " + e.getMessage());

@@ -4,6 +4,7 @@
 
 package crawlers;
 
+import java.io.BufferedReader;
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +28,10 @@ import errors.InternalError;
 import models.Configuration;
 import models.ImageDocker;
 import models.Project;
+import ops.CommonOps;
 
 /**
- * Controller for images. Manage every operation which deals with the
- * projects.
+ * Controller for images. Manage every operation which deals with the projects.
  * 
  * @author shathe
  */
@@ -39,6 +40,7 @@ public class ImageDockerController {
 	private static final Logger log = LoggerFactory.getLogger(ImageDockerController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	CommonOps ops = new CommonOps();
 
 	/**
 	 * Returns the images of a specified project
@@ -53,7 +55,7 @@ public class ImageDockerController {
 		try {
 			images = imageDB.getImages(idProject);
 		} catch (Exception a) {
-			throw new InternalError("Error listing images: "+a.getMessage());
+			throw new InternalError("Error listing images: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(images, HttpStatus.OK);
@@ -66,7 +68,6 @@ public class ImageDockerController {
 	@RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
 	ResponseEntity<ImageDocker> deleteImage(@RequestBody ImageDocker image) {
 
-
 		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 		try {
 			imageDB.deleteImage(image);
@@ -74,11 +75,12 @@ public class ImageDockerController {
 			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 			containerDB.deleteContainersOfAImage(String.valueOf(image.getId()));
 			// FALTA ESTO
-			// Deletes also the dockerImages, Containers.. (also in Docker stop+delete)
+			// Deletes also the dockerImages, Containers.. (also in Docker
+			// stop+delete)
 			// Delete the project files (dsl,plugins..) (Not implemented)
 
 		} catch (Exception a) {
-			throw new InternalError("Error deleting: "+a.getMessage());
+			throw new InternalError("Error deleting: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(image, HttpStatus.OK);
@@ -100,7 +102,7 @@ public class ImageDockerController {
 			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
-			throw new InternalError("Error updating: "+a.getMessage());
+			throw new InternalError("Error updating: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(image, HttpStatus.OK);
@@ -114,19 +116,36 @@ public class ImageDockerController {
 	ResponseEntity<ImageDocker> createImage(@RequestParam(value = "idProject") String idProject,
 			@RequestParam(value = "name") String name) {
 		ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
-		//gets the last configuration of the project
-		Configuration config=confDB.GetConfigurationFromProject(idProject);
-		ImageDocker image = new ImageDocker(0, name,String.valueOf(config.getId()),idProject, new Date(System.currentTimeMillis()));
+		// gets the last configuration of the project
+		Configuration config = confDB.GetConfigurationFromProject(idProject);
+		ImageDocker image = new ImageDocker(0, name, String.valueOf(config.getId()), idProject,
+				new Date(System.currentTimeMillis()));
 		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 		try {
 			imageDB.createImage(image);
 			log.info("created image " + image.getName());
-			image=imageDB.getImageJustCreated(idProject);
-			// Creates the project files (Not implemented)
-			// CCreate docker image?
-			//Recuerda que al ejecutar el jar -Imagename seria el ID en este caso
+			image = imageDB.getImageJustCreated(idProject);
+
+			String command = "java -jar ../butler.jar do build --imageName " + image.getId() + " --idProject "
+					+ idProject + "_" + config.getId();
+			log.info("Command: " + command);
+			BufferedReader out = ops.executeCommand(command, false);
+			String lineOut = "";
+			String errorMessage = "";
+			boolean error = true;
+			while ((lineOut = out.readLine()) != null) {
+				errorMessage = lineOut;
+				if ((lineOut.contains("successfully"))) {
+					error = false;
+				}
+			}
+			if (error) {
+				log.warn("Not valid Image: " + errorMessage);
+				throw new InternalError("Not valid Image: " + errorMessage);
+			}
+
 		} catch (Exception a) {
-			throw new InternalError("Error creating: "+a.getMessage());
+			throw new InternalError("Error creating: " + a.getMessage());
 		}
 
 		return new ResponseEntity<>(image, HttpStatus.OK);

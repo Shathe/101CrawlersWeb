@@ -27,13 +27,13 @@
 
 						<tr id="image-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="image in images">
-							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.goToImage(image); container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
+							<td style="padding-top: 14px;"><a  href="#"  ng-click="container.imageSelected=image;container.goToImage(); container.selectedListProjects(3)"><b>{{image.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipImage"
 									title="#editImage">
 									<button class="btn btn-primary btn-xs" data-title="#editImage"
 										data-toggle="modal" data-target="#editImage"
 										style="background-color: #0288D1;"
-										ng-click="container.imageSelected=image; container.setCamposEditImage(image)">
+										ng-click="container.imageSelected=image; container.setCamposEditImage(image); emptyimageMessage(); ">
 										<span class="glyphicon glyphicon-pencil"></span>
 									</button>
 								</p></td>
@@ -85,13 +85,15 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<input id="imageName" class="form-control " type="text"
+					<input id="imageName" required="required" class="form-control " type="text"
 						placeholder="Type the name"></input>
 				</div>
+				<div id="messageImage"></div>
+				
 			</div>
 			<div class="modal-footer ">
 				<button type="button" class="btn btn-info btn-lg"
-					style="width: 100%;" ng-click="container.editImage(container.imageSelected)">
+					style="width: 100%;" ng-click="container.editImage()">
 					<span class="glyphicon glyphicon-ok-sign"></span> Save
 				</button>
 			</div>
@@ -126,7 +128,7 @@
 			</div>
 			<div class="modal-footer ">
 				<button type="button" class="btn btn-success"
-					ng-click="container.deleteImage(container.imageSelected)">
+					ng-click="container.deleteImage()">
 					<span class="glyphicon glyphicon-ok-sign"></span> Yes
 				</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">

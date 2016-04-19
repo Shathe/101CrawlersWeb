@@ -65,10 +65,23 @@ public class ProjectDatabase {
 				project.getDate());
 
 	}
-	public Project getImageJustCreated(String idUser) {
-		//
+	/**
+	 * Gets the last project created
+	 * @param idUser
+	 * @return
+	 */
+	public Project getProjectJustCreated(String idUser) {
 		return this.jdbcTemplate.queryForObject(
 				"select TOP 1 * from projectCrawlers where idUser = " + idUser + " ORDER BY id DESC",
 				new ProjectMapper());
+	}
+	/**
+	 * Gets the id from the user who owns this project
+	 * @param id
+	 * @return
+	 */
+	public String getUserFromProject(String id) {
+		return this.jdbcTemplate.queryForObject("select idUser from projectCrawlers where id = " + id,  String.class);
+
 	}
 }

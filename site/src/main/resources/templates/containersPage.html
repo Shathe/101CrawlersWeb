@@ -28,13 +28,13 @@
 						<tr id="containerDocker-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="containerDocker in containers">
 							<td style="padding-top: 14px;"><a  href="#"  
-							ng-click="container.goToContainer(containerDocker); container.selectedListProjects(4); "><b>{{containerDocker.name}}</b></a></td>
+							ng-click="container.containerSelected=containerDocker;container.goToContainer(containerDocker); container.selectedListProjects(4); "><b>{{containerDocker.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipContainer"
 									title="#editContainer">
 									<button class="btn btn-primary btn-xs" data-title="#editContainer"
 										data-toggle="modal" data-target="#editContainer"
 										style="background-color: #0288D1;"
-										ng-click="container.containerSelected=containerDocker; container.setCamposEditContainer(containerDocker);">
+										ng-click="container.containerSelected=containerDocker; container.setCamposEditContainer(containerDocker);emptyContainerMessage(); ">
 										<span class="glyphicon glyphicon-pencil"></span>
 									</button>
 								</p></td>
@@ -86,13 +86,15 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<input id="containerName" class="form-control " type="text"
+					<input id="containerName" required="required" class="form-control " type="text"
 						placeholder="Type the name"></input>
 				</div>
+				<div id="messageContainer"></div>
+				
 			</div>
 			<div class="modal-footer ">
 				<button type="button" class="btn btn-info btn-lg"
-					style="width: 100%;" ng-click="container.editContainer(container.containerSelected)">
+					style="width: 100%;" ng-click="container.editContainer()">
 					<span class="glyphicon glyphicon-ok-sign"></span> Save
 				</button>
 			</div>
@@ -127,7 +129,7 @@
 			</div>
 			<div class="modal-footer ">
 				<button type="button" class="btn btn-success"
-					ng-click="container.deleteContainer(container.containerSelected)">
+					ng-click="container.deleteContainer()">
 					<span class="glyphicon glyphicon-ok-sign"></span> Yes
 				</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">

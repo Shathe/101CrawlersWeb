@@ -4,6 +4,7 @@
 
 package crawlers;
 
+import java.io.BufferedReader;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import errors.InternalError;
 import models.Configuration;
 import models.ContainerDocker;
 import models.Project;
+import ops.CommonOps;
 
 /**
  * Controller for containers. Manage every operation which deals with the
@@ -38,6 +40,7 @@ public class ContainerDockerController {
 	private static final Logger log = LoggerFactory.getLogger(ContainerDockerController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	CommonOps ops = new CommonOps();
 
 	/**
 	 * Returns the containers of a specified image
@@ -115,9 +118,27 @@ public class ContainerDockerController {
 			containerDB.createContainer(container);
 			log.info("created container " + container.getName());
 			container = containerDB.getContainerJustCreated(idImage);
+			ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
+			// gets the last configuration of the project
+			Configuration config = confDB.GetConfigurationFromProject(idProject);
+			String command = "java -jar ../butler.jar do start --containerName "+container.getId()+" --imageName " + container.getIdImage() + " --idProject "
+					+ idProject + "_" + config.getId();
+			log.info("Command: " + command);
+			BufferedReader out = ops.executeCommand(command, false);
+			String lineOut = "";
+			String errorMessage = "";
+			boolean error = true;
+			while ((lineOut = out.readLine()) != null) {
+				errorMessage = lineOut;
+				if ((lineOut.contains("Container started"))) {
+					error = false;
+				}
+			}
+			if (error) {
+				log.warn("Not valid container: " + errorMessage);
+				throw new InternalError("Not valid container: " + errorMessage);
+			}
 			
-			// CCreate docker container?
-			// Recuerda que al ejecutar el jar -Imagename seria el ID en este
 		} catch (Exception a) {
 			throw new InternalError("Error creating: " + a.getMessage());
 		}

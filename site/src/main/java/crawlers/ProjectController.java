@@ -58,8 +58,7 @@ public class ProjectController {
 	private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	// ops.executeCommand("java -jar ../butler.jar do config --file
-	// ../conf_tutorial.yml --idProject nuevo", true);
+
 
 	/**
 	 * Returns the projects of a specified user
@@ -105,7 +104,10 @@ public class ProjectController {
 			// FALTA ESTO
 			// Deletes also the dockerImages, Containers.. (also in Docker
 			// stop+delete)
-			// Delete the project files (dsl,plugins..) (Not implemented)
+			
+			//Deletes the configuration files
+			File folderProject = new File(project.getIdUser() + "/" + project.getId());
+			FileUtils.deleteDirectory(folderProject);
 
 		} catch (Exception a) {
 			throw new InternalError("Error deleting: " + a.getMessage());
@@ -127,7 +129,6 @@ public class ProjectController {
 		try {
 			projectDB.updateProject(project);
 			log.info("updated project " + project.getId());
-			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
 			throw new InternalError("Error updating: " + a.getMessage());
@@ -149,7 +150,7 @@ public class ProjectController {
 		try {
 			projectDB.createProject(project);
 			log.info("created project " + project.getId());
-			project = projectDB.getImageJustCreated(idUser);
+			project = projectDB.getProjectJustCreated(idUser);
 			// Creates the project files (Not implemented)
 			// CCreate docker image?
 		} catch (Exception a) {
