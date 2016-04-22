@@ -10,7 +10,7 @@
 					<b> Containers of {{container.imageSelected.name}} </b> <small>
 						<button data-toggle="modal" data-target="#editContainer" class="btn btn-info"
 							style="background-color: #0288D1; float: right;"
-							ng-click="container.containerSelected={}; container.vaciarCamposContainer();" >New
+							ng-click="container.containerSelected={}; container.vaciarCamposContainer(); container.emptyContainerMessage();" >New
 							container</button>
 					</small>
 				</h2>
@@ -28,7 +28,7 @@
 						<tr id="containerDocker-{{$index}}" style="background-color: #ffffff;"
 							ng-repeat="containerDocker in containers">
 							<td style="padding-top: 14px;"><a  href="#"  
-							ng-click="container.containerSelected=containerDocker; containerSelected=containerDocker;container.goToContainer(containerDocker); container.selectedListProjects(4); "><b>{{containerDocker.name}}</b></a></td>
+							ng-click="container.containerSelected=containerDocker; containerSelected=containerDocker;container.goToContainer(containerDocker); container.selectedListProjects(4);container.containerStatus(); "><b>{{containerDocker.name}}</b></a></td>
 							<td style="padding-top: 14px;"><p data-placement="top" data-toggle="tooltipContainer"
 									title="#editContainer">
 									<button class="btn btn-primary btn-xs" data-title="#editContainer"

@@ -5,6 +5,7 @@
 package crawlers;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
 import errors.InternalError;
 import models.Configuration;
+import models.ContainerDocker;
 import models.ImageDocker;
 import models.Project;
 import ops.CommonOps;
@@ -67,20 +69,13 @@ public class ImageDockerController {
 	 */
 	@RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
 	ResponseEntity<ImageDocker> deleteImage(@RequestBody ImageDocker image) {
-
-		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
+		List<ImageDocker> images = new ArrayList<>();
+		images.add(image);
 		try {
-			imageDB.deleteImage(image);
-			log.info("deleted image " + image.getId());
-			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
-			containerDB.deleteContainersOfAImage(String.valueOf(image.getId()));
-			// FALTA ESTO
-			// Deletes also the dockerImages, Containers.. (also in Docker
-			// stop+delete)
-			// Delete the project files (dsl,plugins..) (Not implemented)
-
-		} catch (Exception a) {
-			throw new InternalError("Error deleting: " + a.getMessage());
+			ops.deleteImages(images, jdbcTemplate);
+		} catch (Exception e) {
+			log.warn("Error deleting: " + e.getMessage());
+			throw new InternalError("Error deleting: " + e.getMessage());
 		}
 
 		return new ResponseEntity<>(image, HttpStatus.OK);
@@ -99,7 +94,6 @@ public class ImageDockerController {
 		try {
 			imageDB.updateImage(image);
 			log.info("updated image " + image.getId());
-			// Change the project files (Not implemented)
 
 		} catch (Exception a) {
 			throw new InternalError("Error updating: " + a.getMessage());

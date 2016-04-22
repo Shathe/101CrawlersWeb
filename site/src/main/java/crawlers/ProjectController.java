@@ -27,6 +27,7 @@ import dataBase.ProjectDatabase;
 import errors.BadRequestError;
 import errors.InternalError;
 import models.Project;
+import ops.CommonOps;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -58,6 +59,7 @@ public class ProjectController {
 	private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	CommonOps ops = new CommonOps();
 
 
 	/**
@@ -91,21 +93,18 @@ public class ProjectController {
 		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
 		ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
 		try {
-			projectDB.deleteProject(project);
+			ops.deleteProject(project, jdbcTemplate);
+
+			/*projectDB.deleteProject(project);
 			// deletes also its configurations
+			ops.deleteProject(project, jdbcTemplate);
 			confDB.deleteConfigurationsOfProject(String.valueOf(project.getId()));
 			ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 			imageDB.deleteImagesOfAProject(String.valueOf(project.getId()));
 			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 			containerDB.deleteContainersOfAProject(String.valueOf(project.getId()));
-
+*/
 			log.info("deleted project " + project.getId());
-
-			// FALTA ESTO
-			// Deletes also the dockerImages, Containers.. (also in Docker
-			// stop+delete)
-			
-			//Deletes the configuration files
 			File folderProject = new File(project.getIdUser() + "/" + project.getId());
 			FileUtils.deleteDirectory(folderProject);
 

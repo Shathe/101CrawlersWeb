@@ -13,6 +13,7 @@
 	    this.formerName="";
 	    $scope.pluginEdited=false;
 	    $scope.dslEdited=false;
+	    $scope.containerStatus={};
 	    /*
 		 * GENERAL
 		 */
@@ -99,7 +100,7 @@
 	    	        	document.getElementById("plugin").value="";
 	    	        },
 	    	        error: function (data) {
-	    	        	uploadMessage("Plugin not uploaded, try again",1);
+	    	        	uploadMessage("Plugin not uploaded, try again. (Max lentgh 10 Mb ",1);
 	    	        },
 	    	        cache: false,
 	    	        contentType: false,
@@ -556,7 +557,7 @@
       /** Deletes a Container and shows visually if it has been really deleted */
 
       this.deleteContainer = function() {
-    	  var container=this.containerSelected
+    	  var container=this.containerSelected;
         	  $.ajax({
   	    		  type: 'DELETE',
   	    		  dataType: 'json',
@@ -586,7 +587,7 @@
 		 */
 
 	      this.editContainer = function() {
-	    	  var container=this.containerSelected
+	    	var container=this.containerSelected;
 	      	if(document.getElementById("containerName").value!=""){	     
 
 	    	  if(jQuery.isEmptyObject(container)){
@@ -631,6 +632,197 @@
     	  document.getElementById("containerName").value=container.name;
       }
 
+      
+      
+        
+        /** stops the container */
+        this.stopContainer = function (){
+      	  var container=this.containerSelected;
+      	 containerItemMessage("Stopping the container",0)
+
+            $.post('/stopContainer',{ idContainer: container.id})
+            .done(function(data, status) {
+            emptyContainerItemMessage();
+      		  console.log(data);
+              containerItemMessage("Loading status..",0);
+              $http({
+  		        method : "GET",
+  		        url : "/statusContainer",
+        	    params:  { idContainer: container.id }
+  		    }).then(function mySucces(response) {
+                emptyContainerItemMessage();
+  		    	console.log(response);
+        		  $scope.containerStatus=response.data;
+  		    }, function myError(response) {
+  		    	console.log(response);
+          		$scope.containerStatus=response.data;
+                emptyContainerItemMessage();
+
+  		    });		
+            })
+            .fail(function(data, status) {
+              console.log(data);
+              containerItemMessage(data.responseJSON.message,1)
+            });              
+
+          };
+
+          /** Pauses the container */
+          this.pauseContainer = function (){
+        	  var container=this.containerSelected;
+           	 containerItemMessage("Paussing the container",0)
+
+              $.post('/pauseContainer',{ idContainer: container.id})
+              .done(function(data, status) {
+        		  console.log(data);
+                  containerItemMessage("Loading status...",0);
+
+                  $http({
+      		        method : "GET",
+      		        url : "/statusContainer",
+            	    params:  { idContainer: container.id }
+      		    }).then(function mySucces(response) {
+      		    	
+      		    	console.log(response);
+            		  $scope.containerStatus=response.data;
+                      emptyContainerItemMessage();
+
+      		    }, function myError(response) {
+      		    	console.log(response);
+              		$scope.containerStatus=response.data;
+                    emptyContainerItemMessage();
+
+      		    });		
+              })
+              .fail(function(data, status) {
+                console.log(data);
+                alert(data.responseJSON.message);
+                containerItemMessage(data.responseJSON.message,1)
+
+              });
+            };
+          
+          
+          /** Starts the container */
+          this.startsContainer = function (){
+           	 containerItemMessage("Restarting the container",0)
+
+        	  var container=this.containerSelected;
+
+              $.post('/startsContainer',{ idContainer: container.id})
+              .done(function(data, status) {
+        		  console.log(data);
+                  containerItemMessage("Loading status...",0);
+        		    $http({
+        		        method : "GET",
+        		        url : "/statusContainer",
+                	    params:  { idContainer: container.id }
+        		    }).then(function mySucces(response) {
+        		    	console.log(response);
+              		  $scope.containerStatus=response.data;
+                      emptyContainerItemMessage();
+
+        		    }, function myError(response) {
+        		    	console.log(response);
+                		$scope.containerStatus=response.data;
+                        emptyContainerItemMessage();
+
+        		    });		  
+        		  
+              })
+              .fail(function(data, status) {
+                console.log(data);
+                alert(data.responseJSON.message);
+                containerItemMessage(data.responseJSON.message,1)
+
+              });
+            };
+            
+          
+          /** Gets the status of the container */
+          this.containerStatus = function (){
+        	  var container=this.containerSelected;
+		    	console.log(container);
+
+        	  $http({
+  		        method : "GET",
+  		        url : "/statusContainer",
+        	    params:  { idContainer: container.id }
+
+  		    }).then(function mySucces(response) {
+  		    	console.log(response);
+        		  $scope.containerStatus=response.data;
+
+  		    }, function myError(response) {
+  		    	console.log(response);
+          		$scope.containerStatus=response.data;
+
+  		    });	
+              
+            };
+            
+            /** Indexes the crawler */
+            this.indexCrawl = function (){
+                $.post('/indexContainer',{ idContainer: this.containerSelected.id})
+                .done(function(data, status) {
+          		  console.log(data);
+                })
+                .fail(function(data, status) {
+                  console.log(data);
+                });
+              };
+              
+              /** Searches the crawler */
+              this.searchQuery = function (){
+                 
+                  $http({
+        		        method : "GET",
+        		        url : "/searchContainer",
+              	    params:  { idContainer: this.containerSelected.id ,query : document.getElementById("search").value}
+
+        		    }).then(function mySucces(response) {
+        		    	console.log(response);
+              		  $scope.results=response.data;
+        		    }, function myError(response) {
+        		    	console.log(response);
+                        containerItemMessage(response.data.responseText,1);
+
+        		    });	
+                  
+                };
+                /** Downloads all the data from the crawler */
+                this.downloadAll = function (){
+                   
+                    $http({
+          		        method : "GET",
+          		        url : "/downloadAll",
+                	    params:  { idContainer: this.containerSelected.id }
+
+          		    }).then(function mySucces(response) {
+          		    	console.log(response);
+          		    }, function myError(response) {
+          		    	console.log(response);
+
+          		    });	
+                    
+                  };
+                  /** download all the results from the query */
+                  this.downloadResults = function (){
+                      $http({
+            		        method : "GET",
+            		        url : "/downloadResults",
+                  	    params:  { idContainer: this.containerSelected.id ,query : document.getElementById("search").value}
+
+            		    }).then(function mySucces(response) {
+            		    	console.log(response);
+            		    }, function myError(response) {
+            		    	console.log(response);
+
+            		    });	
+                      
+                    };
+              
+            
 
 }]);
 
@@ -908,6 +1100,14 @@ function containerMessage (message,error){
 	}	   
 }
 
+function containerItemMessage (message,error){
+	if(error){
+		   document.getElementById('messageItemContainer').innerHTML="<h4   style=\"text-align:center;\" class=\"bg-warning\"><br/><p>"+message+"<p/><br/></h4>";
+	}else{
+		   document.getElementById('messageItemContainer').innerHTML="<h4 style=\"text-align:center;\" class=\"bg-success\"> <br/><p>"+message+"<p/><br/></h4>";
+	}	   
+}
+
 function emptyimageMessage (){
 	   document.getElementById('messageImage').innerHTML="";   
 }
@@ -917,6 +1117,9 @@ function emptyUploadMessage (){
 
 function emptyContainerMessage (){
 	   document.getElementById('messageContainer').innerHTML="";   
+}
+function emptyContainerItemMessage (){
+	   document.getElementById('messageItemContainer').innerHTML="";   
 }
 
 // Delete cookie

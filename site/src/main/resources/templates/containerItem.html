@@ -5,48 +5,89 @@
 		<div
 			class="col-md-10 col-md-offset-1 col-xs-10 col-xs-offset-1
   col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-			<div class="table-responsive">
+			<div>
 				<h2>
-					<b>{{container.containerSelected.name}} </b> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Index</button>
-					</small>
-					<div class="form-group">
-						<input id="search" class="form-control " type="text"
-							placeholder="search"></input>
-					</div>
-					<small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Search</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Reload
-							information</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Stop
-							crawl</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Start
-							Crawl</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Start
-							Container</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Pause
-							Container</button>
-					</small> <small>
-						<button class="btn btn-info"
-							style="background-color: #0288D1; float: right;" ng-click="">Stop
-							Container</button>
-					</small>
+					<b>{{container.containerSelected.name}}: </b>
 				</h2>
+				<h4>container {{containerStatus.containerStatus}}, crawler
+					{{containerStatus.crawlerStatus}}</h4>
+				<br />
+
+				<div class="form-group">
+					<input id="search" class="form-control " type="text"
+						placeholder="search top 20"></input> <small> <br />
+
+						<button class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.indexCrawl();">
+							Index <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+						</button>
+					</small> <small>
+						<button class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.searchQuery();">
+							Search <span class="glyphicon glyphicon-search"
+								aria-hidden="true"></span>
+						</button>
+					</small><small>
+						<button class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.startsContainer();"
+							ng-show="containerStatus.containerStatus!='Running'">
+							Restart <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+						</button>
+					</small> <small>
+						<button class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.pauseContainer();"
+							ng-show="containerStatus.containerStatus=='Running'">
+							Pause <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+
+						</button>
+					</small> <small>
+						<button class="btn btn-info"
+							style="background-color: #0288D1; float: right;"
+							ng-click="container.stopContainer();"
+							ng-show="containerStatus.containerStatus=='Running' ">
+							Stop <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+
+						</button> <small>
+							<button class="btn btn-info" id="reload"
+								style="background-color: #0288D1; float: right;"
+								ng-click="container.containerStatus();">
+								status <span class="glyphicon glyphicon-refresh"
+									aria-hidden="true"></span>
+							</button>
+					</small> <small>
+							<button class="btn btn-info" id="downlaodresults"
+								style="background-color: #0288D1; float: right;"
+								ng-click="container.downloadResults();">
+								Download all results <span
+									class="glyphicon glyphicon-download-alt"
+								aria-hidden="true"></span>
+							</button>
+					</small> <small>
+							<button class="btn btn-info" id="downlaodresults"
+								style="background-color: #0288D1; float: right;"
+								ng-click="container.downloadAll();">
+								Download all <span
+									class="glyphicon glyphicon-download-alt"
+								aria-hidden="true"></span>
+							</button>
+					</small>
+					</small>
+				</div>
+				<br /> <br />
+				<div id="messageItemContainer"></div>
+				<br />
+				<div id="resultsQuery" ng-repeat="resultContainer in results">
+
+					<a ng-href="{{resultContainer}}">{{resultContainer}}</a><br />
+				</div>
+
+
 			</div>
-			<br/> Status container(running/stopped/paused): <br/> Status
-			crawler (not started/running/finished): <br/> Result search:
+			<br /> <br />
 		</div>
 
 	</div>

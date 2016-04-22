@@ -194,7 +194,7 @@ public class StoppingCommands implements CommandMarker {
 		String idContainer = idProject + "_" + imageName + "_" + containerName;
 
 		// docker stop -t $tiempo $idContainer
-		String command = "docker rm " + idContainer;
+		String command = "docker rm -f " + idContainer;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
@@ -225,7 +225,7 @@ public class StoppingCommands implements CommandMarker {
 		String idImage = idProject + "_" + imageName;
 
 		// docker stop -t $tiempo $idContainer
-		String comando = "docker rmi " + idImage;
+		String comando = "docker rmi -f" + idImage;
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}

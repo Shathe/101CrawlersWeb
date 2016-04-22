@@ -273,8 +273,11 @@ public class CrawlerCommands implements CommandMarker {
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
 		}
-		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
+		if (!ops.containerExists(idContainer)) {
 			return "Docker container don't exist, please, try executing the start command";
+		}
+		if (!ops.containerRunning(idContainer)) {
+			return "I don't known (container stopped/paused)";
 		}
 
 		// docker exec idContainer sh crawler/juntarSalidas.sh
@@ -312,11 +315,11 @@ public class CrawlerCommands implements CommandMarker {
 		}
 
 		if (ops.containerRunning(idContainer))
-			return "running";
+			return "Running";
 		if (ops.containerPaused(idContainer))
-			return "paused";
+			return "Paused";
 		if (ops.containerStopped(idContainer))
-			return "stopped";
+			return "Stopped";
 		
 		return "Unknown status";
 	}

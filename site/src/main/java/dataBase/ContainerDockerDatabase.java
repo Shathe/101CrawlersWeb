@@ -91,15 +91,27 @@ public class ContainerDockerDatabase {
 	}
 
 	/**
-	 * Gets the last created containers
+	 * Gets the last created container
 	 * 
 	 * @param idImage
-	 * @return
 	 */
 	public ContainerDocker getContainerJustCreated(String idImage) {
 		//
 		return this.jdbcTemplate.queryForObject(
 				"select TOP 1 * from containerCrawlers where idImage = " + idImage + " ORDER BY id DESC",
+				new ContainerDockerMapper());
+	}
+
+
+	/**
+	 * Gets a container from its id
+	 * 
+	 * @param id
+	 */
+	public ContainerDocker getContainerFromId(String id) {
+		//
+		return this.jdbcTemplate.queryForObject(
+				"select TOP 1 * from containerCrawlers where id = " + id + " ORDER BY id DESC",
 				new ContainerDockerMapper());
 	}
 

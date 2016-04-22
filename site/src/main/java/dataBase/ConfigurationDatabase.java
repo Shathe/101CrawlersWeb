@@ -4,10 +4,13 @@
 
 package dataBase;
 
+import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import models.Configuration;
+import models.ContainerDocker;
 
 /**
  * Configuration database operations
@@ -34,6 +37,18 @@ public class ConfigurationDatabase {
 		//
 		return this.jdbcTemplate.queryForObject(
 				"select TOP 1 * from configurationCrawlers where idProject = " + idProject + " ORDER BY id DESC",
+				new ConfigurationMapper());
+	}
+	/**
+	 * Returns a list of configurations of a project
+	 * 
+	 * @param idProject
+	 * @return
+	 */
+
+	public List<Configuration> GetConfigurationsFromProject(String idProject) {
+		return this.jdbcTemplate.query(
+				"select * from configurationCrawlers where idProject = " + idProject ,
 				new ConfigurationMapper());
 	}
 
