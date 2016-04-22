@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,13 +48,13 @@ public class UserController {
 
 		int mismoEmail = userDB.getNumberUsersSameEmail(email);
 
-		User usuario = null;
+		User newUser;
 		if (user != null && psdw != null && email != null && !user.equals("") && !psdw.equals("") && !email.equals("")
 				&& mismoNick <= 0 && mismoEmail <= 0) {
 			// Everything OK. Hash the password
 			userDB.insertarUsuario(user, email, psdw);
 			Long id = userDB.getIdFromEmail(email);
-			usuario = new User(id, user, email, psdw);
+			newUser = new User(id, user, email, psdw);
 
 		} else {
 			// There's an error
@@ -77,7 +75,7 @@ public class UserController {
 			throw new InternalError(error);
 
 		}
-		return usuario;
+		return newUser;
 	}
 
 	/**
@@ -92,27 +90,27 @@ public class UserController {
 
 		UserDatabase userDB = new UserDatabase(jdbcTemplate);
 
-		String mensaje = "";
+		String message;
 		String error = "";
-		String contrasena = "";
-		int mismoNick = 1;
+		String password = "";
+		int mismoNick;
 		if (user != null && psdw != null && !user.equals("") && !psdw.equals("")) {
 			
 			mismoNick = userDB.getNumberUsersSameNick(user);
 
 			if (mismoNick > 0)
-				contrasena = userDB.getpswdFromUser(user);
+				password = userDB.getpswdFromUser(user);
 
-			if (contrasena.equals(ops.HashFunction(psdw)) && mismoNick > 0) {
+			if (password.equals(ops.HashFunction(psdw)) && mismoNick > 0) {
 				//Everything OK
 				
-				mensaje = String.valueOf(userDB.getIdFromUser(user).longValue());
-				log.info("Logged id: " + mensaje);
+				message = String.valueOf(userDB.getIdFromUser(user).longValue());
+				log.info("Logged id: " + message);
 
 			} else {
 				// Error (something is wrong)
 
-				if (!contrasena.equals(ops.HashFunction(psdw)))
+				if (!password.equals(ops.HashFunction(psdw)))
 					error = "Incorrect password";
 				if (mismoNick <= 0)
 					error = "User doesn't exist";
@@ -134,7 +132,7 @@ public class UserController {
 
 		}
 
-		return mensaje;
+		return message;
 	}
 
 }

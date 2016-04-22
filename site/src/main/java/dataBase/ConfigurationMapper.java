@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import models.Configuration;
-import models.Project;
 /**
  * Mapper for the project
  * @author shathe

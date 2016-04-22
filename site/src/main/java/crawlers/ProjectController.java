@@ -4,6 +4,7 @@
 
 package crawlers;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -20,33 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import dataBase.ConfigurationDatabase;
-import dataBase.ContainerDockerDatabase;
-import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
-import errors.BadRequestError;
 import errors.InternalError;
 import models.Project;
 import ops.CommonOps;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for projects. Manage every operation which deals with the
@@ -60,7 +38,6 @@ public class ProjectController {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	CommonOps ops = new CommonOps();
-
 
 	/**
 	 * Returns the projects of a specified user
@@ -89,21 +66,8 @@ public class ProjectController {
 	ResponseEntity<Project> deleteProject(@RequestBody Project project) {
 
 		log.info("deleting project " + project.getId());
-
-		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
-		ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
 		try {
 			ops.deleteProject(project, jdbcTemplate);
-
-			/*projectDB.deleteProject(project);
-			// deletes also its configurations
-			ops.deleteProject(project, jdbcTemplate);
-			confDB.deleteConfigurationsOfProject(String.valueOf(project.getId()));
-			ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
-			imageDB.deleteImagesOfAProject(String.valueOf(project.getId()));
-			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
-			containerDB.deleteContainersOfAProject(String.valueOf(project.getId()));
-*/
 			log.info("deleted project " + project.getId());
 			File folderProject = new File(project.getIdUser() + "/" + project.getId());
 			FileUtils.deleteDirectory(folderProject);

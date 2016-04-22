@@ -90,7 +90,6 @@ public class Operations implements CommandMarker {
 		 * implementes, yes
 		 */
 
-		// FIXME Files.listFiles may return null if File is not a directory
 		File[] plugins = a.listFiles();
 		if (plugins != null) {
 			for (File plugin : plugins) {
@@ -99,11 +98,11 @@ public class Operations implements CommandMarker {
 				PluginNew.setName(plugin.getName());
 				// Its files
 				ArrayList<File> pluginsFilesNew = new ArrayList<>();
-				// FIXME Files.listFiles may return null if File is not a
-				// directory
 				File[] pluginsFiles = plugin.listFiles();
-				for (File file : pluginsFiles) {
-					pluginsFilesNew.add(file);
+				if (pluginsFiles != null) {
+					for (File file : pluginsFiles) {
+						pluginsFilesNew.add(file);
+					}
 				}
 				// Add files
 				PluginNew.setFiles(pluginsFilesNew);

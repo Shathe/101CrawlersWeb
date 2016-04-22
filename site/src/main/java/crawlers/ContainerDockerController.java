@@ -4,7 +4,6 @@
 
 package crawlers;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,9 +15,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -41,8 +37,7 @@ import errors.InternalError;
 import models.Configuration;
 import models.ContainerDocker;
 import models.ContainerStatus;
-import models.ImageDocker;
-import models.Project;
+
 import ops.CommonOps;
 
 /**
@@ -396,12 +391,12 @@ public class ContainerDockerController {
 			}
 			if (error)
 				throw new InternalError("Error searching crawler, try again in some minutes");
-			//creates a empty file to fill with de data
-			file= new File(projectDB.getUserFromProject(container.getIdProject())+ "/output.txt");
+			// creates a empty file to fill with de data
+			file = new File(projectDB.getUserFromProject(container.getIdProject()) + "/output.txt");
 			if (file.exists())
 				file.delete();
 			file.createNewFile();
-			//puts data in
+			// puts data in
 			PrintWriter pw = new PrintWriter(new FileWriter(file));
 			for (int i = 0; i < results.size(); i++) {
 				pw.println(results.get(i));
@@ -409,30 +404,31 @@ public class ContainerDockerController {
 			pw.flush();
 			pw.close();
 
-	        String mimeType= URLConnection.guessContentTypeFromName(file.getName());
-	        if(mimeType==null){
-	            mimeType = "application/octet-stream";
-	        }
-	         	         
-	        response.setContentType(mimeType);
-	         
-	        // "Content-Disposition : inline" will show viewable types [like images/text/pdf/anything viewable by browser] right on browser 
-	        //    while others(zip e.g) will be directly downloaded [may provide save as popup, based on your browser setting.]
-	        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() +"\""));
-	 
-	         
-	        // "Content-Disposition : attachment" will be directly download, may provide save as popup, based on your browser setting
-	        //response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
-	         
-	        response.setContentLength((int)file.length());
-	 
-	        InputStream inputStream =new FileInputStream(file);
-	 
-	        //Copy bytes from source to destination(outputstream in this example), closes both streams.
-	        FileCopyUtils.copy(inputStream, response.getOutputStream());
-	        
-	        
-	        
+			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+			if (mimeType == null) {
+				mimeType = "application/octet-stream";
+			}
+
+			response.setContentType(mimeType);
+
+			// "Content-Disposition : inline" will show viewable types [like
+			// images/text/pdf/anything viewable by browser] right on browser
+			// while others(zip e.g) will be directly downloaded [may provide
+			// save as popup, based on your browser setting.]
+			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+			// "Content-Disposition : attachment" will be directly download, may
+			// provide save as popup, based on your browser setting
+			// response.setHeader("Content-Disposition",
+			// String.format("attachment; filename=\"%s\"", file.getName()));
+
+			response.setContentLength((int) file.length());
+
+			InputStream inputStream = new FileInputStream(file);
+
+			// Copy bytes from source to destination(outputstream in this
+			// example), closes both streams.
+			FileCopyUtils.copy(inputStream, response.getOutputStream());
 
 		} catch (Exception a) {
 			log.warn("Error downloading crawler: " + a.getMessage());

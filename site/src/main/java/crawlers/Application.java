@@ -4,7 +4,6 @@
 
 package crawlers;
 
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,16 +58,6 @@ public class Application implements CommandLineRunner {
 		// Inserts
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
 				"inigol22zgz@gmail.com", ops.HashFunction("contrasena"));
-/*
-		jdbcTemplate.update("insert into projectCrawlers (idUser,name,date) values (?,?,?)", "1", "First project",
-				new Date(System.currentTimeMillis()));
 
-		jdbcTemplate.update("insert into configurationCrawlers (idProject) values (?)", 1);
-		jdbcTemplate.update("insert into imageCrawlers (idProject,idConfiguration,name,date) values (?,?,?,?)", 1, 1,
-				"Image :D First", new Date(System.currentTimeMillis()));
-
-		jdbcTemplate.update("insert into containerCrawlers (idProject, idImage, name,date) values (?,?,?,?)", 1, 1,
-				"Docker container nutch", new Date(System.currentTimeMillis()));
-*/
 	}
 }

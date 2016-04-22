@@ -60,7 +60,7 @@ public class ConfigurationController {
 			throw new InternalError("Error getting configuration: " + a.getMessage());
 		}
 
-		return new ResponseEntity<Configuration>(configuration, HttpStatus.OK);
+		return new ResponseEntity<>(configuration, HttpStatus.OK);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ConfigurationController {
 	 * error message
 	 */
 	@RequestMapping(value = "/createConfiguration", method = RequestMethod.POST)
-	ResponseEntity<Configuration> createProject(@RequestParam(value = "idProject") String idProject) {
+	ResponseEntity<Configuration> createConfiguration(@RequestParam(value = "idProject") String idProject) {
 
 		Configuration configuration = new Configuration(0, idProject);
 		ConfigurationDatabase configurationDB = new ConfigurationDatabase(jdbcTemplate);
@@ -76,12 +76,11 @@ public class ConfigurationController {
 			configurationDB.createConfiguration(configuration);
 			log.info("created configuration " + configuration.getId());
 			configuration = configurationDB.GetConfigurationFromProject(idProject);
-			// Creates the project files (Not implemented)
-			// CCreate docker image?
+		
 		} catch (Exception a) {
 			throw new InternalError("Error creating: " + a.getMessage());
 		}
-		return new ResponseEntity<Configuration>(configuration, HttpStatus.OK);
+		return new ResponseEntity<>(configuration, HttpStatus.OK);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class ConfigurationController {
 			log.warn("DSL not copied, empty file: " + idUser);
 			throw new BadRequestError("Empty file");
 		}
-		return new ResponseEntity<>(new String("copied"), HttpStatus.OK);
+		return new ResponseEntity<>("copied", HttpStatus.OK);
 	}
 
 	/**
@@ -175,7 +174,7 @@ public class ConfigurationController {
 			log.warn("There are no plugins to upload: " + idUser);
 			throw new BadRequestError("There are no plugins to upload");
 		}
-		return new ResponseEntity<>(new String("copied"), HttpStatus.OK);
+		return new ResponseEntity<>("copied", HttpStatus.OK);
 	}
 
 	/**
@@ -197,7 +196,7 @@ public class ConfigurationController {
 			log.warn("Auxuliar folder deleted:" + e.getMessage());
 			throw new InternalError("Error deleting auxiliar folder: " + e.getMessage());
 		}
-		return new ResponseEntity<>(new String("deleted"), HttpStatus.OK);
+		return new ResponseEntity<>("deleted", HttpStatus.OK);
 	}
 
 	/**
@@ -255,7 +254,7 @@ public class ConfigurationController {
 			log.warn("Configuration not saved:" + e.getMessage());
 			throw new InternalError("Error saving: " + e.getMessage());
 		}
-		return new ResponseEntity<>(new String("saved"), HttpStatus.OK);
+		return new ResponseEntity<>("saved", HttpStatus.OK);
 	}
 
 }

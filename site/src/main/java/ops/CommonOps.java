@@ -7,23 +7,16 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import crawlers.Application;
 import dataBase.ConfigurationDatabase;
 import dataBase.ContainerDockerDatabase;
 import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
-import errors.InternalError;
 import models.Configuration;
 import models.ContainerDocker;
 import models.ImageDocker;
@@ -99,7 +92,7 @@ public class CommonOps {
 			try {
 				// If there's any index folder, deletes it
 				File folderProject = new File(container.getIdProject() + "_" + config.getId() + "_"
-						+ container.getIdImage() + container.getId() + "_" + "_index");
+						+ container.getIdImage() + "_"+ container.getId()  + "_index");
 				FileUtils.deleteDirectory(folderProject);
 			} catch (Exception a) {
 			}

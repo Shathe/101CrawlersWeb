@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import models.Configuration;
-import models.ContainerDocker;
 
 /**
  * Configuration database operations
