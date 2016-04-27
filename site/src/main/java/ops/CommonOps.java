@@ -1,5 +1,10 @@
 package ops;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +14,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import dataBase.ConfigurationDatabase;
 import dataBase.ContainerDockerDatabase;
 import dataBase.ImageDockerDatabase;
 import dataBase.ProjectDatabase;
+import errors.InternalError;
 import models.Configuration;
 import models.ContainerDocker;
 import models.ImageDocker;
@@ -177,4 +179,23 @@ public class CommonOps {
 
 	}
 
+	public void checkMessage(String command, String message, String exceptionMessage) {
+		try (BufferedReader out = executeCommand(command, false)) {
+			String lineOut;
+			String errorMessage = "";
+			boolean error = true;
+			while ((lineOut = out.readLine()) != null) {
+				errorMessage = lineOut;
+				if ((lineOut.contains(message))) {
+					error = false;
+				}
+			}
+			if (error) {
+				log.warn("Not valid container: " + errorMessage);
+				throw new InternalError("Not valid container: " + errorMessage);
+			}
+		} catch (IOException e) {
+			throw new InternalError(exceptionMessage + ": " + e.getMessage());
+		}
+	}
 }

@@ -801,7 +801,6 @@
                 	    params:  { idContainer: this.containerSelected.id }
 
           		    }).then(function mySucces(response) {
-          		    	console.log(response);
          		    	  document.location = 'data:Application/octet-stream,' +
                           encodeURIComponent(response.data);
           		    }, function myError(response) {
@@ -818,7 +817,6 @@
                   	    params:  { idContainer: this.containerSelected.id ,query : document.getElementById("search").value}
 
             		    }).then(function mySucces(response) {
-            		    	console.log(response);
            		    	  document.location = 'data:Application/octet-stream,' +
                               encodeURIComponent(response.data);
             		    	

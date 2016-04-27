@@ -30,115 +30,94 @@ import ops.CommonOps;
 
 /**
  * Controller for images. Manage every operation which deals with the projects.
- * 
+ *
  * @author shathe
  */
 @RestController
 public class ImageDockerController {
-	private static final Logger log = LoggerFactory.getLogger(ImageDockerController.class);
-	@Autowired
-	JdbcTemplate jdbcTemplate;
-	CommonOps ops = new CommonOps();
+    private static final Logger log = LoggerFactory.getLogger(ImageDockerController.class);
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    CommonOps ops = new CommonOps();
 
-	/**
-	 * Returns the images of a specified project
-	 */
-	@RequestMapping(value = "/images", method = RequestMethod.GET)
-	ResponseEntity<List<ImageDocker>> listImages(@RequestParam(value = "idProject") String idProject) {
+    /**
+     * Returns the images of a specified project
+     */
+    @RequestMapping(value = "/images", method = RequestMethod.GET)
+    ResponseEntity<List<ImageDocker>> listImages(@RequestParam(value = "idProject") String idProject) {
 
-		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
+        ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
 
-		log.info("listImages " + idProject);
-		List<ImageDocker> images;
-		try {
-			images = imageDB.getImages(idProject);
-		} catch (Exception a) {
-			throw new InternalError("Error listing images: " + a.getMessage());
-		}
+        log.info("listImages " + idProject);
+        List<ImageDocker> images;
+        try {
+            images = imageDB.getImages(idProject);
+        } catch (Exception a) {
+            throw new InternalError("Error listing images: " + a.getMessage());
+        }
 
-		return new ResponseEntity<>(images, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(images, HttpStatus.OK);
+    }
 
-	/**
-	 * Returns the deleted image if it has been deleted, if not, returns an
-	 * error message
-	 */
-	@RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-	ResponseEntity<ImageDocker> deleteImage(@RequestBody ImageDocker image) {
-		List<ImageDocker> images = new ArrayList<>();
-		images.add(image);
-		try {
-			ops.deleteImages(images, jdbcTemplate);
-		} catch (Exception e) {
-			log.warn("Error deleting: " + e.getMessage());
-			throw new InternalError("Error deleting: " + e.getMessage());
-		}
+    /**
+     * Returns the deleted image if it has been deleted, if not, returns an error message
+     */
+    @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
+    ResponseEntity<ImageDocker> deleteImage(@RequestBody ImageDocker image) {
+        List<ImageDocker> images = new ArrayList<>();
+        images.add(image);
+        try {
+            ops.deleteImages(images, jdbcTemplate);
+        } catch (Exception e) {
+            log.warn("Error deleting: " + e.getMessage());
+            throw new InternalError("Error deleting: " + e.getMessage());
+        }
 
-		return new ResponseEntity<>(image, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(image, HttpStatus.OK);
+    }
 
-	/**
-	 * Returns the updated image if it has been updated, if not, returns an
-	 * error message
-	 */
-	@RequestMapping(value = "/editImage", method = RequestMethod.POST)
-	ResponseEntity<ImageDocker> editImage(@RequestBody ImageDocker image) {
+    /**
+     * Returns the updated image if it has been updated, if not, returns an error message
+     */
+    @RequestMapping(value = "/editImage", method = RequestMethod.POST)
+    ResponseEntity<ImageDocker> editImage(@RequestBody ImageDocker image) {
 
-		log.info("updating image " + image.getId());
+        log.info("updating image " + image.getId());
 
-		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
-		try {
-			imageDB.updateImage(image);
-			log.info("updated image " + image.getId());
+        ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
+        try {
+            imageDB.updateImage(image);
+            log.info("updated image " + image.getId());
 
-		} catch (Exception a) {
-			throw new InternalError("Error updating: " + a.getMessage());
-		}
+        } catch (Exception a) {
+            throw new InternalError("Error updating: " + a.getMessage());
+        }
 
-		return new ResponseEntity<>(image, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(image, HttpStatus.OK);
+    }
 
-	/**
-	 * Returns the created image if it has been created, if not, returns an
-	 * error message
-	 */
-	@RequestMapping(value = "/createImage", method = RequestMethod.POST)
-	ResponseEntity<ImageDocker> createImage(@RequestParam(value = "idProject") String idProject,
-			@RequestParam(value = "name") String name) {
-		ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
-		// gets the last configuration of the project
-		Configuration config = confDB.GetConfigurationFromProject(idProject);
-		ImageDocker image = new ImageDocker(0, name, String.valueOf(config.getId()), idProject,
-				new Date(System.currentTimeMillis()));
-		ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
-		try {
-			imageDB.createImage(image);
-			log.info("created image " + image.getName());
-			image = imageDB.getImageJustCreated(idProject);
+    /**
+     * Returns the created image if it has been created, if not, returns an error message
+     */
+    @RequestMapping(value = "/createImage", method = RequestMethod.POST)
+    ResponseEntity<ImageDocker> createImage(@RequestParam(value = "idProject") String idProject,
+                                            @RequestParam(value = "name") String name) {
+        ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
+        // gets the last configuration of the project
+        Configuration config = confDB.GetConfigurationFromProject(idProject);
+        ImageDocker image = new ImageDocker(0, name, String.valueOf(config.getId()), idProject,
+                new Date(System.currentTimeMillis()));
+        ImageDockerDatabase imageDB = new ImageDockerDatabase(jdbcTemplate);
+        imageDB.createImage(image);
+        log.info("created image " + image.getName());
+        image = imageDB.getImageJustCreated(idProject);
 
-			String command = "java -jar ../butler.jar do build --imageName " + image.getId() + " --idProject "
-					+ idProject + "_" + config.getId();
-			log.info("Command: " + command);
-			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
-			String errorMessage = "";
-			boolean error = true;
-			while ((lineOut = out.readLine()) != null) {
-				errorMessage = lineOut;
-				if ((lineOut.contains("successfully"))) {
-					error = false;
-				}
-			}
-			if (error) {
-				log.warn("Not valid Image: " + errorMessage);
-				throw new InternalError("Not valid Image: " + errorMessage);
-			}
+        String command = "java -jar ../butler.jar do build --imageName " + image.getId() + " --idProject "
+                + idProject + "_" + config.getId();
+        log.info("Command: " + command);
+        ops.checkMessage(command, "successfully", "Not valid Image");
 
-		} catch (Exception a) {
-			throw new InternalError("Error creating: " + a.getMessage());
-		}
-
-		return new ResponseEntity<>(image, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(image, HttpStatus.OK);
+    }
 
 }

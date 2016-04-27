@@ -64,7 +64,7 @@ public class ConfigurationDatabase {
 	/**
 	 * Deletes every configuration of a project
 	 * 
-	 * @param project
+	 * @param idProject
 	 * @return
 	 */
 	public int deleteConfigurationsOfProject(String idProject) {
@@ -74,7 +74,7 @@ public class ConfigurationDatabase {
 	/**
 	 * Creates a new configuration
 	 * 
-	 * @param project
+	 * @param idProject
 	 * @return
 	 */
 	public int createConfiguration(Configuration configuration) {
