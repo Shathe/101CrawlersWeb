@@ -4,21 +4,6 @@
 
 package crawlers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +18,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import dataBase.ConfigurationDatabase;
 import dataBase.ContainerDockerDatabase;
 import dataBase.ProjectDatabase;
@@ -40,7 +39,6 @@ import errors.InternalError;
 import models.Configuration;
 import models.ContainerDocker;
 import models.ContainerStatus;
-
 import ops.CommonOps;
 
 /**
@@ -463,19 +461,11 @@ public class ContainerDockerController {
 			OutputStream outStream = response.getOutputStream();
 			IOUtils.copy(inputStream, outStream);
 			response.flushBuffer();
-			try {
-				if (null != inputStream)
-					inputStream.close();
-				if (null != inputStream)
-					outStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            inputStream.close();
 		} catch (Exception e) {
 			log.warn("Error writing file to output stream", e);
 			throw new RuntimeException("IOError writing file to output stream");
 		}
-
 	}
 
     /**
