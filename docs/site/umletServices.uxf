@@ -2,12 +2,24 @@
 <diagram program="umlet" version="14.1.1">
   <zoom_level>10</zoom_level>
   <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>190</x>
+      <y>30</y>
+      <w>730</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>Services
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
     <id>UMLGeneric</id>
     <coordinates>
       <x>210</x>
-      <y>280</y>
-      <w>200</w>
-      <h>80</h>
+      <y>80</y>
+      <w>690</w>
+      <h>250</h>
     </coordinates>
     <panel_attributes>symbol=component
 Rest Controllers</panel_attributes>
@@ -16,80 +28,124 @@ Rest Controllers</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>420</x>
-      <y>280</y>
-      <w>240</w>
+      <x>220</x>
+      <y>150</y>
+      <w>230</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>symbol=component
-Exceptions Management</panel_attributes>
+Project Controller
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>210</x>
-      <y>390</y>
-      <w>450</w>
+      <x>220</x>
+      <y>240</y>
+      <w>230</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>symbol=component
-JDBC JdbcTemplate</panel_attributes>
+Configuration Controller
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>UMLDeployment</id>
+    <id>UMLGeneric</id>
     <coordinates>
-      <x>180</x>
-      <y>210</y>
-      <w>520</w>
-      <h>300</h>
-    </coordinates>
-    <panel_attributes>Services</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLDeployment</id>
-    <coordinates>
-      <x>340</x>
-      <y>530</y>
-      <w>170</w>
+      <x>470</x>
+      <y>150</y>
+      <w>200</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>JDBC Data Base</panel_attributes>
+    <panel_attributes>symbol=component
+Image Controller</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>690</x>
+      <y>150</y>
+      <w>200</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Container Controller</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>470</x>
+      <y>240</y>
+      <w>200</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Main Controller
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>690</x>
+      <y>240</y>
+      <w>200</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+User Controller
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>420</x>
+      <y>490</y>
+      <w>250</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;DataBase&gt;&gt;
+JDBC Database</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>400</x>
+      <y>350</y>
+      <w>290</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+JDBC Template
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>410</x>
-      <y>440</y>
+      <x>540</x>
+      <y>310</y>
       <w>30</w>
-      <h>120</h>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>380</x>
-      <y>320</y>
-      <w>90</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>290</x>
-      <y>320</y>
+      <x>540</x>
+      <y>430</y>
       <w>30</w>
-      <h>120</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>

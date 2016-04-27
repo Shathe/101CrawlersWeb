@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>448</x>
+      <y>56</y>
+      <w>70</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Yalm 
+Configuration 
+File
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>616</x>
+      <y>371</y>
+      <w>189</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Customized Templates</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>721</x>
+      <y>308</y>
+      <w>77</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Crawler
+Configuration
+Files
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>623</x>
+      <y>308</y>
+      <w>91</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Dockerfile
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>616</x>
+      <y>280</y>
+      <w>189</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Default templates</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>623</x>
+      <y>126</y>
+      <w>84</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Docker 
+Builder</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>616</x>
+      <y>98</y>
+      <w>189</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Configuration validator</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>714</x>
+      <y>126</y>
+      <w>84</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Crawler 
+Builder</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>616</x>
+      <y>189</y>
+      <w>189</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Builder</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>98</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>448</x>
+      <y>126</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Validate
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>469</x>
+      <y>175</y>
+      <w>28</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>bg=green
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>147</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>483</x>
+      <y>14</y>
+      <w>105</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+No valid</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0;80.0;250.0;20.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>196</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Valid</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>623</x>
+      <y>217</y>
+      <w>84</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Docker 
+Builder</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>714</x>
+      <y>217</y>
+      <w>84</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=component
+Crawler 
+Builder</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>623</x>
+      <y>406</y>
+      <w>91</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Dockerfile
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>721</x>
+      <y>406</y>
+      <w>77</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Crawler
+Configuration
+Files
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLObject</id>
+    <coordinates>
+      <x>378</x>
+      <y>0</y>
+      <w>217</w>
+      <h>511</h>
+    </coordinates>
+    <panel_attributes>DSL Creator System
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>448</x>
+      <y>224</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Build
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>476</x>
+      <y>14</y>
+      <w>14</w>
+      <h>14</h>
+    </coordinates>
+    <panel_attributes>type=initial</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>14</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSyncBarHorizontal</id>
+    <coordinates>
+      <x>448</x>
+      <y>280</y>
+      <w>70</w>
+      <h>14</h>
+    </coordinates>
+    <panel_attributes>{joinSpec=
+date is on or 
+after July 1st
+and the exam 
+is passed}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>497</x>
+      <y>280</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>245</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>455</x>
+      <y>280</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>413</x>
+      <y>308</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Build Docker
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>490</x>
+      <y>308</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Build Crawler
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>448</x>
+      <y>385</y>
+      <w>77</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>symbol=artifact
+Final
+Configuration
+Files
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarHorizontal</id>
+    <coordinates>
+      <x>448</x>
+      <y>350</y>
+      <w>70</w>
+      <h>14</h>
+    </coordinates>
+    <panel_attributes>{joinSpec=
+date is on or 
+after July 1st
+and the exam 
+is passed}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>350</y>
+      <w>21</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>497</x>
+      <y>329</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>455</x>
+      <y>329</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>14</x>
+      <y>14</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>511</x>
+      <y>133</y>
+      <w>119</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>511</x>
+      <y>231</y>
+      <w>119</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>518</x>
+      <y>399</y>
+      <w>112</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>476</x>
+      <y>322</y>
+      <w>259</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>350.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>553</x>
+      <y>322</y>
+      <w>91</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
