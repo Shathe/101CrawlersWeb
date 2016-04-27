@@ -405,7 +405,7 @@ public class ContainerDockerController {
             // Copy bytes from source to destination(outputstream in this
             // example), closes both streams.
             FileCopyUtils.copy(inputStream, response.getOutputStream());
-
+            inputStream.close();
         } catch (Exception a) {
             log.warn("Error downloading crawler: " + a.getMessage());
         }
