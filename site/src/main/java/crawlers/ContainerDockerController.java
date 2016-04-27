@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -370,6 +372,7 @@ public class ContainerDockerController {
 		ContainerDocker container;
 		ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
+
 		try {
 			container = containerDB.getContainerFromId(idContainer);
 			ConfigurationDatabase confDB = new ConfigurationDatabase(jdbcTemplate);
@@ -409,13 +412,18 @@ public class ContainerDockerController {
 				mimeType = "application/octet-stream";
 			}
 
-			response.setContentType(mimeType);
+			FileInputStream inputStream = new FileInputStream(file);
 
-			// "Content-Disposition : inline" will show viewable types [like
-			// images/text/pdf/anything viewable by browser] right on browser
-			// while others(zip e.g) will be directly downloaded [may provide
-			// save as popup, based on your browser setting.]
-			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+			response.setContentLength((int) file.length());
+
+			// response header
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"", file.getName());
+			response.setHeader(headerKey, headerValue);
+
+			// Write response
+
+			response.setContentType(mimeType);
 
 			// "Content-Disposition : attachment" will be directly download, may
 			// provide save as popup, based on your browser setting
@@ -424,14 +432,22 @@ public class ContainerDockerController {
 
 			response.setContentLength((int) file.length());
 
-			InputStream inputStream = new FileInputStream(file);
-
 			// Copy bytes from source to destination(outputstream in this
 			// example), closes both streams.
-			FileCopyUtils.copy(inputStream, response.getOutputStream());
-
-		} catch (Exception a) {
-			log.warn("Error downloading crawler: " + a.getMessage());
+			OutputStream outStream = response.getOutputStream();
+			IOUtils.copy(inputStream, outStream);
+			response.flushBuffer();
+			try {
+				if (null != inputStream)
+					inputStream.close();
+				if (null != inputStream)
+					outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			log.warn("Error writing file to output stream", e);
+			throw new RuntimeException("IOError writing file to output stream");
 		}
 
 	}
@@ -465,6 +481,7 @@ public class ContainerDockerController {
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			// Read from the file and write into the response
 			OutputStream os = response.getOutputStream();
+
 			byte[] buffer = new byte[1024];
 			int len;
 			while ((len = is.read(buffer)) != -1) {

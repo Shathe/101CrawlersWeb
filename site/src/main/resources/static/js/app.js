@@ -552,6 +552,7 @@
       /** Goes to a container (visually) */
 
       this.goToContainer= function(container) {
+    emptyContainerItemMessage();
   	  this.containerSelected=container;
       }
       /** Deletes a Container and shows visually if it has been really deleted */
@@ -774,7 +775,8 @@
               
               /** Searches the crawler */
               this.searchQuery = function (){
-                 
+            	    emptyContainerItemMessage();
+
                   $http({
         		        method : "GET",
         		        url : "/searchContainer",
@@ -800,6 +802,8 @@
 
           		    }).then(function mySucces(response) {
           		    	console.log(response);
+         		    	  document.location = 'data:Application/octet-stream,' +
+                          encodeURIComponent(response.data);
           		    }, function myError(response) {
           		    	console.log(response);
 
@@ -815,6 +819,9 @@
 
             		    }).then(function mySucces(response) {
             		    	console.log(response);
+           		    	  document.location = 'data:Application/octet-stream,' +
+                              encodeURIComponent(response.data);
+            		    	
             		    }, function myError(response) {
             		    	console.log(response);
 
@@ -822,7 +829,9 @@
                       
                     };
               
-            
+                    function onDownload() {
+                      
+                    }
 
 }]);
 
