@@ -9,9 +9,9 @@
 
 Al darle al botón de 'new project', se mostrará una nueva pantalla para rellenar los datos necesarios para la creación del proyecto.
 
-# Información mínima necesaria
+### Información mínima necesaria
 * Nombre del proyecto
-* fichero de configuración Yalm que siga [esta especificación](https://github.com/Shathe/101CrawlersWeb/wiki/Especificaci%C3%B3n-del-fichero-de-configuraci%C3%B3n-yaml)
+* fichero de configuración Yaml que siga [esta especificación](https://github.com/Shathe/101CrawlersWeb/wiki/Especificaci%C3%B3n-del-fichero-de-configuraci%C3%B3n-yaml)
 
 
 ![alt tag]
@@ -21,7 +21,7 @@ Tras introducir el nombre y seleccionar el fichero correspondiente al DSL, el fi
 
 Una vez subido el fichero, se puede dar a guardar el proyecto. Cuando se le dé, se validará el fichero y si es correcto, el proyecto se creará, sino es así, se notificará del error y no se creará.
 
-# Información opcional 
+### Información opcional 
 * Plugins
 
 Los plugins se deben de adjuntar con todos sus ficheros de golpe y ya compilados, es decir, el fichero plugin.xml y los jars. Para poder añadir un plugin, tan solo hay que darle un nombre (el nombre del plugin que viene en el plugin.xml) y adjutnar los ficheros. Al darle a Upload plugin, se subirá el plugin al servidor.
@@ -61,7 +61,7 @@ Una vez lo creas, y clicas en el para introducirte dentro, tardará en cargar un
 ![alt tag]
 (https://raw.githubusercontent.com/Shathe/101CrawlersWeb/master/docs/site/container2.png)
 
-# Funcionalidades
+### Funcionalidades
 
 * Index: Indexa todo lo que se ha ido recogiendo de información, esta opción está introducida debido a que en el DSL se especifica cuadno se quiere indexar, pero se da la opción de realizarlo manualmente por si el usuario quiere asegurarse o ha cambiado de opinión respecto a cuando realizarla.
 * Search: Puedes buscar cualquier contenido en la información que el sistema ha recogido tan solo introduciendo la búsqueda y clicando a este botón. Tan solo muestra los 20 primeros resultados
