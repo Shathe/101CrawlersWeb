@@ -4,7 +4,7 @@ Docker based crawler customization and monitoring infrastructure
 
 Open source developing application.
 
-## Organización
+## Organization
 
 * [docs](docs) General project documentation
 * [butler](butler) Dockerized crawlers management system.
