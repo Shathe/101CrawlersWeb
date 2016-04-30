@@ -7,10 +7,11 @@
   col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
 			<div>
 				<h2>
-					<b>{{container.containerSelected.name}}: </b>
+					<b>{{container.containerSelected.name}} </b> <small>Container status:
+						{{containerStatus.containerStatus}}. Crawler status:
+						{{containerStatus.crawlerStatus}}</small>
 				</h2>
-				<h4>container {{containerStatus.containerStatus}}, crawler
-					{{containerStatus.crawlerStatus}}</h4>
+
 				<br />
 
 				<div class="form-group">
@@ -63,16 +64,14 @@
 								style="background-color: #0288D1; float: right;"
 								ng-click="container.downloadResults();">
 								Download all results <span
-									class="glyphicon glyphicon-download-alt"
-								aria-hidden="true"></span>
+									class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 							</button>
 					</small> <small>
 							<button class="btn btn-info" id="downlaodresults"
 								style="background-color: #0288D1; float: right;"
 								ng-click="container.downloadAll();">
-								Download all <span
-									class="glyphicon glyphicon-download-alt"
-								aria-hidden="true"></span>
+								Download all information <span
+									class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 							</button>
 					</small>
 					</small>
