@@ -7,11 +7,14 @@
   col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
 			<div>
 				<h2>
-					<b>{{container.containerSelected.name}} </b> <small>Container status:
-						{{containerStatus.containerStatus}}. Crawler status:
-						{{containerStatus.crawlerStatus}}</small>
+					<b>{{container.containerSelected.name}} </b> <small>Container
+						status: {{containerStatus.containerStatus}}. Crawler status:
+						{{containerStatus.crawlerStatus}} </small> <br /> <small>Rounds:
+						{{containerStatus.rounds}} Fetched links:
+						{{containerStatus.fetchedLinks}}  Unfetched links:
+						{{containerStatus.unfetchedLinks}} </small>
 				</h2>
-
+			
 				<br />
 
 				<div class="form-group">

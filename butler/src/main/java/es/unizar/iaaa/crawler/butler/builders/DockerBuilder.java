@@ -74,6 +74,8 @@ public class DockerBuilder {
 			} else {
 				pw.println("dumpOptions=\"-nogenerate -nofetch -nocontent -noparse -noparsedata\"");
 			}
+			pw.println("echo '0/"+configuracion.getCrawlSystem().getRounds()+" ' >> roundsDone.txt");
+
 			while (scan.hasNextLine()) {
 				String linea = scan.nextLine();
 				if (linea.contains("i=$(($i+1))") && configuracion.getCrawlSystem().getExtraction().contains("round")) {
@@ -81,6 +83,7 @@ public class DockerBuilder {
 					pw.println("sh juntarSalidas.sh");
 					pw.println("java -jar $HOME/101CrawlersWeb/butler.jar index");
 					pw.println("touch IndexPending");
+					pw.println("echo $((i+1))/"+configuracion.getCrawlSystem().getRounds()+"  >> roundsDone.txt");
 				}
 				if (linea.contains("rm STARTED") && configuracion.getCrawlSystem().getExtraction().contains("finish")) {
 
@@ -88,6 +91,8 @@ public class DockerBuilder {
 					pw.println("sh juntarSalidas.sh");
 					pw.println("java -jar $HOME/101CrawlersWeb/butler.jar index");
 					pw.println("touch IndexPending");
+					pw.println("echo $((i+1))/"+configuracion.getCrawlSystem().getRounds()+"  >> roundsDone.txt");
+
 
 				}
 				pw.println(linea);

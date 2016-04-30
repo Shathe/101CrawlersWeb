@@ -29,6 +29,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -268,6 +269,31 @@ public class ContainerDockerController {
             }
             status.setCrawlerStatus(message);
 
+            command = "java -jar ../butler.jar do runningStatus --containerName " + container.getId() + " --imageName "
+                    + container.getIdImage() + " --idProject " + container.getIdProject() + "_" + config.getId();
+            log.info("Command: " + command);
+            out = ops.executeCommand(command, false);
+            lineOut = "";
+            while ((lineOut = out.readLine()) != null) {
+                // get the last message with the state
+                message = lineOut;
+            }
+            // message -> Fetched links: 2, unfetched links: 158, rounds: 1/2
+            message=message.replace("Fetched links:", "");
+            message=message.replace("unfetched links:", "");
+            message=message.replace("rounds:", "");
+            message= message.replace(",", "");
+            Scanner scan= new Scanner(message);
+            try{
+                status.setFetchedLinks(scan.next());
+                status.setUnfetchedLinks(scan.next());
+                status.setRounds(scan.next());
+            }catch(Exception a){
+            	 status.setFetchedLinks("0");
+                 status.setUnfetchedLinks("0");
+                 status.setRounds("0");
+            }
+            scan.close();
         } catch (Exception a) {
             throw new InternalError("Error getting the status of the crawler: " + a.getMessage());
         }

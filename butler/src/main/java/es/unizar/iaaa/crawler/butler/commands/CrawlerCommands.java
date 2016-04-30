@@ -76,6 +76,12 @@ public class CrawlerCommands implements CommandMarker {
 		return true;
 	}
 
+	@CliAvailabilityIndicator({ "runningStatus" })
+	public boolean runningStatusAvailable() {
+		// always available
+		return true;
+	}
+
 	/**
 	 * Start docker container
 	 */
@@ -259,6 +265,101 @@ public class CrawlerCommands implements CommandMarker {
 	}
 
 	/**
+	 * Returns the number of unfetched links, fetched links and number of rounds
+	 * done
+	 */
+	@CliCommand(value = "runningStatus", help = "Returns the number of unfetched links")
+	public String links(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
+
+		String command = "docker exec " + idContainer + " crawler/bin/nutch readdb crawler/micrawl/crawldb -stats";
+		if (!ops.dockerIsRunning()) {
+			return "Docker is not running, please start it with sudo service docker start";
+		}
+		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
+			return "Docker container don't exist, please, try executing the start command";
+		}
+
+		String s;
+		String unfetched = "0";
+		String fetched = "0";
+		String rounds = "0";
+		String result = "The crawler hasn't been started yet";
+		try {
+			BufferedReader out = ops.executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains("status 1 (db_unfetched):")) {
+					s = s.replace("status 1 (db_unfetched):", "");
+					s = s.replace("	", "");
+					unfetched = s;
+				}
+			}
+			command = "docker exec " + idContainer + " caFetchedt crawler/roundsDone.txt";
+			out = ops.executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains("/"))
+					rounds = s;
+			}
+			command = "docker exec " + idContainer + " crawler/bin/nutch readdb crawler/micrawl/crawldb -stats";
+			out = ops.executeCommand(command, false);
+			while ((s = out.readLine()) != null) {
+				if (s.contains("status 2 (db_fetched):")) {
+					s = s.replace("status 2 (db_fetched):", "");
+					s = s.replace("	", "");
+					fetched = s;
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			fetched = "I don't known";
+		}
+		if (unfetched.equals("") && rounds.equals("") && fetched.equals(""))
+			return result;
+		else
+			return "Fetched links: " + fetched + ", unfetched links: " + unfetched + ", rounds: " + rounds;
+	}
+
+	/**
+	 * Returns the number of fetch links
+	 */
+	@CliCommand(value = "fetchLinks", help = "Returns the number of fetched links")
+	public String unfetchLinks(
+			@CliOption(key = { "idProject" }, mandatory = true, help = "id of the idProject") final String idProject,
+			@CliOption(key = { "imageName" }, mandatory = true, help = "name of the image") final String imageName,
+			@CliOption(key = {
+					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
+		String idContainer = idProject + "_" + imageName + "_" + containerName;
+
+		String command = "docker exec " + idContainer + " crawler/bin/nutch readdb crawler/micrawl/crawldb -stats";
+		if (!ops.dockerIsRunning()) {
+			return "Docker is not running, please start it with sudo service docker start";
+		}
+		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
+			return "Docker container don't exist, please, try executing the start command";
+		}
+
+		String s;
+		try (BufferedReader out = ops.executeCommand(command, false)) {
+			while ((s = out.readLine()) != null) {
+				if (s.contains("status 2 (db_fetched):")) {
+					s = s.replace("status 2 (db_fetched):", "");
+					s = s.replace("	", "");
+					s = s.replace(" ", "");
+					return s;
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "I don't known";
+		}
+		return "The crawler hasn't been started yet";
+	}
+
+	/**
 	 * Gives information about the crawl, if the crawl is actually running
 	 */
 	@CliCommand(value = "info", help = "information about the crawl")
@@ -320,7 +421,7 @@ public class CrawlerCommands implements CommandMarker {
 			return "Paused";
 		if (ops.containerStopped(idContainer))
 			return "Stopped";
-		
+
 		return "Unknown status";
 	}
 

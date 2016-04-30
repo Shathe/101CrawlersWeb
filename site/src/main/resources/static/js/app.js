@@ -552,8 +552,11 @@
       /** Goes to a container (visually) */
 
       this.goToContainer= function(container) {
-    emptyContainerItemMessage();
-  	  this.containerSelected=container;
+	      emptyContainerItemMessage();
+	  	  this.containerSelected=container;
+	  	 $scope.containerStatus={containerStatus:"Loading..",
+	  			 crawlerStatus:"Loading..",rounds:"Loading..",
+	  	    	 fetchedLinks:"Loading..", unfetchedLinks:"Loading.."};
       }
       /** Deletes a Container and shows visually if it has been really deleted */
 
@@ -653,11 +656,13 @@
   		    }).then(function mySucces(response) {
                 emptyContainerItemMessage();
   		    	console.log(response);
-        		  $scope.containerStatus=response.data;
+        		$scope.containerStatus=response.data;
+        		
+
+
   		    }, function myError(response) {
   		    	console.log(response);
-          		$scope.containerStatus=response.data;
-                emptyContainerItemMessage();
+          		
 
   		    });		
             })
@@ -744,7 +749,10 @@
           this.containerStatus = function (){
         	  var container=this.containerSelected;
 		    	console.log(container);
-
+		    	 $scope.containerStatus={containerStatus:"Loading..",
+			  			 crawlerStatus:"Loading..",rounds:"Loading..",
+			  	    	 fetchedLinks:"Loading..", unfetchedLinks:"Loading.."};
+    	
         	  $http({
   		        method : "GET",
   		        url : "/statusContainer",
@@ -753,6 +761,7 @@
   		    }).then(function mySucces(response) {
   		    	console.log(response);
         		  $scope.containerStatus=response.data;
+
 
   		    }, function myError(response) {
   		    	console.log(response);
