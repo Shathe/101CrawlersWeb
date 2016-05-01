@@ -284,7 +284,7 @@ public class CrawlerCommands implements CommandMarker {
 			return "Fetched links: Unknwon, unfetched links: Unknwon, rounds: Unknwon";
 		}
 		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
-			return "Fetched links: Don't know, unfetched links: Don't know, rounds: Don't know";
+			return "Fetched links: Unknwon, unfetched links: Unknwon, rounds: Unknwon";
 		}
 
 		String s;
