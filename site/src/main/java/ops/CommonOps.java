@@ -191,8 +191,8 @@ public class CommonOps {
 				}
 			}
 			if (error) {
-				log.warn("Not valid container: " + errorMessage);
-				throw new InternalError("Not valid container: " + errorMessage);
+				log.warn("Not valid container/image: " + errorMessage);
+				throw new InternalError("Not valid container/image: " + errorMessage);
 			}
 		} catch (IOException e) {
 			throw new InternalError(exceptionMessage + ": " + e.getMessage());
