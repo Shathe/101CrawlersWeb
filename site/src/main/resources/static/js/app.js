@@ -854,7 +854,7 @@
 
 	  /** Gives red color if the passwords are not the same */
     this.colorPswdRepeat = function (){
-      /* Se evalua que las contraseñas coincidas */
+      /* Se evalua que las contrasenas coincidas */
       var inputRepeat = document.getElementById("confirmPassword");
       if (this.repeatPswd==this.password){
         inputRepeat.style.borderColor= "#78FA89";
@@ -1053,12 +1053,12 @@ function loginUser(username, pass) {
       console.log(data);
       var obj = jQuery.parseJSON(data.responseText );
       var mensajeError=obj.message;
-      if(mensajeError.indexOf("contraseña") > -1){
+      if(mensajeError.indexOf("password") > -1){
         document.getElementById("passwordLogin").value="";
         document.getElementById("passwordLogin").placeholder=obj.message;
 
       }
-      if(mensajeError.indexOf("usuario") > -1){
+      if(mensajeError.indexOf("user") > -1){
         document.getElementById("usernameLogin").value="";
         document.getElementById("usernameLogin").placeholder=obj.message;
 

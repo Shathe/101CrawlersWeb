@@ -129,7 +129,7 @@
 															<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 														</span> <input type="text" name="usernameLogin"
 															id="usernameLogin" tabindex="1" class="form-control"
-															placeholder="Nombre de usuario"
+															placeholder="username"
 															ng-model="formulario.user" required="true" />
 													</div>
 												</div>
@@ -140,7 +140,7 @@
 															<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 														</span> <input type="password" name="passwordLogin"
 															id="passwordLogin" tabindex="2" class="form-control"
-															placeholder="Contraseña" required="true" />
+															placeholder="password" required="true" />
 													</div>
 												</div>
 												<ul class="list-group">
@@ -182,7 +182,7 @@
 															<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 														</span> <input type="text" name="usernameRegister"
 															id="usernameRegister" tabindex="1" class="form-control"
-															placeholder="Usuario" ng-model="formulario.user"
+															placeholder="User" ng-model="formulario.user"
 															required="true" />
 													</div>
 												</div>
@@ -202,7 +202,7 @@
 														</span> <input type="password" name="passwordRegister"
 															ng-model="formulario.password" id="passwordRegister"
 															tabindex="2" class="form-control"
-															placeholder="Contraseña (tamaño 5-25 sin caracteres especiales)"
+															placeholder="password (size 5-25, no special characters)"
 															ng-Change="formulario.colorPswdRepeat()" required="true"
 															pattern="[A-Za-z0-9-_.=/@+:]{5,25}" />
 													</div>
@@ -214,7 +214,7 @@
 															<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 														</span> <input type="password" name="confirmPassword"
 															id="confirmPassword" tabindex="2" class="form-control"
-															placeholder="Repita la contraseña"
+															placeholder="repeat the password"
 															ng-model="formulario.repeatPswd"
 															ng-Change="formulario.colorPswdRepeat()" required="true" />
 													</div>

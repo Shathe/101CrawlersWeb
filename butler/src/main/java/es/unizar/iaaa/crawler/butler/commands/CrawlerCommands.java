@@ -183,52 +183,52 @@ public class CrawlerCommands implements CommandMarker {
 		Path outputPath = Paths.get(indexPath);
 		// If the folder exists, delete it (rewrite the index)
 
-			try {
-				FileUtils.deleteDirectory(outputPath.toFile());
-				Files.createDirectory(outputPath);
-			} catch (IOException e1) {
-				LOGGER.warn("IOException: " + e1.getMessage(), e1);
-				return "Failing creating the index folder";
-			}
-			if (!ops.dockerIsRunning()) {
-				return "Docker is not running, please start it with sudo service docker start";
-			}
-			if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
-				return "Docker container don't exist, please, try executing the start command";
-			}
+		try {
+			FileUtils.deleteDirectory(outputPath.toFile());
+			Files.createDirectory(outputPath);
+		} catch (IOException e1) {
+			LOGGER.warn("IOException: " + e1.getMessage(), e1);
+			return "Failing creating the index folder";
+		}
+		if (!ops.dockerIsRunning()) {
+			return "Docker is not running, please start it with sudo service docker start";
+		}
+		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
+			return "Docker container don't exist, please, try executing the start command";
+		}
 
-			String command1 = "docker exec " + idContainer + " sh crawler/juntarSalidas.sh";
-			try {
-				ops.executeCommand(command1, true);
-			} catch (IOException e) {
-				LOGGER.warn("IOException: " + e.getMessage(), e);
-				return "Docker exec failed";
-			}
+		String command1 = "docker exec " + idContainer + " sh crawler/juntarSalidas.sh";
+		try {
+			ops.executeCommand(command1, true);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "Docker exec failed";
+		}
 
-			String command2 = "docker cp " + idContainer + ":root/crawler/salida/salida " + indexPath + "/output.txt";
-			try {
-				ops.executeCommand(command2, true);
-			} catch (IOException e) {
-				LOGGER.warn("IOException: " + e.getMessage(), e);
-				return "Docker cp failed";
-			}
+		String command2 = "docker cp " + idContainer + ":root/crawler/salida/salida " + indexPath + "/output.txt";
+		try {
+			ops.executeCommand(command2, true);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "Docker cp failed";
+		}
 
-			try {
-				// Index
-				IndexFiles nuevo = new IndexFiles();
-				nuevo.index(idContainer + "_index/index", new File(idContainer + "_index/output.txt"));
+		try {
+			// Index
+			IndexFiles nuevo = new IndexFiles();
+			nuevo.index(idContainer + "_index/index", new File(idContainer + "_index/output.txt"));
 
-				// Ahora este índice está más actualizado o igual que el de
-				// docker,
-				// así
-				// que se borra que el indice está pendiente
-				// en el contendor respecto a el del sistema
-				command1 = "docker exec " + idContainer + " rm crawler/IndexPending";
-				ops.executeCommand(command1, false);
-			} catch (IOException e) {
-				LOGGER.warn("IOException: " + e.getMessage(), e);
-				return "Docker exec failed";
-			
+			// Ahora este índice está más actualizado o igual que el de
+			// docker,
+			// así
+			// que se borra que el indice está pendiente
+			// en el contendor respecto a el del sistema
+			command1 = "docker exec " + idContainer + " rm crawler/IndexPending";
+			ops.executeCommand(command1, false);
+		} catch (IOException e) {
+			LOGGER.warn("IOException: " + e.getMessage(), e);
+			return "Docker exec failed";
+
 		}
 		LOGGER.info("Indexed correctly " + idContainer);
 
@@ -281,10 +281,10 @@ public class CrawlerCommands implements CommandMarker {
 
 		String command = "docker exec " + idContainer + " crawler/bin/nutch readdb crawler/micrawl/crawldb -stats";
 		if (!ops.dockerIsRunning()) {
-			return "Docker is not running, please start it with sudo service docker start";
+			return "Fetched links: Unknwon, unfetched links: Unknwon, rounds: Unknwon";
 		}
 		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
-			return "Docker container don't exist, please, try executing the start command";
+			return "Fetched links: Don't know, unfetched links: Don't know, rounds: Don't know";
 		}
 
 		String s;
@@ -301,7 +301,7 @@ public class CrawlerCommands implements CommandMarker {
 					unfetched = s;
 				}
 			}
-			command = "docker exec " + idContainer + " caFetchedt crawler/roundsDone.txt";
+			command = "docker exec " + idContainer + " cat crawler/roundsDone.txt";
 			out = ops.executeCommand(command, false);
 			while ((s = out.readLine()) != null) {
 				if (s.contains("/"))
@@ -322,8 +322,19 @@ public class CrawlerCommands implements CommandMarker {
 		}
 		if (unfetched.equals("") && rounds.equals("") && fetched.equals(""))
 			return result;
-		else
-			return "Fetched links: " + fetched + ", unfetched links: " + unfetched + ", rounds: " + rounds;
+
+		if (!(rounds.contains("/") || rounds.contains("0")))
+			rounds = "Don't know";
+		try {
+			Integer.valueOf(fetched);
+			Integer.valueOf(unfetched);
+		} catch (Exception a) {
+			unfetched = "Don't know";
+			fetched = "Don't know";
+
+		}
+
+		return "Fetched links: " + fetched + ", unfetched links: " + unfetched + ", rounds: " + rounds;
 	}
 
 	/**
@@ -442,8 +453,6 @@ public class CrawlerCommands implements CommandMarker {
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
 		String idContainer = idProject + "_" + imageName + "_" + containerName;
-
-	
 
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";
