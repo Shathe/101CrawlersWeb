@@ -11,10 +11,10 @@
 						status: {{containerStatus.containerStatus}}. Crawler status:
 						{{containerStatus.crawlerStatus}} </small> <br /> <small>Rounds:
 						{{containerStatus.rounds}} Fetched links:
-						{{containerStatus.fetchedLinks}}  Unfetched links:
+						{{containerStatus.fetchedLinks}} Unfetched links:
 						{{containerStatus.unfetchedLinks}} </small>
 				</h2>
-			
+
 				<br />
 
 				<div class="form-group">
@@ -63,18 +63,32 @@
 									aria-hidden="true"></span>
 							</button>
 					</small> <small>
-							<button class="btn btn-info" id="downlaodresults"
+							<button class="btn btn-info"
 								style="background-color: #0288D1; float: right;"
 								ng-click="container.downloadResults();">
 								Download all results <span
 									class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 							</button>
 					</small> <small>
-							<button class="btn btn-info" id="downlaodresults"
+							<button class="btn btn-info"
 								style="background-color: #0288D1; float: right;"
 								ng-click="container.downloadAll();">
 								Download all information <span
 									class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+							</button>
+					</small> <small>
+							<button class="btn btn-info"
+								style="background-color: #0288D1; float: right;"
+								ng-click="container.addOpenSearch();">
+								Opendata it <span class="glyphicon glyphicon-cloud-upload"
+									aria-hidden="true"></span>
+							</button>
+					</small> <small>
+							<button class="btn btn-info"
+								style="background-color: #0288D1; float: right;"
+								ng-click="container.searchOpen();">
+								open Search <span class="glyphicon glyphicon-cloud-download"
+									aria-hidden="true"></span>
 							</button>
 					</small>
 					</small>

@@ -181,51 +181,54 @@ public class CrawlerCommands implements CommandMarker {
 		String idContainer = idProject + "_" + imageName + "_" + containerName;
 		String indexPath = idContainer + "_index";
 		Path outputPath = Paths.get(indexPath);
-
 		// If the folder exists, delete it (rewrite the index)
-		try {
-			FileUtils.deleteDirectory(outputPath.toFile());
-			Files.createDirectory(outputPath);
-		} catch (IOException e1) {
-			LOGGER.warn("IOException: " + e1.getMessage(), e1);
-			return "Failing creating the index folder";
-		}
-		if (!ops.dockerIsRunning()) {
-			return "Docker is not running, please start it with sudo service docker start";
-		}
-		if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
-			return "Docker container don't exist, please, try executing the start command";
-		}
 
-		String command1 = "docker exec " + idContainer + " sh crawler/juntarSalidas.sh";
-		try {
-			ops.executeCommand(command1, true);
-		} catch (IOException e) {
-			LOGGER.warn("IOException: " + e.getMessage(), e);
-			return "Docker exec failed";
-		}
+			try {
+				FileUtils.deleteDirectory(outputPath.toFile());
+				Files.createDirectory(outputPath);
+			} catch (IOException e1) {
+				LOGGER.warn("IOException: " + e1.getMessage(), e1);
+				return "Failing creating the index folder";
+			}
+			if (!ops.dockerIsRunning()) {
+				return "Docker is not running, please start it with sudo service docker start";
+			}
+			if (!ops.containerExists(idContainer) || !ops.containerRunning(idContainer)) {
+				return "Docker container don't exist, please, try executing the start command";
+			}
 
-		String command2 = "docker cp " + idContainer + ":root/crawler/salida/salida " + indexPath + "/output.txt";
-		try {
-			ops.executeCommand(command2, true);
-		} catch (IOException e) {
-			LOGGER.warn("IOException: " + e.getMessage(), e);
-			return "Docker cp failed";
-		}
+			String command1 = "docker exec " + idContainer + " sh crawler/juntarSalidas.sh";
+			try {
+				ops.executeCommand(command1, true);
+			} catch (IOException e) {
+				LOGGER.warn("IOException: " + e.getMessage(), e);
+				return "Docker exec failed";
+			}
 
-		// Index
-		IndexFiles nuevo = new IndexFiles();
-		nuevo.index(idContainer + "_index/index", new File(idContainer + "_index/output.txt"));
+			String command2 = "docker cp " + idContainer + ":root/crawler/salida/salida " + indexPath + "/output.txt";
+			try {
+				ops.executeCommand(command2, true);
+			} catch (IOException e) {
+				LOGGER.warn("IOException: " + e.getMessage(), e);
+				return "Docker cp failed";
+			}
 
-		// Ahora este índice está más actualizado o igual que el de docker, así
-		// que se borra que el indice está pendiente
-		// en el contendor respecto a el del sistema
-		command1 = "docker exec " + idContainer + " rm crawler/IndexPending";
-		try {
-			ops.executeCommand(command1, false);
-		} catch (IOException e) {
-			LOGGER.warn("IOException: " + e.getMessage(), e);
-			return "Docker exec failed";
+			try {
+				// Index
+				IndexFiles nuevo = new IndexFiles();
+				nuevo.index(idContainer + "_index/index", new File(idContainer + "_index/output.txt"));
+
+				// Ahora este índice está más actualizado o igual que el de
+				// docker,
+				// así
+				// que se borra que el indice está pendiente
+				// en el contendor respecto a el del sistema
+				command1 = "docker exec " + idContainer + " rm crawler/IndexPending";
+				ops.executeCommand(command1, false);
+			} catch (IOException e) {
+				LOGGER.warn("IOException: " + e.getMessage(), e);
+				return "Docker exec failed";
+			
 		}
 		LOGGER.info("Indexed correctly " + idContainer);
 
@@ -439,6 +442,8 @@ public class CrawlerCommands implements CommandMarker {
 			@CliOption(key = {
 					"containerName" }, mandatory = true, help = "name of the container") final String containerName) {
 		String idContainer = idProject + "_" + imageName + "_" + containerName;
+
+	
 
 		if (!ops.dockerIsRunning()) {
 			return "Docker is not running, please start it with sudo service docker start";

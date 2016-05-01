@@ -835,10 +835,8 @@
             		    });	
                       
                     };
-              
-                    function onDownload() {
-                      
-                    }
+                    
+                
 
 }]);
 

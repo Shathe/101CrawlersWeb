@@ -4,6 +4,8 @@
 
 package crawlers;
 
+import java.io.File;
+import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,18 +45,18 @@ public class Application implements CommandLineRunner {
 
 		jdbcTemplate
 				.execute("CREATE TABLE projectCrawlers(" + "id SERIAL, idUser long, name VARCHAR(100), date DATETIME)");
-		jdbcTemplate.execute(
-				"CREATE TABLE configurationCrawlers(id SERIAL,idProject long)");
+		jdbcTemplate.execute("CREATE TABLE configurationCrawlers(id SERIAL,idProject long)");
 
 		jdbcTemplate.execute(
 				"CREATE TABLE imageCrawlers(id SERIAL, idProject long, idConfiguration long, name VARCHAR(100), date DATETIME)");
 
-		jdbcTemplate.execute(
-				"CREATE TABLE containerCrawlers(" + "id SERIAL, idProject long,idImage long, name VARCHAR(100), date DATETIME)");
+		jdbcTemplate.execute("CREATE TABLE containerCrawlers("
+				+ "id SERIAL, idProject long,idImage long, name VARCHAR(100), date DATETIME)");
 
 
+		
 
-		CommonOps ops= new CommonOps();
+		CommonOps ops = new CommonOps();
 		// Inserts
 		jdbcTemplate.update("insert into userCrawlers (nick, email, contrasena) values (?,?, ?)", "inigo",
 				"inigol22zgz@gmail.com", ops.HashFunction("contrasena"));
