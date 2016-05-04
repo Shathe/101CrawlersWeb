@@ -57,6 +57,7 @@ public class ConfigurationController {
 		try {
 			configuration = configDB.GetConfigurationFromProject(idProject);
 		} catch (Exception a) {
+			log.warn("Exception: " + a.getMessage(), a);
 			throw new InternalError("Error getting configuration: " + a.getMessage());
 		}
 
@@ -78,6 +79,7 @@ public class ConfigurationController {
 			configuration = configurationDB.GetConfigurationFromProject(idProject);
 		
 		} catch (Exception a) {
+			log.warn("Exception: " + a.getMessage(), a);
 			throw new InternalError("Error creating: " + a.getMessage());
 		}
 		return new ResponseEntity<>(configuration, HttpStatus.OK);

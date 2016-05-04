@@ -4,8 +4,6 @@
 
 package es.unizar.iaaa.crawler.butler.builders;
 
-import com.google.common.io.Files;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
