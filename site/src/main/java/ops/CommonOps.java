@@ -97,6 +97,7 @@ public class CommonOps {
 						+ container.getIdImage() + "_"+ container.getId()  + "_index");
 				FileUtils.deleteDirectory(folderProject);
 			} catch (Exception a) {
+				log.warn("Exception: " + a.getMessage(), a);
 			}
 			// containers cant be stopped if the are paused, first, unpaussed
 			String command = "java -jar ../butler.jar do start --containerName " + container.getId() + " --imageName "
@@ -137,6 +138,8 @@ public class CommonOps {
 				File folderProject = new File(image.getIdProject() + "_" + config.getId());
 				FileUtils.deleteDirectory(folderProject);
 			} catch (Exception a) {
+				log.warn("Exception: " + a.getMessage(), a);
+
 			}
 			// delete containers from DB and Docker
 			ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
@@ -195,6 +198,7 @@ public class CommonOps {
 				throw new InternalError("Not valid container/image: " + errorMessage);
 			}
 		} catch (IOException e) {
+			
 			throw new InternalError(exceptionMessage + ": " + e.getMessage());
 		}
 	}
