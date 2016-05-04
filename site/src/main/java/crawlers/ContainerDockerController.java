@@ -22,13 +22,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +53,8 @@ public class ContainerDockerController {
 	private static final Logger log = LoggerFactory.getLogger(ContainerDockerController.class);
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	CommonOps ops = new CommonOps();
+
+	private CommonOps ops = new CommonOps();
 
 	/**
 	 * Returns the containers of a specified image
@@ -141,7 +139,7 @@ public class ContainerDockerController {
 					+ container.getIdImage() + " --idProject " + idProject + "_" + config.getId();
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			String errorMessage = "";
 			boolean error = true;
 			while ((lineOut = out.readLine()) != null) {
@@ -185,7 +183,7 @@ public class ContainerDockerController {
 					+ container.getIdImage() + " --idProject " + container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			String errorMessage = "";
 			boolean error = true;
 			while ((lineOut = out.readLine()) != null) {
@@ -259,7 +257,7 @@ public class ContainerDockerController {
 					+ container.getIdImage() + " --idProject " + container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			while ((lineOut = out.readLine()) != null) {
 				// get the last message with the state
 				message = lineOut;
@@ -269,7 +267,6 @@ public class ContainerDockerController {
 					+ container.getIdImage() + " --idProject " + container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			out = ops.executeCommand(command, false);
-			lineOut = "";
 			while ((lineOut = out.readLine()) != null) {
 				// get the last message with the state
 				message = lineOut;
@@ -280,7 +277,6 @@ public class ContainerDockerController {
 					+ container.getIdImage() + " --idProject " + container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			out = ops.executeCommand(command, false);
-			lineOut = "";
 			while ((lineOut = out.readLine()) != null) {
 				// get the last message with the state
 				message = lineOut;
@@ -337,7 +333,7 @@ public class ContainerDockerController {
 	ResponseEntity<List<String>> searchContainer(@RequestParam(value = "idContainer") String idContainer,
 			@RequestParam(value = "query") String query) {
 		// gets the last configuration of the project
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 		try {
 			ContainerDocker container = containerDB.getContainerFromId(idContainer);
@@ -349,10 +345,10 @@ public class ContainerDockerController {
 					+ container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			boolean error = false;
 			while ((lineOut = out.readLine()) != null) {
-				if (lineOut != null && !lineOut.equals("") && !lineOut.contains("total matching documents")
+				if (!lineOut.equals("") && !lineOut.contains("total matching documents")
 						&& !lineOut.contains("Results shown"))
 					results.add(lineOut);
 				if (lineOut.contains("[WARN]"))
@@ -379,7 +375,7 @@ public class ContainerDockerController {
 			@RequestParam(value = "query") String query, HttpServletResponse response) {
 		File file;
 		// gets the last configuration of the project
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		ContainerDocker container;
 		ContainerDockerDatabase containerDB = new ContainerDockerDatabase(jdbcTemplate);
 		ProjectDatabase projectDB = new ProjectDatabase(jdbcTemplate);
@@ -393,10 +389,10 @@ public class ContainerDockerController {
 					+ container.getIdProject() + "_" + config.getId();
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			boolean error = false;
 			while ((lineOut = out.readLine()) != null) {
-				if (lineOut != null && !lineOut.equals("") && !lineOut.contains("total matching documents")
+				if (!lineOut.equals("") && !lineOut.contains("total matching documents")
 						&& !lineOut.contains("Results shown"))
 					results.add(lineOut);
 				if (lineOut.contains("[WARN]"))
@@ -411,9 +407,9 @@ public class ContainerDockerController {
 			file.createNewFile();
 			// puts data in
 			PrintWriter pw = new PrintWriter(new FileWriter(file));
-			for (int i = 0; i < results.size(); i++) {
-				pw.println(results.get(i));
-			}
+            for (String result : results) {
+                pw.println(result);
+            }
 			pw.flush();
 			pw.close();
 
