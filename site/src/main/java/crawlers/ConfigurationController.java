@@ -131,8 +131,9 @@ public class ConfigurationController {
 	/**
 	 * Uploads a list of files of a user, the plugin files to an auxiliar
 	 * folder, if it's not upload returns an error
-	 * 
-	 * @param file
+	 *
+	 * @param name
+	 * @param files
 	 * @param idUser
 	 */
 
@@ -237,7 +238,7 @@ public class ConfigurationController {
 
 			log.info("Command: " + command);
 			BufferedReader out = ops.executeCommand(command, false);
-			String lineOut = "";
+			String lineOut;
 			String errorMessage = "";
 			boolean error = true;
 			while ((lineOut = out.readLine()) != null) {
