@@ -16,7 +16,7 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>590</x>
+      <x>630</x>
       <y>70</y>
       <w>160</w>
       <h>30</h>
@@ -62,7 +62,7 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>660</x>
+      <x>700</x>
       <y>90</y>
       <w>30</w>
       <h>100</h>
@@ -109,7 +109,7 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>660</x>
+      <x>700</x>
       <y>170</y>
       <w>20</w>
       <h>690</h>
@@ -147,24 +147,24 @@ Indexar()</panel_attributes>
     <coordinates>
       <x>410</x>
       <y>160</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 getContent()</panel_attributes>
-    <additional_attributes>250.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>290.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>410</x>
       <y>190</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 content</panel_attributes>
-    <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -181,7 +181,7 @@ preprocesado()</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>680</x>
+      <x>720</x>
       <y>280</y>
       <w>200</w>
       <h>140</h>
@@ -192,7 +192,7 @@ preprocesado()</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>680</x>
+      <x>720</x>
       <y>310</y>
       <w>20</w>
       <h>100</h>
@@ -204,7 +204,7 @@ bg=red</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>690</x>
+      <x>730</x>
       <y>310</y>
       <w>150</w>
       <h>60</h>
@@ -216,7 +216,7 @@ preprocesado()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>690</x>
+      <x>730</x>
       <y>350</y>
       <w>110</w>
       <h>70</h>
@@ -254,31 +254,31 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>410</x>
       <y>470</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 getTimeLastIndex()</panel_attributes>
-    <additional_attributes>250.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>290.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>410</x>
       <y>490</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 date</panel_attributes>
-    <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
       <x>420</x>
       <y>520</y>
-      <w>620</w>
+      <w>290</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>optional 
@@ -290,24 +290,24 @@ container index is more recent</panel_attributes>
     <coordinates>
       <x>410</x>
       <y>560</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 getLastIndex()</panel_attributes>
-    <additional_attributes>250.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>290.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>410</x>
       <y>580</y>
-      <w>270</w>
+      <w>310</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 Index</panel_attributes>
-    <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
